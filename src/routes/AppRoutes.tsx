@@ -3,6 +3,8 @@ export const routes = {
 
 LOGIN: "/",
 
-FORGETPASSWORD: "/forget-password",
+SUPERADMIN: "/superadmin",
+ORGANIZATIONADMIN: "/organizationadmin",
+ZONALADMIN: "/zonaladmin",
 
 };

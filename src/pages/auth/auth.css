@@ -3,6 +3,7 @@
 .FormContainer .login-box {width: 500px; background: #ffffff; padding: 55px 60px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);} 
 .FormContainer .login-box h1{text-align: center;}
 .FormContainer .ForgetPassword{text-align: right;}
+.FormContainer .otp-wrapper input{width: 18%; height: 40px; margin: 1%; text-align: center;}
 
 
 

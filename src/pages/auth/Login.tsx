@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import "./auth.css";
 
@@ -7,18 +7,13 @@ import FormInputField from "../../components/ui/FormInputfields";
 
 import { Heading1 } from "../../components/ui/HeadingPara";
 
-import Logo from "../../assets/Images/Logo.svg";
-
-import Loader from "../../components/ui/Loaders";
 import Button from "../../components/ui/Buttons";
 
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../routes/AppRoutes";
+type LoginProps = {
+  onForgotPassword: () => void;
+};
 
-function LoginForm() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-
+function Login({ onForgotPassword }: LoginProps) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,14 +23,6 @@ function LoginForm() {
     email?: string;
     password?: string;
   }>({});
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const fields: FieldConfig[] = [
     { label: "Email", name: "email", type: "email", placeholder: "Enter your email", required: true, },
@@ -50,57 +37,46 @@ function LoginForm() {
       [name]: value,
     }));
 
-    // remove error while typing
     setErrors((prev) => ({
       ...prev,
       [name]: "",
     }));
   };
 
-
-
-  if (loading) {
-    return <>
-      <div className="FormContainer">
-        <Loader />
-      </div>
-    </>
-    ;
-  }
-
   return (
-    <div className="FormContainer">
-      <div className="IndexHeader">
-        <img src={Logo} alt="ASDimo" />
-      </div>
+    <div className="login-box">
+      <Heading1 text="LOGIN" />
 
-      <div className="login-box">
-        <Heading1 text="LOGIN" />
+      <div className="LogIn">
+        <form>
+          {fields.map((field) => (
+            <FormInputField
+              key={field.name}
+              {...field}
+              value={formData[field.name as keyof typeof formData]}
+              onChange={handleChange}
+              error={errors[field.name as keyof typeof errors]}
+            />
+          ))}
 
-          <div className="LogIn">
-            <form>
-              {fields.map((field) => (
-                <FormInputField
-                  key={field.name}
-                  {...field}
-                  value={formData[field.name as keyof typeof formData]}
-                  onChange={handleChange}
-                  error={errors[field.name as keyof typeof errors]}
-                />
-              ))}
-              <Button
-                text="Forget Your password?"
-                variant="trashparent"
-                className="ForgetPassword"
-                onClick={() => navigate(routes.FORGETPASSWORD)}
-              />
-              <Button type="submit" text="Proceed" width="full" textsize="md"/>
-            </form>
-          </div>
+          <Button
+            text="Forget Your password?"
+            variant="trashparent"
+            className="ForgetPassword"
+            type="button"
+            onClick={onForgotPassword}
+          />
 
+          <Button
+            type="submit"
+            text="Proceed"
+            width="full"
+            textsize="md"
+          />
+        </form>
       </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default Login;
