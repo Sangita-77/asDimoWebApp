@@ -1,15 +1,29 @@
 *{ margin: 0; padding: 0;box-sizing: border-box;}
+
 @font-face {
-    font-family: "SourceSansRegular";
-    src: url("/src/assets/Font/SourceSansRegular.woff2") format("woff2");
+  font-family: "SourceSans";
+  src: url("/src/assets/Font/SourceSansRegular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
+
+@font-face {
+  font-family: "SourceSans";
+  src: url("/src/assets/Font/SourceSansSemiBold.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+
 :root{
      --PrimaryColor: #83DBD7; 
      --SecondayColor: #369183;
-     --TextcolorDark: #464255
+     --TextcolorDark: #464255;
+     --TextcolorLight: #ffff;
+     --BorderColor: #b4b2bb;
     } 
 
-body{ font-family: SourceSansRegular;}
+body{ font-family: "SourceSans", sans-serif; }
 
 
 

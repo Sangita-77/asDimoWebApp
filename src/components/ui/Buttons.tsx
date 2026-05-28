@@ -1,0 +1,44 @@
+import React from "react";
+import "./UIstyles.css";
+
+interface GlobalButtons {
+  text: string;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  textsize?: "sm" | "md";
+  variant?: "trashparent" | "solid" ;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+  className?: string;
+  iconPosition?: "left" | "right"; 
+  width?: "full" | "padding"; 
+}
+
+const DashboardButtons: React.FC<GlobalButtons> = ({
+  text,
+  icon,
+  onClick,
+  textsize = "sm",
+  type = "button",
+  variant = "solid",
+  disabled = false,
+  className = "",
+  iconPosition = "left",
+  width = "padding",
+}) => {
+  return (
+    <div className={`GlobalButton ${className}`}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`Global-button d-flex ${width} ${variant} ${textsize}`} >
+      {iconPosition === "left" && icon}
+      {text}
+      {iconPosition === "right" && icon}
+    </button>
+    </div>
+  );
+};
+
+export default DashboardButtons;

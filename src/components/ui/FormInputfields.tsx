@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export interface FieldConfig {
   label: string;
@@ -11,7 +12,7 @@ export interface FieldConfig {
   required?: boolean;
   error?: string;
   options?: string[];
-};
+}
 
 const FormInputField: React.FC<FieldConfig> = ({
   label,
@@ -20,22 +21,48 @@ const FormInputField: React.FC<FieldConfig> = ({
   placeholder,
   value,
   onChange,
-  className = "",   
+  className = "",
   required = false,
   error,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = type === "password";
+
   return (
-    <div className={className}>
-      <label>{label}</label>
-      <input
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required={required}
-      />
-      {error && <p>{error}</p>}
+    <div className={`form-group ${className}`}>
+      <label htmlFor={name}>{label}</label>
+
+      <div className="input-wrapper">
+        <input
+          id={name}
+          type={
+            isPassword
+              ? showPassword
+                ? "text"
+                : "password"
+              : type
+          }
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required={required}
+          className={error ? "input-error" : ""}
+        />
+
+        {isPassword && (
+          <button
+            type="button"
+            className="eye-btn"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeIcon/> : <EyeOffIcon/> }
+          </button>
+        )}
+      </div>
+
+      {error && <p className="error-text">{error}</p>}
     </div>
   );
 };

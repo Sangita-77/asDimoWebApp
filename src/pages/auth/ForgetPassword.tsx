@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import "./auth.css";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../routes/AppRoutes";
 
 import type { FieldConfig } from "../../components/ui/FormInputfields";
 import FormInputField from "../../components/ui/FormInputfields";
@@ -9,15 +10,10 @@ import { Heading1 } from "../../components/ui/HeadingPara";
 
 import Logo from "../../assets/Images/Logo.svg";
 
-import Loader from "../../components/ui/Loaders";
 import Button from "../../components/ui/Buttons";
 
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../routes/AppRoutes";
-
-function LoginForm() {
+function ForgetPassword() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -29,17 +25,10 @@ function LoginForm() {
     password?: string;
   }>({});
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const fields: FieldConfig[] = [
-    { label: "Email", name: "email", type: "email", placeholder: "Enter your email", required: true, },
-    { label: "Password", name: "password", type: "password", placeholder: "Enter your password", required: true, },
+    { label: "New Password", name: "password", type: "password", placeholder: "Enter your password", required: true, },
+    { label: "Confirm Password", name: "confirmpassword", type: "password", placeholder: "Re-Enter your password", required: true, },
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,16 +46,26 @@ function LoginForm() {
     }));
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    const newErrors: typeof errors = {};
 
-  if (loading) {
-    return <>
-      <div className="FormContainer">
-        <Loader />
-      </div>
-    </>
-    ;
-  }
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Form Submitted:", formData);
+    }
+  };
+
 
   return (
     <div className="FormContainer">
@@ -75,10 +74,10 @@ function LoginForm() {
       </div>
 
       <div className="login-box">
-        <Heading1 text="LOGIN" />
+        <Heading1 text="Forget Password" />
 
           <div className="LogIn">
-            <form>
+            <form onSubmit={handleSubmit}>
               {fields.map((field) => (
                 <FormInputField
                   key={field.name}
@@ -88,12 +87,7 @@ function LoginForm() {
                   error={errors[field.name as keyof typeof errors]}
                 />
               ))}
-              <Button
-                text="Forget Your password?"
-                variant="trashparent"
-                className="ForgetPassword"
-                onClick={() => navigate(routes.FORGETPASSWORD)}
-              />
+              <Button text="Already logged in? No need to reset your password." variant="trashparent" className="ForgetPassword" onClick={() => navigate(routes.LOGIN)} />
               <Button type="submit" text="Proceed" width="full" textsize="md"/>
             </form>
           </div>
@@ -103,4 +97,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default ForgetPassword;
