@@ -13,8 +13,8 @@ function AuthMain() {
   const [showForgotPassword, setShowForgotPassword] =
     useState(false);
 
-  const [showSendOTP, setShowSendOTP] =
-    useState(false);
+  const [showSendOTP, setShowSendOTP] = useState(false);
+  const [resetData, setResetData] =useState({email: "",otp: "",});
 
   return (
     <div className="FormContainer">
@@ -39,7 +39,12 @@ function AuthMain() {
             setShowSendOTP(false);
             setShowForgotPassword(false);
           }}
-          onOTPSuccess={() => {
+          onOTPSuccess={(email, otp) => {
+            setResetData({
+              email,
+              otp,
+            });
+
             setShowSendOTP(false);
             setShowForgotPassword(true);
           }}
@@ -53,6 +58,8 @@ function AuthMain() {
             setShowForgotPassword(false);
             setShowSendOTP(false);
           }}
+          email={resetData.email}
+          otp={resetData.otp}
         />
       )}
     </div>
