@@ -15,7 +15,8 @@ export type RoleType =
   | "TeachersOrg"
   | "parentsGlobal"
   | "teachersGlobal"
-  | "zonalAdmin";
+  | "zonalAdmin"
+  | "Admin";
 
 type StoredUser = {
   flag: number;
@@ -29,12 +30,14 @@ export const roleTypeByFlag: Record<number, RoleType> = {
   4: "parentsGlobal",
   5: "teachersGlobal",
   6: "zonalAdmin",
+  7: "Admin",
 };
 
 export const routeByRoleType: Partial<Record<RoleType, string>> = {
   SuperAdmin: routes.SUPERADMIN,
   OrganizationAdmin: routes.ORGANIZATIONADMIN,
   zonalAdmin: routes.ZONALADMIN,
+  Admin: routes.ADMIN,
 };
 
 export const getRoleTypeByFlag = (flag: number) => {

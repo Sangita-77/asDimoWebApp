@@ -6,5 +6,6 @@ LOGIN: "/",
 SUPERADMIN: "/superadmin",
 ORGANIZATIONADMIN: "/organizationadmin",
 ZONALADMIN: "/zonaladmin",
+ADMIN: "/admin",
 
 };
