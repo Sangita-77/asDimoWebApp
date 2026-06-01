@@ -49,6 +49,15 @@ function App() {
             </AuthMiddleware>
           }
         />
+
+        {/* ================= ADMIN ================= */}
+
+        <Route path={routes.ADMIN} element={
+            <AuthMiddleware allowedFlags={["Admin"]}>
+              <OrganizationAdminIndex />
+            </AuthMiddleware>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
