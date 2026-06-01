@@ -2,9 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AuthMain from "./pages/auth/authMain";
 import AuthMiddleware from "./middleware/AuthMiddleware";
+
 import { routes } from "./routes/AppRoutes";
 
-import SuperAdminIndex from "./pages/superAdmin";
+import DashboardLayOut from "./components/layout/DashboardLayout";
+
+import SuperAdminDashboard from "./pages/superAdmin/index";
+import SuperAdminSettings from "./pages/superAdmin/Settings";
+
 import ZonalAdminIndex from "./pages/zonalAdmin";
 import OrganizationAdminIndex from "./pages/organization";
 
@@ -12,43 +17,38 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={routes.LOGIN} element={<AuthMain/>} />
+        {/* Login */}
+        <Route path={routes.LOGIN} element={<AuthMain />} />
 
+        {/* ================= SUPER ADMIN ================= */}
 
-        {/* SuperAdmin Start */}
-        <Route
-          path={routes.SUPERADMIN}
-          element={
+        <Route path={routes.SUPERADMIN} element={
             <AuthMiddleware allowedFlags={["SuperAdmin"]}>
-              <SuperAdminIndex/>
+              <DashboardLayOut />
             </AuthMiddleware>
           }
-        />
-        {/* SuperAdmin End */}
+        >
+          <Route index element={<SuperAdminDashboard />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+        </Route>
 
-        {/* ZonalAdmin Start */}
-        <Route
-          path={routes.ZONALADMIN}
-          element={
+        {/* ================= ZONAL ADMIN ================= */} 
+
+        <Route path={routes.ZONALADMIN} element={
             <AuthMiddleware allowedFlags={["zonalAdmin"]}>
-              <ZonalAdminIndex/>
+              <ZonalAdminIndex />
             </AuthMiddleware>
           }
         />
-        {/* ZonalAdmin Start */}
 
-        {/* OrganizationAdmin Start */}
-        <Route
-          path={routes.ORGANIZATIONADMIN}
-          element={
+        {/* ================= ORGANIZATION ADMIN ================= */}
+
+        <Route path={routes.ORGANIZATIONADMIN} element={
             <AuthMiddleware allowedFlags={["OrganizationAdmin"]}>
-              <OrganizationAdminIndex/>
+              <OrganizationAdminIndex />
             </AuthMiddleware>
           }
         />
-        {/* OrganizationAdmin End */}
-
-
       </Routes>
     </BrowserRouter>
   );
