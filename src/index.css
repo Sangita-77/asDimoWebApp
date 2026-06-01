@@ -14,12 +14,15 @@
 }
 
 :root{
-     --PrimaryColor: #83DBD7; 
+     --PrimaryColor: #82C9BE; 
      --SecondayColor: #369183;
      --TextcolorDark: #464255;
      --TextcolorLight: #ffff;
      --BorderColor: #b4b2bb;
+     --GreenButtonHover: #3691832f;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }
- 
+/* Global CSS Start */
+.d-flex{display: flex;}
+/* Global CSS End */

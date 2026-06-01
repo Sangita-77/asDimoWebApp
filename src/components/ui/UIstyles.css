@@ -16,10 +16,11 @@ h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; lin
 /* Button Start */
 button{cursor: pointer;}
 /* ButtonSize */
-.GlobalButton button.full{width: 100%; background: var(--SecondayColor); border: none; border-radius: 8px;  padding: 10px;}
+.GlobalButton button.full{width: 100%;}
 /* variants */
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
-.GlobalButton button.solid{color: var(--TextcolorLight);}
+.GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px;}
+.GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}
@@ -43,8 +44,41 @@ button{cursor: pointer;}
 /* Form End */
 
 
+/* ModalBox Start */
+/* Overlay */
+.modalOverlay { position: fixed; inset: 0;  display: flex; align-items: center; justify-content: center;  background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(4px);  z-index: 9999; padding: 20px;  animation: fadeIn 0.25s ease; }
+/* Modal Container */
+.modalBox { width: 100%; max-width: 380px;  background: #ffffff; border-radius: 16px;  overflow: hidden;  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 20px 50px rgba(0, 0, 0, 0.12);  animation: modalSlideUp 0.3s ease; }
+/* Header */
+.modalHeader { display: flex; align-items: center; justify-content: space-between;  padding: 8px 24px;  border-bottom: 1px solid #ececec;  font-size: 20px; font-weight: 600; background: var(--GreenButtonHover);}
+/* Close Button */
+.modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: #f5f5f5; color: #333;  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
+.modalCloseBtn:hover { background: #e8e8e8; transform: rotate(90deg); }
+/* Body */
+.modalBody { padding: 24px; color: #555; font-size: 15px; line-height: 1.6; }
+/* Optional Footer */
+.modalFooter { display: flex; justify-content: flex-end; gap: 12px;  padding: 20px 24px;  border-top: 1px solid #ececec; }
+.logout-popup-actions{gap: 20px; padding-top: 10px;  justify-content: center;}
+/* ModalBox End */
 
 
+
+
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalSlideUp { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+
+
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .modalBox { max-width: 100%; }
+  .modalHeader { padding: 16px 20px; font-size: 18px; }
+  .modalBody { padding: 20px; }
+}
 
 
 
