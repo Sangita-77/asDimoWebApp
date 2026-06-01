@@ -33,14 +33,18 @@ export const roleTypeByFlag: Record<number, RoleType> = {
   7: "Admin",
 };
 
-export const routeByRoleType: Partial<Record<RoleType, string>> = {
+export const routeByRoleType: Partial<
+  Record<RoleType, string>
+> = {
   SuperAdmin: routes.SUPERADMIN,
   OrganizationAdmin: routes.ORGANIZATIONADMIN,
   zonalAdmin: routes.ZONALADMIN,
   Admin: routes.ADMIN,
 };
 
-export const getRoleTypeByFlag = (flag: number) => {
+export const getRoleTypeByFlag = (
+  flag: number
+): RoleType | null => {
   return roleTypeByFlag[flag] ?? null;
 };
 
@@ -54,7 +58,7 @@ export const getRouteByFlag = (flag: number) => {
   return routeByRoleType[roleType] ?? routes.LOGIN;
 };
 
-const getStoredUser = (): StoredUser | null => {
+export const getStoredUser = (): StoredUser | null => {
   const user = localStorage.getItem("user");
 
   if (!user) {
@@ -66,8 +70,19 @@ const getStoredUser = (): StoredUser | null => {
   } catch {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+
     return null;
   }
+};
+
+export const getCurrentUserRole = (): RoleType | null => {
+  const user = getStoredUser();
+
+  if (!user) {
+    return null;
+  }
+
+  return getRoleTypeByFlag(user.flag);
 };
 
 function AuthMiddleware({
@@ -75,7 +90,9 @@ function AuthMiddleware({
   children,
 }: AuthMiddlewareProps) {
   const location = useLocation();
+
   const token = localStorage.getItem("token");
+
   const user = getStoredUser();
 
   if (!token || !user) {
@@ -90,9 +107,15 @@ function AuthMiddleware({
 
   const roleType = getRoleTypeByFlag(user.flag);
 
-  if (!roleType || !allowedFlags.includes(roleType)) {
+  if (
+    !roleType ||
+    !allowedFlags.includes(roleType)
+  ) {
     return (
-      <Navigate to={getRouteByFlag(user.flag)} replace />
+      <Navigate
+        to={getRouteByFlag(user.flag)}
+        replace
+      />
     );
   }
 
