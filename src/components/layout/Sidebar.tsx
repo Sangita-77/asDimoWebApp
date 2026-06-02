@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import "./layout.css";
 import "../../components/ui/UIstyles.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 import { routes } from "../../routes/AppRoutes";
+import { useLogout } from "../../services/useLogout";
 
 import Logo from "../../assets/Images/Logo.svg";
 import DashBoardIcon from "../../assets/Images/DashBoardIcon.svg";
 import SettingsIcon from "../../assets/Images/SettingsIcon.svg";
 import LogOutIcon from "../../assets/Images/LogOutIcon.svg";
 import DashboardButtons from "../ui/Buttons";
-
 import ModalBox from "../ui/ModalBox";
 
 interface SidebarProps {
@@ -23,36 +24,44 @@ const Sidebar: React.FC<SidebarProps> = ({
   isDesktop,
   closeSidebar,
 }) => {
-  const navigate = useNavigate();
+  const logout = useLogout();
 
   const [showLogoutModal, setShowLogoutModal] =
     useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setShowLogoutModal(false);
 
     if (!isDesktop) {
       closeSidebar();
     }
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-
-    navigate(routes.LOGIN, {
-      replace: true,
-    });
+    await logout();
   };
 
   const menuItems = [
-    { name: "Dashboard", path: routes.SUPERADMIN, icon: DashBoardIcon, },
-    { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
+    {
+      name: "Dashboard",
+      path: routes.SUPERADMIN,
+      icon: DashBoardIcon,
+    },
+    {
+      name: "Settings",
+      path: routes.SUPERADMINSETTINGS,
+      icon: SettingsIcon,
+    },
   ];
 
   return (
     <div className={`sidebar ${open ? "open" : ""}`}>
       {!isDesktop && (
-        <button type="button" className="sidebar-close" onClick={closeSidebar} > ✕ </button>
+        <button
+          type="button"
+          className="sidebar-close"
+          onClick={closeSidebar}
+        >
+          ✕
+        </button>
       )}
 
       <div className="AdminLogo">
@@ -65,8 +74,16 @@ const Sidebar: React.FC<SidebarProps> = ({
             <NavLink
               to={item.path}
               end={item.path === routes.SUPERADMIN}
-              className={({ isActive }) => isActive ? "nav-link active" : "nav-link" }
-              onClick={() => { if (!isDesktop) { closeSidebar(); } }}
+              className={({ isActive }) =>
+                isActive
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+              onClick={() => {
+                if (!isDesktop) {
+                  closeSidebar();
+                }
+              }}
             >
               <img src={item.icon} alt={item.name} />
               <span>{item.name}</span>
@@ -75,7 +92,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         ))}
 
         <li>
-          <a type="button" className="logout-btn" onClick={() => setShowLogoutModal(true) } >
+          <a
+            className="logout-btn"
+            onClick={() =>
+              setShowLogoutModal(true)
+            }
+          >
             <img src={LogOutIcon} alt="Logout" />
             <span>Logout</span>
           </a>
@@ -90,12 +112,27 @@ const Sidebar: React.FC<SidebarProps> = ({
           }
           body={
             <div className="logout-popup">
-              <p> Are you sure you want to logout from your account? </p>
+              <p>
+                Are you sure you want to logout
+                from your account?
+              </p>
 
               <div className="logout-popup-actions d-flex">
-                <DashboardButtons text="Cancle" variant="solid" textsize="sm" onClick={() => setShowLogoutModal(false) } />
+                <DashboardButtons
+                  text="Cancel"
+                  variant="solid"
+                  textsize="sm"
+                  onClick={() =>
+                    setShowLogoutModal(false)
+                  }
+                />
 
-                <DashboardButtons text="Logout" variant="solid" textsize="sm" onClick={handleLogout} />
+                <DashboardButtons
+                  text="Logout"
+                  variant="solid"
+                  textsize="sm"
+                  onClick={handleLogout}
+                />
               </div>
             </div>
           }
