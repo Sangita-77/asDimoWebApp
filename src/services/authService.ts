@@ -33,6 +33,12 @@ interface LogoutResponse {
   message: string;
 }
 
+interface ProfileResponse {
+  success: boolean;
+  message: string;
+  data: any;
+}
+
 export const authService = {
   /**
    * Login with email and password
@@ -98,6 +104,27 @@ export const authService = {
 
     if (!response.ok || !data.success) {
       throw new Error(data.message || "Logout failed");
+    }
+
+    return data;
+  },
+
+  /**
+   * Get logged-in user profile
+   */
+  async getProfile(accessToken: string): Promise<ProfileResponse> {
+    const response = await fetch(`${BASE_URL}/auth/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Profile fetch failed");
     }
 
     return data;
