@@ -10,20 +10,8 @@ import { Heading1 } from "../../components/ui/HeadingPara";
 
 import Button from "../../components/ui/Buttons";
 import { getRouteByFlag } from "../../middleware/AuthMiddleware";
-import { BASE_URL } from "../../api/config";
-
-// const API_BASE_URL = "http://localhost:4000/api/";
-
-type LoginResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    user: {
-      flag: number;
-    };
-    token: string;
-  };
-};
+import { authService } from "../../services/authService";
+import { tokenManager } from "../../services/tokenManager";
 
 type LoginProps = {
   onForgotPassword: () => void;
@@ -91,38 +79,22 @@ function Login({ onForgotPassword }: LoginProps) {
     setApiError("");
 
     try {
-      const apiResponse = await fetch(
-        `${BASE_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email.trim(),
-            password: formData.password,
-          }),
-        }
+      const response = await authService.login(
+        formData.email.trim(),
+        formData.password
       );
-
-      const response =
-        (await apiResponse.json()) as LoginResponse;
-
-      if (!apiResponse.ok || !response.success) {
-        throw new Error(
-          response.message || "Login failed"
-        );
-      }
 
       if (getRouteByFlag(response.data.user.flag) === "/") {
         throw new Error("You are not allowed to login");
       }
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
-      );
+      // Store tokens and user data
+      tokenManager.setTokens({
+        token: response.data.token,
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+      });
+      tokenManager.setUser(response.data.user);
 
       navigate(getRouteByFlag(response.data.user.flag));
     } catch (error) {

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 import { routes } from "../routes/AppRoutes";
+import { tokenManager } from "../services/tokenManager";
 
 type AuthMiddlewareProps = {
   allowedFlags: RoleType[];
@@ -59,20 +60,7 @@ export const getRouteByFlag = (flag: number) => {
 };
 
 export const getStoredUser = (): StoredUser | null => {
-  const user = localStorage.getItem("user");
-
-  if (!user) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(user) as StoredUser;
-  } catch {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-    return null;
-  }
+  return tokenManager.getUser();
 };
 
 export const getCurrentUserRole = (): RoleType | null => {
@@ -91,11 +79,10 @@ function AuthMiddleware({
 }: AuthMiddlewareProps) {
   const location = useLocation();
 
-  const token = localStorage.getItem("token");
-
+  const isAuthenticated = tokenManager.isAuthenticated();
   const user = getStoredUser();
 
-  if (!token || !user) {
+  if (!isAuthenticated || !user) {
     return (
       <Navigate
         to={routes.LOGIN}
