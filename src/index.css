@@ -17,9 +17,11 @@
      --PrimaryColor: #82C9BE; 
      --SecondayColor: #369183;
      --TextcolorDark: #464255;
+     --TextcolorGrey: #A5AEBF;
      --TextcolorLight: #ffff;
      --BorderColor: #b4b2bb;
      --GreenButtonHover: #3691832f;
+     --ColorBlue: #3b82f6;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }

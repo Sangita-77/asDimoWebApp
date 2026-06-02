@@ -19,8 +19,8 @@ button{cursor: pointer;}
 .GlobalButton button.full{width: 100%;}
 /* variants */
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
-.GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px;}
-.GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s;}
+.GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
+.GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}
