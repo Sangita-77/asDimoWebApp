@@ -20,6 +20,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
   const profileImageUrl = profileImg
   ? `${filebasename}${profileImg.replace("/uploads", "")}`
   : "";
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
 
   const getRoleName = (flag: number) => {
     switch (flag) {
@@ -38,11 +40,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
 
 
 // Demo Notifications
-  const notifications = [
-    { id: 1, title: "New User Registered", time: "2 mins ago", unread: true, },
-    { id: 2, title: "Payment Received", time: "15 mins ago", unread: true, },
-    { id: 3, title: "Subscription Expired", time: "1 hour ago", unread: false, },
-  ];
+  // const notifications = [
+  //   { id: 1, title: "New User Registered", time: "2 mins ago", unread: true, },
+  //   { id: 2, title: "Payment Received", time: "15 mins ago", unread: true, },
+  //   { id: 3, title: "Subscription Expired", time: "1 hour ago", unread: false, },
+  // ];
 
 
 
@@ -110,6 +112,75 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
     loadProfile();
   }, []);
 
+
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+
+    const diff = Math.floor(
+      (now.getTime() - date.getTime()) / 1000
+    );
+
+    if (diff < 60) return `${diff}s ago`;
+
+    if (diff < 3600) return `${Math.floor(diff / 60)} mins ago`;
+
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+
+    return `${Math.floor(diff / 86400)} days ago`;
+  };
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const token = tokenManager.getAccessToken();
+
+      if (!token) return;
+
+      try {
+        setLoadingNotifications(true);
+
+        const response =
+          await authService.getNotifications(token);
+
+        setNotifications(response?.data || []);
+      } catch (error) {
+        console.error(
+          "Failed to load notifications:",
+          error
+        );
+      } finally {
+        setLoadingNotifications(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const markNotificationAsRead = async (id: string) => {
+    const token = tokenManager.getAccessToken();
+
+    if (!token) return;
+
+    try {
+      await authService.markNotificationRead(id, token);
+
+      setNotifications((prev) =>
+        prev.map((item) =>
+          item._id === id
+            ? { ...item, read: true }
+            : item
+        )
+      );
+
+      setShowNotification(false);
+    } catch (error) {
+      console.error(
+        "Failed to mark notification as read:",
+        error
+      );
+    }
+  };
+  
   return (
     <div className="navbar">
       <span className="menu-toggle" onClick={toggle}>
@@ -123,7 +194,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
         <div className="NotificationWrapper" ref={notificationRef}>
           <button className="NotificationBtn" onClick={() => setShowNotification(!showNotification)} >
             <BellIcon/>
-            <span className="NotificationBadge"> {notifications.filter((item) => item.unread).length} </span>
+            {/* <span className="NotificationBadge"> {notifications.filter((item) => item.unread).length} </span> */}
+            <span className="NotificationBadge">
+              {notifications.filter((item) => !item.read).length}
+            </span>
           </button>
 
           {showNotification && (
@@ -133,21 +207,58 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
               </div>
 
               <div className="NotificationList">
-                {notifications.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`NotificationItem ${
-                      item.unread ? "unread" : ""
-                    }`}
-                  >
-                    <div className="NotificationDot"></div>
-
-                    <div>
-                      <h5>{item.title}</h5>
-                      <span>{item.time}</span>
-                    </div>
+                {loadingNotifications ? (
+                  <div className="NotificationItem">
+                    Loading...
                   </div>
-                ))}
+                ) : notifications.length > 0 ? (
+                  notifications.map((item) => (
+                    // <div
+                    //   key={item._id}
+                    //   className={`NotificationItem ${
+                    //     !item.read ? "unread" : ""
+                    //   }`}
+                    // >
+
+                      <div
+                        key={item._id}
+                        className={`NotificationItem ${
+                          !item.read ? "unread" : ""
+                        }`}
+                        onClick={() => {
+                          if (!item.read) {
+                            markNotificationAsRead(item._id);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                      {!item.read && (
+                        <div className="NotificationDot"></div>
+                      )}
+
+                      <div>
+                        <h5>{item.title}</h5>
+
+                        <p
+                          style={{
+                            margin: "4px 0",
+                            fontSize: "12px",
+                          }}
+                        >
+                          {item.message}
+                        </p>
+
+                        <span>
+                          {formatTimeAgo(item.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="NotificationItem">
+                    No notifications found
+                  </div>
+                )}
               </div>
 
 

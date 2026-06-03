@@ -1,4 +1,5 @@
 import { BASE_URL } from "../api/config";
+import axios from "axios";
 
 interface LoginResponse {
   success: boolean;
@@ -129,4 +130,30 @@ export const authService = {
 
     return data;
   },
+
+
+  getNotifications: async (token: string) => {
+    const response = await axios.get(`${BASE_URL}/notifications`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
+  async markNotificationRead(id: string, token: string) {
+    const response = await axios.put(
+      `${BASE_URL}/notifications/read/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };
