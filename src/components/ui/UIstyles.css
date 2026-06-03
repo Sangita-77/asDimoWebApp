@@ -1,4 +1,3 @@
-
 /* loader Start*/
 .loader-wrapper{position: absolute; z-index: 9999; left: 49%; top: 48%;}
 .loader{ --c1:var(--SecondayColor); --c2:var(--PrimaryColor); width: 30px; height: 60px; border-top: 4px solid var(--c1); border-bottom: 4px solid var(--c1); background: linear-gradient(90deg, var(--c1) 2px, var(--c2) 0 5px,var(--c1) 0) 50%/7px 8px no-repeat; display: grid; overflow: hidden; animation: l5-0 2s infinite linear; }
@@ -50,10 +49,10 @@ button{cursor: pointer;}
 /* Modal Container */
 .modalBox { width: 100%; max-width: 380px;  background: #ffffff; border-radius: 16px;  overflow: hidden;  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 20px 50px rgba(0, 0, 0, 0.12);  animation: modalSlideUp 0.3s ease; }
 /* Header */
-.modalHeader { display: flex; align-items: center; justify-content: space-between;  padding: 8px 24px;  border-bottom: 1px solid #ececec;  font-size: 20px; font-weight: 600; background: var(--GreenButtonHover);}
+.modalHeader { display: flex; align-items: center; justify-content: space-between;  padding: 15px;  border-bottom: 1px solid #ececec;  font-size: 20px; font-weight: 600; background: var(--GreenButtonHover);}
 /* Close Button */
-.modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: #f5f5f5; color: #333;  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
-.modalCloseBtn:hover { background: #e8e8e8; transform: rotate(90deg); }
+.modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: var(--SecondayColor); color: var(--TextcolorLight);  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
+.modalCloseBtn:hover {transform: rotate(90deg);  background: var(--SecondayColor); color: var(--TextcolorLight);}
 /* Body */
 .modalBody { padding: 24px; color: #555; font-size: 15px; line-height: 1.6; }
 /* Optional Footer */
@@ -63,7 +62,136 @@ button{cursor: pointer;}
 
 
 
+/* Tab CSS Start */
+.DashboardsTabs{margin-top: 30px;}
+.DashboardsTabs.LeftSide{display: flex; border-top: solid 1px var(--GreyBorders);}
+.DashboardsTabs.LeftSide .tabs-header{width: 20%; padding: 50px 20px; border-right: solid 1px var(--GreyBorders);}
+.DashboardsTabs.LeftSide .tabs-content{width: 80%; padding: 30px;}
+.DashboardsTabs.LeftSide .tab-btn.LeftSide{width: 100%; margin: 10px 0px; padding: 15px; border: none; text-align: left; font-size: 15px; background: transparent;}
+.DashboardsTabs.LeftSide .tab-btn.active.LeftSide{background: var(--GreenActiveColor); border-radius: 5px; position: relative;}
+.DashboardsTabs.LeftSide .TabButton{border-bottom: solid 1px var(--PrimaryColor);}
+/* Tab CSS End */
 
+
+.profile-card .NotificationToggle{padding: 15px 0; font-weight: 600;}
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.field-content {
+  flex: 1;
+}
+
+.field-content label {
+  display: block;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.field-content p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.field-content input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+}
+
+.field-btn {
+  min-width: 80px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+
+.profile-image-container {
+  align-items: self-start;
+  margin-bottom: 30px;
+  border-bottom: solid 1px var(--GreyBorders);
+  padding-bottom: 20px;
+}
+
+
+.upload-image-btn {
+    margin-top: 12px;
+    background: transparent;
+    color: var(--TextcolorDark);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 108px;
+    justify-content: center;
+}
+
+
+.profile-placeholder { width: 108px; height: 108px; border-radius: 50%; background: var(--SecondayColor); color: var(--TextcolorLight); font-size: 48px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+
+.profile-image {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: solid 5px var(--PrimaryColor);
+}
+
+.field-info label{width: 100%; display: block;}
+.field-info{width: 100%;}
+.field-info input{border: none;}
+.field-info p{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); cursor: pointer; width: 100%;}
+.field-info input{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); font-family: "SourceSans", sans-serif; background: transparent; width: 100%;}
+.field-info input:focus-visible{outline: 0px;}
+
+
+/* ///////////////////////////////////////////// */
+
+.notification-status {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.toggle-btn {
+  width: 90px;
+  height: 40px;
+  border: none;
+  border-radius: 30px;
+  background: #d1d5db;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.toggle-btn.active {
+  background: var(--NeonGreen);
+}
+
+.toggle-circle{width: 30px; height: 30px; background: #fff; border-radius: 50%; position: absolute; top: 5px; transition: 0.3s; left: 5px;}
+.toggle-btn.active .toggle-circle { left: 48px; }
+.toggle-text{color: var(--TextcolorLight); padding-left: 5px;}
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -74,7 +202,6 @@ button{cursor: pointer;}
 
 /* Mobile */
 @media (max-width: 768px) {
-
   .modalBox { max-width: 100%; }
   .modalHeader { padding: 16px 20px; font-size: 18px; }
   .modalBody { padding: 20px; }

@@ -20,8 +20,11 @@
      --TextcolorGrey: #A5AEBF;
      --TextcolorLight: #ffff;
      --BorderColor: #b4b2bb;
-     --GreenButtonHover: #3691832f;
+     --GreenButtonHover: #DAEBE8;
+     --GreenActiveColor: #D0E3D6;
      --ColorBlue: #3b82f6;
+     --GreyBorders: #DEDEDE;
+     --NeonGreen: #67A401;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }

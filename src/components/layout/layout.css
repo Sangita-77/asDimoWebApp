@@ -14,12 +14,13 @@
 /* Start Sidebar End */
 
 /* Navbar Start */
-.navbar { height: 60px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } 
+.navbar { height: 85px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } 
 .menu-toggle { font-size: 20px; cursor: pointer; }
 .navbar .ProfilePreview{align-items: center; gap: 10px;}
-.navbar .ProfilePreview .ProfileIMAGE img{width: 35px; height: 35px; object-fit: cover; background: var(--PrimaryColor); border-radius: 100%; padding: 4px;}
+.navbar .ProfilePreview .ProfileIMAGE img{width: 35px; height: 35px; object-fit: cover; background: var(--PrimaryColor); border-radius: 100%;}
 .navbar .ProfileName{font-weight: 500; color: var(--TextcolorDark); font-size: 16px; text-align: right;}
 .navbar .ProfileName p{font-weight: 400; color: var(--TextcolorGrey); font-size: 15px;}
+.ProfileIMAGE { width: 45px; height: 45px; border-radius: 50%; background: var(--PrimaryColor); color: var(--TextcolorDark); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; text-transform: uppercase; cursor: pointer; overflow: hidden; }
 /* Navbar End*/
 
 .dashboard {display: flex; min-height: 100vh; background: #f4f6f9;}
@@ -28,7 +29,7 @@
 /* Desktop spacing (when sidebar is visible) */
 .main.desktop { margin-left: 300px;} 
 /* Content padding */
-.content {padding: 20px;}
+.content {padding: 30px 40px;}
 
 .sidebar-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: none; background: #fff; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; } 
 
@@ -44,7 +45,7 @@
 .NotificationList { max-height: 350px; overflow-y: auto; }
 .NotificationItem {border-bottom:solid 1px var(--PrimaryColor); display: flex; gap: 12px; padding: 14px 20px; cursor: pointer; transition: 0.25s ease;}
 .NotificationItem.unread .NotificationDot { width: 10px; height: 10px; background: var(--ColorBlue); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
-.NotificationItem.unread{background: var(--GreenButtonHover);}
+.NotificationItem.unread{background: var(--GreenActiveColor);}
 .NotificationItem h5 { margin: 0; font-size: 14px; font-weight: 600; color: var(--TextcolorDark); }
 .NotificationItem span { font-size: 12px; color: var(--TextcolorDark); }
 .NotificationFooter { text-align: center; padding: 14px; border-top: 1px solid var(--GreenButtonHover); font-size: 14px; font-weight: 500; color: var(--SecondayColor); cursor: pointer; }
@@ -60,19 +61,3 @@
 }
 
 
-
-.ProfileIMAGE {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: var(--PrimaryColor);
-  color: var(--TextcolorDark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-  overflow: hidden;
-}
