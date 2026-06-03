@@ -61,3 +61,18 @@
 
 
 
+.ProfileIMAGE {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--PrimaryColor);
+  color: var(--TextcolorDark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+}

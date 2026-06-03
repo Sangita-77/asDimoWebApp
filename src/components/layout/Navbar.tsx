@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./layout.css";
-import user from "../../assets/Images/user.png";
+// import user from "../../assets/Images/user.png";
 import { BellIcon } from "lucide-animated";
+import { authService } from "../../services/authService";
+import { tokenManager } from "../../services/tokenManager";
+import { filebasename } from "../../api/config";
 
 interface NavbarProps {
   toggle: () => void;
@@ -10,6 +13,28 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const [profileName, setProfileName] = useState("Admin");
+  const [profileRole, setProfileRole] = useState("Admin");
+  const profileInitial = profileName?.charAt(0)?.toUpperCase() || "A";
+  const [profileImg, setProfileImg] = useState("");
+  const profileImageUrl = profileImg
+  ? `${filebasename}${profileImg.replace("/uploads", "")}`
+  : "";
+
+  const getRoleName = (flag: number) => {
+    switch (flag) {
+      case 0:
+        return "Super Admin";
+      case 1:
+        return "Organization Admin";
+      case 6:
+        return "Zonal Admin";
+      case 7:
+        return "Admin";
+      default:
+        return "Admin";
+    }
+  };
 
 
 // Demo Notifications
@@ -38,13 +63,60 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const getDisplayName = (profile: any) => {
+      const user = profile?.user || profile?.profile || profile;
+
+      return (
+        user?.name ||
+        user?.Name ||
+        user?.fullName ||
+        user?.fullname ||
+        user?.username ||
+        user?.firstName ||
+        user?.email ||
+        "Admin"
+      );
+    };
+
+    const loadProfile = async () => {
+      const token = tokenManager.getAccessToken();
+
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await authService.getProfile(token);
+
+        const userData = response?.data?.user;
+
+        // console.log("Profile API response ----- :", userData.profileImg);
+
+        setProfileName(getDisplayName(response.data));
+        setProfileRole(getRoleName(userData?.flag));
+        setProfileImg(userData?.profileImg || "");
+      } catch (error) {
+        const userData = tokenManager.getUser();
+
+        setProfileName(getDisplayName(userData));
+        setProfileRole(getRoleName(userData?.flag));
+        setProfileImg(userData?.profileImg || "");
+
+        console.error("Profile API failed:", error);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   return (
     <div className="navbar">
       <span className="menu-toggle" onClick={toggle}>
         ☰
       </span>
 
-      <h3>Super Admin</h3>
+      <h3>{profileRole}</h3>
 
       <div className="d-flex ProfilePreview">
 
@@ -89,13 +161,18 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
         
 
         <div className="ProfileName">
-          Mr. John
-          <p>Admin</p>
+          {profileName}
+          <p>{profileRole}</p>
         </div>
 
-        <div className="ProfileIMAGE">
-          <img src={user} alt="user" />
-        </div>
+      <div className="ProfileIMAGE">
+        {profileImg ? (
+          // <img src={profileImg} alt={profileName} />
+          <img src={profileImageUrl} alt={profileName} />
+        ) : (
+          profileInitial
+        )}
+      </div>
       </div>
     </div>
   );
