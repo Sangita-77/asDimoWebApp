@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
   const profileInitial = profileName?.charAt(0)?.toUpperCase() || "A";
   const [profileImg, setProfileImg] = useState("");
   const profileImageUrl = profileImg
-  ? `${filebasename}${profileImg.replace("/uploads", "")}`
+  ? `${filebasename}${profileImg}`
   : "";
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loadingNotifications, setLoadingNotifications] = useState(false);
