@@ -153,7 +153,7 @@ button{cursor: pointer;}
   border: solid 5px var(--PrimaryColor);
 }
 
-.field-info label{width: 100%; display: block;}
+.field-info label{width: 100%; display: block; font-weight: 600; font-size: 18px; color: var(--TextcolorDark);}
 .field-info{width: 100%;}
 .field-info input{border: none;}
 .field-info p{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); cursor: pointer; width: 100%;}
@@ -163,32 +163,8 @@ button{cursor: pointer;}
 
 /* ///////////////////////////////////////////// */
 
-.notification-status {
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-}
-
-.toggle-btn {
-  width: 90px;
-  height: 40px;
-  border: none;
-  border-radius: 30px;
-  background: #d1d5db;
-  position: relative;
-  cursor: pointer;
-  transition: 0.3s;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-}
-
-.toggle-btn.active {
-  background: var(--NeonGreen);
-}
-
+.toggle-btn { width: 90px; height: 40px; border: none; border-radius: 30px; background: #d1d5db; position: relative; cursor: pointer; transition: 0.3s; display: flex; align-items: center; padding: 0 8px; } 
+.toggle-btn.active { background: var(--NeonGreen); } 
 .toggle-circle{width: 30px; height: 30px; background: #fff; border-radius: 50%; position: absolute; top: 5px; transition: 0.3s; left: 5px;}
 .toggle-btn.active .toggle-circle { left: 48px; }
 .toggle-text{color: var(--TextcolorLight); padding-left: 5px;}

@@ -6,7 +6,7 @@
 .sidebar ul { list-style: none; padding: 0; margin: 0; } 
 .sidebar li { margin-bottom: 10px; padding: 0 15px; cursor: pointer;}
 .sidebar a { display: flex; align-items: center; gap: 12px; padding: 15px; border-radius: 10px; color: var(--TextcolorLight); text-decoration: none; font-size: 18px; font-weight: 500; transition: all 0.25s ease; } 
-.sidebar a:hover { background: var(--GreenButtonHover); transform: translateX(6px); }
+.sidebar a:hover { background: var(--TranshparentGreen); transform: translateX(6px); }
 .sidebar a.active { background: var(--SecondayColor); color: #fff; font-weight: 600; position: relative;  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
 .sidebar a.active::before { content: ""; position: absolute; left: -33px; top: 50%; transform: translateY(-50%); width: 6px; height: 70%; background: var(--SecondayColor); border-radius: 10px; }
 .sidebar-close { position: absolute; top: 15px; right: 15px; width: 38px; height: 38px; border: none; border-radius: 50%; cursor: pointer; background: rgba(255, 255, 255, 0.15); color: #fff; font-size: 18px; transition: 0.3s; }
@@ -14,7 +14,7 @@
 /* Start Sidebar End */
 
 /* Navbar Start */
-.navbar { height: 85px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } 
+.navbar { height: 85px; background: var(--TextcolorLight); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } 
 .menu-toggle { font-size: 20px; cursor: pointer; }
 .navbar .ProfilePreview{align-items: center; gap: 10px;}
 .navbar .ProfilePreview .ProfileIMAGE img{width: 35px; height: 35px; object-fit: cover; background: var(--PrimaryColor); border-radius: 100%;}

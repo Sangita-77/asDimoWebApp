@@ -53,11 +53,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
       {showProfileImage && (
         <div className="profile-image-container">
         {profileImage ? (
-        <img
-            src={profileImage}
-            alt="Profile"
-            className="profile-image"
-        />
+        <img src={profileImage} alt="Profile" className="profile-image" />
         ) : (
         <div className="profile-placeholder">
             {value.charAt(0).toUpperCase()}
@@ -66,12 +62,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
 
           <label className="upload-image-btn">
             <img src={UploadCameraIcon}/> Upload
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleImageUpload}
-            />
+            <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
           </label>
         </div>
       )}
@@ -81,30 +72,16 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
           <label>{label}</label>
 
         {isEditing && !isPassword ? (
-        <input
-            type="text"
-            value={fieldValue}
-            onChange={(e) => setFieldValue(e.target.value)}
-        />
+        <input type="text" value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} />
         ) : (
         <p>{fieldValue}</p>
         )}
         </div>
 
         {isPassword ? (
-        <button
-            className="field-btn"
-            onClick={onResetPassword}
-        >
-            Reset Password
-        </button>
+        <button className="field-btn" onClick={onResetPassword} > Reset Password </button>
         ) : editable ? (
-        <button
-            className="field-btn"
-            onClick={handleAction}
-        >
-            {isEditing ? "Save" : "Edit"}
-        </button>
+        <button className="field-btn" onClick={handleAction} > {isEditing ? "Save" : "Edit"} </button>
         ) : null}
       </div>
     </>
