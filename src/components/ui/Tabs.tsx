@@ -21,16 +21,18 @@ const Tabs: React.FC<TabsProps> = ({
     <div className={`DashboardsTabs ${variant}`}>
       <div className="tabs-header">
         {tabs.map((tab, index) => (
-          <div className="TabButton">
-              <button
-                key={index}
-                className={`tab-btn 
-                  ${activeTab === index ? "active" : ""} 
-                  ${variant}`}
-                onClick={() => setActiveTab(index)}
-              >
-                {tab.label}
-              </button>
+          <div
+            key={tab.label || index}
+            className="TabButton"
+          >
+            <button
+              className={`tab-btn 
+                ${activeTab === index ? "active" : ""} 
+                ${variant}`}
+              onClick={() => setActiveTab(index)}
+            >
+              {tab.label}
+            </button>
           </div>
         ))}
       </div>

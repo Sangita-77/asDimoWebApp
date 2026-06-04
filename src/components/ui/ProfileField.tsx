@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UIstyles.css";
 import UploadCameraIcon from "../../assets/Images/UploadCameraIcon.svg";
 
@@ -10,6 +10,7 @@ interface ProfileFieldProps {
   editable?: boolean;
   isPassword?: boolean;
   onResetPassword?: () => void;
+  profileImage?: string;
 }
 
 const ProfileField: React.FC<ProfileFieldProps> = ({
@@ -20,13 +21,18 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
   editable = true,
   isPassword = false,
   onResetPassword,
+  profileImage,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fieldValue, setFieldValue] = useState(value);
 
-  const [profileImage, setProfileImage] = useState(
-    ""
-  );
+  // Local uploaded image preview
+  const [uploadedImage, setUploadedImage] = useState("");
+
+  // Update field value whenever API data changes
+  useEffect(() => {
+    setFieldValue(value);
+  }, [value]);
 
   const handleAction = () => {
     if (isEditing) {
@@ -43,29 +49,33 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
 
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+      setUploadedImage(imageUrl);
     }
   };
 
+  // Show uploaded image first, otherwise API image
+  const imageSrc = uploadedImage || profileImage;
 
   return (
     <>
       {showProfileImage && (
         <div className="profile-image-container">
-        {profileImage ? (
-        <img
-            src={profileImage}
-            alt="Profile"
-            className="profile-image"
-        />
-        ) : (
-        <div className="profile-placeholder">
-            {value.charAt(0).toUpperCase()}
-        </div>
-        )}
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt="Profile"
+              className="profile-image"
+            />
+          ) : (
+            <div className="profile-placeholder">
+              {value?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+          )}
 
           <label className="upload-image-btn">
-            <img src={UploadCameraIcon}/> Upload
+            <img src={UploadCameraIcon} alt="Upload" />
+            Upload
+
             <input
               type="file"
               accept="image/*"
@@ -80,31 +90,33 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
         <div className="field-info">
           <label>{label}</label>
 
-        {isEditing && !isPassword ? (
-        <input
-            type="text"
-            value={fieldValue}
-            onChange={(e) => setFieldValue(e.target.value)}
-        />
-        ) : (
-        <p>{fieldValue}</p>
-        )}
+          {isEditing && !isPassword ? (
+            <input
+              type="text"
+              value={fieldValue}
+              onChange={(e) =>
+                setFieldValue(e.target.value)
+              }
+            />
+          ) : (
+            <p>{fieldValue || "-"}</p>
+          )}
         </div>
 
         {isPassword ? (
-        <button
+          <button
             className="field-btn"
             onClick={onResetPassword}
-        >
+          >
             Reset Password
-        </button>
+          </button>
         ) : editable ? (
-        <button
+          <button
             className="field-btn"
             onClick={handleAction}
-        >
+          >
             {isEditing ? "Save" : "Edit"}
-        </button>
+          </button>
         ) : null}
       </div>
     </>
