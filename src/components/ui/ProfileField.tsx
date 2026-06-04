@@ -11,6 +11,7 @@ interface ProfileFieldProps {
   isPassword?: boolean;
   onResetPassword?: () => void;
   profileImage?: string;
+  onImageChange?: (file: File) => void;
 }
 
 const ProfileField: React.FC<ProfileFieldProps> = ({
@@ -22,6 +23,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
   isPassword = false,
   onResetPassword,
   profileImage,
+  onImageChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fieldValue, setFieldValue] = useState(value);
@@ -42,6 +44,17 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
     setIsEditing(!isEditing);
   };
 
+  // const handleImageUpload = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const file = e.target.files?.[0];
+
+  //   if (file) {
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setUploadedImage(imageUrl);
+  //   }
+  // };
+
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -49,7 +62,10 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
 
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+
       setUploadedImage(imageUrl);
+
+      onImageChange?.(file);
     }
   };
 

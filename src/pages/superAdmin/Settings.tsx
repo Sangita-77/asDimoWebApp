@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Heading1 } from "../../components/ui/HeadingPara";
 import Tabs from "../../components/ui/Tabs";
 import ProfileUpdate from "../../components/modules/ProfileUpdate";
+import Loader from "../../components/ui/Loaders";
 import { authService } from "../../services/authService";
-
-
 
 const CustomerDocuments: React.FC = () => {
   const [profileData, setProfileData] = useState<any>(null);
@@ -13,7 +12,6 @@ const CustomerDocuments: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -38,7 +36,7 @@ const CustomerDocuments: React.FC = () => {
     {
       label: "General",
       content: loading ? (
-        <p>Loading...</p>
+        <Loader />
       ) : (
         <ProfileUpdate profileData={profileData} />
       ),
@@ -49,7 +47,6 @@ const CustomerDocuments: React.FC = () => {
     },
   ];
 
-
   return (
     <div className="CustomerDocuments">
       <Heading1 text="Settings" />
@@ -57,4 +54,5 @@ const CustomerDocuments: React.FC = () => {
     </div>
   );
 };
-export default CustomerDocuments; 
+
+export default CustomerDocuments;

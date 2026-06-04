@@ -68,9 +68,7 @@ export const authService = {
   /**
    * Refresh access token using refresh token
    */
-  async refreshToken(
-    refreshToken: string
-  ): Promise<RefreshTokenResponse> {
+  async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
     const response = await fetch(`${BASE_URL}/auth/refresh-token`, {
       method: "POST",
       headers: {
@@ -146,6 +144,20 @@ export const authService = {
     const response = await axios.put(
       `${BASE_URL}/notifications/read/${id}`,
       {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  },
+
+  async updateProfile(token: string,userId: string,payload: FormData) {
+    const response = await axios.put(
+      `${BASE_URL}/auth/updateProfile/${userId}`,
+      payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
