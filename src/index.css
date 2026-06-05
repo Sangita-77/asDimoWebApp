@@ -26,9 +26,11 @@
      --GreyBorders: #DEDEDE;
      --NeonGreen: #67A401;
      --TranshparentGreen: #05413834;
+     --lightBackground: #F4F8FF;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }
 /* Global CSS Start */
 .d-flex{display: flex;}
+button:focus-visible{outline: solid 0px;}
 /* Global CSS End */

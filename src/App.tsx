@@ -8,9 +8,12 @@ import { routes } from "./routes/AppRoutes";
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
+import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
+
 import ZonalAdminIndex from "./pages/zonalAdmin";
+
 import OrganizationAdminIndex from "./pages/organization";
 
 function App() {
@@ -29,6 +32,7 @@ function App() {
           }
         >
           <Route index element={<SuperAdminDashboard />} />
+          <Route path="zonal-admin" element={<SupZonaladmin />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 

@@ -40,16 +40,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const menuItems = [
-    {
-      name: "Dashboard",
-      path: routes.SUPERADMIN,
-      icon: DashBoardIcon,
-    },
-    {
-      name: "Settings",
-      path: routes.SUPERADMINSETTINGS,
-      icon: SettingsIcon,
-    },
+    { name: "Dashboard", path: routes.SUPERADMIN, icon: DashBoardIcon, },
+    { name: "Zonal Admin", path: routes.SUP_ZONALADMIN, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
   ];
 
   return (

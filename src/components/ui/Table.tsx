@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon} from 'lucide-animated';
 import Buttons from "../ui/Buttons";
 
-// import React, { useState } from "react";
 interface TableColumn {
   key: string;
   title: string;
@@ -10,15 +9,6 @@ interface TableColumn {
   render?: (value: any, row: any, rowIndex: number) => React.ReactNode;
 }
 
-// interface TableProps {
-//   columns: TableColumn[];
-//   rows: Record<string, any>[];
-//   className?: string;
-//   selectable?: boolean;
-//   pagination?: boolean;
-//   rowsPerPageOptions?: number[];
-//   onBulkDelete?: boolean;
-// }
 
 interface TableProps {
   columns: TableColumn[];
@@ -45,16 +35,6 @@ interface TableProps {
   ) => void;
 }
 
-// const Table: React.FC<TableProps> = ({
-//   columns,
-//   rows,
-//   className = "",
-//   selectable = false,
-//   pagination = true,
-//   rowsPerPageOptions = [10, 20, 50, 200],
-//   onBulkDelete = false,
-// }) => {
-
 const Table: React.FC<TableProps> = ({
   columns,
   rows,
@@ -73,21 +53,6 @@ const Table: React.FC<TableProps> = ({
   onRowsPerPageChange,
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
-  // const [currentPage, onPageChange?.] = useState(1);
-  // const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-
-  // Pagination Logic
-  // const totalPages = Math.ceil(rows.length / rowsPerPage);
-
-  // const paginatedRows = useMemo(() => {
-  //   if (!pagination) return rows;
-
-  //   const start = (currentPage - 1) * rowsPerPage;
-  //   const end = start + rowsPerPage;
-
-  //   return rows.slice(start, end);
-  // }, [rows, currentPage, rowsPerPage, pagination]);
 
   const paginatedRows = useMemo(() => {
     return rows;
@@ -137,15 +102,6 @@ const Table: React.FC<TableProps> = ({
     }
   };
 
-    // const handleBulkDelete = () => {
-    // console.log(
-    //     "Selected Rows:",
-    //     selectedRows.map((index) => rows[index])
-    // );
-
-    // setSelectedRows([]);
-    // };
-
     const handleBulkDelete = () => {
       const selectedData =
         selectedRows.map(
@@ -171,15 +127,20 @@ const Table: React.FC<TableProps> = ({
           icon={<DeleteIcon size={25}/>}
           onClick={handleBulkDelete}
         />
-          {/* <button
-            className="bulk-delete-btn"
-            onClick={handleBulkDelete}
-          >
-            <DeleteIcon/> Delete Selected ({selectedRows.length})
-          </button> */}
         </div>
       )}
-
+      {selectable && (
+        <div className="mobile-select-all">
+          <label>
+            <input
+              type="checkbox"
+              checked={isAllSelected}
+              onChange={handleSelectAll}
+            />
+            <span>Select All</span>
+          </label>
+        </div>
+      )}
     <div className="GlobalTable gradientBox">
       <table className="custom-table ">
         <thead>
@@ -233,17 +194,20 @@ const Table: React.FC<TableProps> = ({
                     </td>
                   )}
 
-                  {columns.map((col) => (
-                    <td key={col.key}>
-                      {col.render
-                        ? col.render(
-                            row[col.key],
-                            row,
-                            actualIndex
-                          )
-                        : row[col.key]}
-                    </td>
-                  ))}
+                {columns.map((col) => (
+                  <td
+                    key={col.key}
+                    data-label={col.title}
+                  >
+                    {col.render
+                      ? col.render(
+                          row[col.key],
+                          row,
+                          actualIndex
+                        )
+                      : row[col.key]}
+                  </td>
+                ))}
                 </tr>
               );
             })
