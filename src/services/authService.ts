@@ -40,6 +40,26 @@ interface ProfileResponse {
   data: any;
 }
 
+interface UserListResponse {
+  success: boolean;
+  count: number;
+  data: Array<{
+    _id: string;
+    userId: number;
+    name: string;
+    email: string;
+    flag: number;
+    status: number;
+    city: string | null;
+    state: string | null;
+    pincode: string | null;
+    address: string | null;
+    profileImg: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }>;
+}
+
 export const authService = {
   /**
    * Login with email and password
@@ -161,6 +181,22 @@ export const authService = {
       {
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  },
+
+  async getUsersByFlag(token: string,flag: number): Promise<UserListResponse> {
+    
+    const response = await axios.post(
+      `${BASE_URL}/auth/getAllUsers`,
+      { flag },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );

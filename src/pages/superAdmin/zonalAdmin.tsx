@@ -1,54 +1,93 @@
-import React, { useState } from "react";
-import Table from "../../components/ui/Table"; 
+import React, { useEffect, useState } from "react";
+import Table from "../../components/ui/Table";
 import DashboardButtons from "../../components/ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
+import Loader from "../../components/ui/Loaders";
+import { authService } from "../../services/authService";
+import { getStoredUser } from "../../middleware/AuthMiddleware";
 
-const supZonaladmin: React.FC = () => {
+const SupZonaladmin: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-const columns = [
-  { key: "name", title: "Name" },
-  { key: "admin", title: "Admin" },
-  { key: "organizations", title: "Organizations" },
-  { key: "location", title: "Location" },
-  { key: "subscription", title: "Subscription" },
-  { key: "pe", title: "PE" },
-  { key: "actions", title: "Actions",
-    render: (_value: any, row: any) => (
-      <DashboardButtons
-       text="View Details"
-       icon={<img src={IButton} alt="view" className="btn-icon" />}
-       variant="trashparent"
-       onClick={() => handleViewDetails(row)}
-      />
-    ),
-  },
-];
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
 
-  const rows = [
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-    { name: "Swati Bazal", admin: "2", organizations: "5", location: "Mumbai, India", subscription: "6", pe: "5",},
-  ];
+      const user = getStoredUser();
+      const accessToken = localStorage.getItem("token");
+
+      console.log("Current User:", user);
+      // return false;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const response = await authService.getUsersByFlag(accessToken,6);
+
+      const formattedRows = response.data.map((item: any) => ({
+        id: item._id,
+        userId: item.userId,
+        name: item.name,
+        admin: "-",
+        organizations: "-",
+        location:
+          [item.city, item.state].filter(Boolean).join(", ") || "-",
+        subscription: "-",
+        pe: "-",
+        originalData: item,
+      }));
+
+      setRows(formattedRows);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setRows([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleDeleteSelected = (selectedRows: any[]) => {
     console.log("Selected Rows:", selectedRows);
   };
 
   const handleViewDetails = (row: any) => {
-  console.log("View Details:", row);
+    console.log("View Details:", row.originalData);
 
-  // Example navigation
-  // navigate(`/zonal-admin/viewdetails`);
-};
+    // navigate(`/zonal-admin/viewdetails/${row.originalData._id}`);
+  };
+
+  const columns = [
+    { key: "name", title: "Name" },
+    { key: "admin", title: "Admin" },
+    { key: "organizations", title: "Organizations" },
+    { key: "location", title: "Location" },
+    { key: "subscription", title: "Subscription" },
+    { key: "pe", title: "PE" },
+    {
+      key: "actions",
+      title: "Actions",
+      render: (_value: any, row: any) => (
+        <DashboardButtons
+          text="View Details"
+          icon={<img src={IButton} alt="view" className="btn-icon" />}
+          variant="trashparent"
+          onClick={() => handleViewDetails(row)}
+        />
+      ),
+    },
+  ];
+
+  if (loading) {
+    return <Loader fullScreen />;
+  }
 
   return (
     <div>
@@ -60,7 +99,7 @@ const columns = [
         onDeleteSelected={handleDeleteSelected}
         pagination={true}
         currentPage={currentPage}
-        totalPages={5}
+        totalPages={Math.ceil(rows.length / rowsPerPage) || 1}
         rowsPerPage={rowsPerPage}
         onPageChange={setCurrentPage}
         onRowsPerPageChange={setRowsPerPage}
@@ -69,4 +108,4 @@ const columns = [
   );
 };
 
-export default supZonaladmin;
+export default SupZonaladmin;
