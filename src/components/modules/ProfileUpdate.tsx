@@ -73,6 +73,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       }));
 
       console.log(`${field} updated`);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -105,6 +106,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       }));
 
       console.log("Profile image updated");
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
