@@ -109,9 +109,7 @@ button{cursor: pointer;}
 .custom-table .GlobalButton{display: grid; justify-content: center;}
 .custom-table .GlobalButton button{margin: 0px;}
 .custom-table tbody tr { transition: all 0.3s ease; }
-.custom-table tbody tr:hover {
-  background: #f8fafc;
-}
+.custom-table tbody tr:hover { background: var(--GreenButtonHover); }
 
 /* Checkbox */
 .check-button {

@@ -231,6 +231,26 @@ const Table: React.FC<TableProps> = ({
       {/* Bottom Pagination */}
       {pagination && totalPages > 1 && (
         <div className="TablepaginationWrap">
+          {/* Rows Per Page */}
+          <div className="rows-per-page">
+            <span>Rows per page:</span>
+
+            <select
+              className="custom-select"
+              value={rowsPerPage}
+              onChange={(e) => {
+                onRowsPerPageChange?.(Number(e.target.value));
+                onPageChange?.(1);
+              }}
+            >
+              {rowsPerPageOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            out of 200
+          </div>
             <div className="table-pagination">
               <div className="table-pagination-wrap">
                 {/* Prev Button */}
@@ -320,25 +340,6 @@ const Table: React.FC<TableProps> = ({
                 </button>
 
               </div>
-          </div>
-          {/* Rows Per Page */}
-          <div className="rows-per-page">
-            <span>Rows per page:</span>
-
-            <select
-              className="custom-select"
-              value={rowsPerPage}
-              onChange={(e) => {
-                onRowsPerPageChange?.(Number(e.target.value));
-                onPageChange?.(1);
-              }}
-            >
-              {rowsPerPageOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
       )}
