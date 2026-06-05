@@ -77,11 +77,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
       {showProfileImage && (
         <div className="profile-image-container">
           {imageSrc ? (
-            <img
-              src={imageSrc}
-              alt="Profile"
-              className="profile-image"
-            />
+            <img src={imageSrc} alt="Profile" className="profile-image" />
           ) : (
             <div className="profile-placeholder">
               {value?.charAt(0)?.toUpperCase() || "U"}
@@ -91,13 +87,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
           <label className="upload-image-btn">
             <img src={UploadCameraIcon} alt="Upload" />
             Upload
-
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleImageUpload}
-            />
+            <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
           </label>
         </div>
       )}
@@ -107,13 +97,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
           <label>{label}</label>
 
           {isEditing && !isPassword ? (
-            <input
-              type="text"
-              value={fieldValue}
-              onChange={(e) =>
-                setFieldValue(e.target.value)
-              }
-            />
+            <input type="text" value={fieldValue} onChange={(e) => setFieldValue(e.target.value) } />
           ) : (
             <p>{fieldValue || "-"}</p>
           )}
