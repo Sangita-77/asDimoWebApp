@@ -8,6 +8,7 @@ import { routes } from "./routes/AppRoutes";
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
+// import SupZonaladmin from "./components/modules/zonalAdminList";
 import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 

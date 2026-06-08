@@ -29,7 +29,7 @@
 /* Desktop spacing (when sidebar is visible) */
 .main.desktop { margin-left: 300px;} 
 /* Content padding */
-.content {padding: 30px 40px; background: var(--TextcolorLight);}
+.content {padding: 30px 40px; background: var(--TextcolorLight); height: 100%;}
 
 .sidebar-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: none; background: #fff; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; } 
 
@@ -42,7 +42,7 @@
 .NotificationDropdown { position: absolute; top: 65px; right: 0; width: 340px; border-radius: 16px; overflow: hidden; z-index: 1000; background: var(--GreenButtonHover);}
 .NotificationHeader { padding: 16px 20px; border-bottom: 1px solid var(--GreenButtonHover); }
 .NotificationHeader h4 { margin: 0; font-size: 16px; font-weight: 600; }
-.NotificationList { max-height: 350px; overflow-y: auto; }
+.NotificationList { max-height: 350px; overflow-y: auto; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--PrimaryColor) var(--GreenButtonHover);}
 .NotificationItem {border-bottom:solid 1px var(--PrimaryColor); display: flex; gap: 12px; padding: 14px 20px; cursor: pointer; transition: 0.25s ease;}
 .NotificationItem.unread .NotificationDot { width: 10px; height: 10px; background: var(--ColorBlue); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
 .NotificationItem.unread{background: var(--GreenActiveColor);}

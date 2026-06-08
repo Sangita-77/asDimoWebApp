@@ -8,7 +8,7 @@
 /* loader End*/
 
 /* HeadingPara Start */
-h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px;}
+h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
 /* HeadingPara End */
 
 
@@ -94,12 +94,14 @@ button{cursor: pointer;}
 /* Table Start */
 /* Table Wrapper */
 .custom-table-wrapper { width: 100%; }
+.table-head-content {position: relative;}
+.table-head-content .filter-btn{position: absolute; right: -9px; border: none; background: transparent; top: 2px;}
 /* Table Container */
-.GlobalTable { width: 100%; overflow-x: auto; border-radius: 12px; }
-.GlobalTable .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; border: solid 1px var(--GreyBorders);}
+.GlobalTable { width: 100%; overflow-x: auto; border: solid 1px var(--GreyBorders); border-radius: 15px;}
+.GlobalTable .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; } 
 /* Header */
 .custom-table thead{background: var(--lightBackground);}
-.custom-table th { padding: 16px 10px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap; color: #374151; }
+.custom-table th { padding: 16px 15px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap; color: #374151; }
 .custom-table thead tr th:not(:last-child){border-right: 1px solid var(--GreyBorders);}
 .custom-table thead tr th:not(:nth-child(2)){text-align: center;}
 /* Rows */
@@ -133,6 +135,16 @@ button{cursor: pointer;}
 /* Hidden on desktop */
 .mobile-select-all { display: none; }
 /* Table End */
+
+/* Search Start */
+.search-sort-container { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; position: relative; margin-top: 20px;} 
+.search-input { width: 525px; height: 45px; padding: 0 15px 0 44px; border: 1px solid var(--GreyBorders); border-radius: 5px; background: var(--TextcolorLight); font-size: 14px; transition: all 0.2s ease; outline: none; }
+.search-input:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+.search-icon { position: absolute; left: 14px; top: 57%; transform: translateY(-50%); color: var(--TextcolorDark); pointer-events: none; } 
+.sort-select { height: 45px; min-width: 180px; padding: 0 40px 0 14px; border: 1px solid var(--GreyBorders); border-radius: 5px; font-size: 14px; cursor: pointer; outline: none; transition: all 0.2s ease; }
+.sort-select:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+/* Search End */
+
 
 
 /* Responsive */

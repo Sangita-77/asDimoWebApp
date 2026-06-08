@@ -1,13 +1,20 @@
 import React, { useMemo, useState } from "react";
-import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon} from 'lucide-animated';
+import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon, ArrowDownIcon } from 'lucide-animated';
 import Buttons from "../ui/Buttons";
 
 interface TableColumn {
   key: string;
   title: string;
   width?: string;
-  render?: (value: any, row: any, rowIndex: number) => React.ReactNode;
-}
+  render?: (
+    value: any,
+    row: any,
+    rowIndex: number
+  ) => React.ReactNode;
+
+  showFilter?: boolean;
+  onFilterClick?: (key: string) => void;
+} 
 
 
 interface TableProps {
@@ -163,7 +170,19 @@ const Table: React.FC<TableProps> = ({
                 key={col.key}
                 style={{ width: col.width || "auto" }}
               >
-                {col.title}
+                <div className="table-head-content">
+                  <span>{col.title}</span>
+
+                  {col.showFilter && (
+                    <button
+                      type="button"
+                      className="filter-btn"
+                      onClick={() => col.onFilterClick?.(col.key)}
+                    >
+                      <ArrowDownIcon size={14} />
+                    </button>
+                  )}
+                </div>
               </th>
             ))}
           </tr>
