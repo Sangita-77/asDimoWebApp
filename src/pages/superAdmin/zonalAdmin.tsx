@@ -18,7 +18,7 @@ const columns = [
     render: (_value: any, row: any) => (
       <DashboardButtons
        text="View Details"
-       icon={<img src={IButton} alt="view" className="btn-icon" />}
+       icon={<img src={IButton } alt="view" className="btn-icon" />}
        variant="trashparent"
        onClick={() => handleViewDetails(row)}
       />
