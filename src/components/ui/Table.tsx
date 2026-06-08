@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon, ArrowDownIcon } from 'lucide-animated';
-import Buttons from "../ui/Buttons";
+// import Buttons from "../ui/Buttons";
 
 interface TableColumn {
   key: string;
@@ -126,15 +126,27 @@ const Table: React.FC<TableProps> = ({
     <div className={`custom-table-wrapper ${className}`}>
       {/* Top Actions */}
       {selectable && onBulkDelete && selectedRows.length > 0 && (
+        // <div className="table-top-actions">
+        //   <Buttons
+        //   textsize="md"
+        //   text={`(${selectedRows.length})`}
+        //   variant="red"
+        //   icon={<DeleteIcon size={25}/>}
+        //   onClick={handleBulkDelete}
+        // />
+        // </div>
         <div className="table-top-actions">
-          <Buttons
-          textsize="md"
-          text={`Delete Selected (${selectedRows.length})`}
-          variant="red"
-          icon={<DeleteIcon size={25}/>}
-          onClick={handleBulkDelete}
-        />
-        </div>
+          <button
+            className="bulk-delete-btn"
+            onClick={handleBulkDelete}
+            title={`Delete ${selectedRows.length} selected items`}
+          >
+            <DeleteIcon size={20} />
+            <span className="delete-badge">
+              {selectedRows.length}
+            </span>
+          </button>
+        </div> 
       )}
       {selectable && (
         <div className="mobile-select-all">
