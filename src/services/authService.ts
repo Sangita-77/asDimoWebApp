@@ -204,4 +204,20 @@ export const authService = {
     return response.data;
   },
 
+  deleteUsers: async (token: string, userIds: string[]) => {
+    const response = await axios.post(
+      `${BASE_URL}/auth/delete`,
+      {
+        userIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };
