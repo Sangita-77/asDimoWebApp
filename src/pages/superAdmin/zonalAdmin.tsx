@@ -4,7 +4,7 @@ import DashboardButtons from "../../components/ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
 import Loader from "../../components/ui/Loaders";
 import { authService } from "../../services/authService";
-import { getStoredUser } from "../../middleware/AuthMiddleware";
+// import { getStoredUser } from "../../middleware/AuthMiddleware";
 import ModalBox from "../../components/ui/ModalBox";
 
 const SupZonaladmin: React.FC = () => {
@@ -20,10 +20,10 @@ const SupZonaladmin: React.FC = () => {
     try {
       setLoading(true);
 
-      const user = getStoredUser();
+      // const user = getStoredUser();
       const accessToken = localStorage.getItem("token");
 
-      console.log("Current User:", user);
+      // console.log("Current User:", user);
 
       if (!accessToken) {
         throw new Error("No access token found");
@@ -57,7 +57,6 @@ const SupZonaladmin: React.FC = () => {
     fetchUsers();
   }, []);
 
-  // Opens confirmation modal
   const handleDeleteSelected = (selectedRows: any[]) => {
     const userIds = selectedRows.map((row) => row.id);
 
@@ -65,7 +64,6 @@ const SupZonaladmin: React.FC = () => {
     setShowModal(true);
   };
 
-  // Actual delete API call
   const confirmDelete = async () => {
     try {
       const accessToken = localStorage.getItem("token");
