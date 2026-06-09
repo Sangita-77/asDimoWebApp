@@ -4,6 +4,7 @@ import AuthMain from "./pages/auth/authMain";
 import AuthMiddleware from "./middleware/AuthMiddleware";
 
 import { routes } from "./routes/AppRoutes";
+import { basename } from "./api/config";
 
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
@@ -19,7 +20,7 @@ import OrganizationAdminIndex from "./pages/organization";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         {/* Login */}
         <Route path={routes.LOGIN} element={<AuthMain />} />

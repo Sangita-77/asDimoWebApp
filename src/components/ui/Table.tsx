@@ -40,6 +40,8 @@ interface TableProps {
   onRowsPerPageChange?: (
     value: number
   ) => void;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 const Table: React.FC<TableProps> = ({
@@ -58,6 +60,8 @@ const Table: React.FC<TableProps> = ({
 
   onPageChange,
   onRowsPerPageChange,
+  sortBy,
+  sortOrder = "asc",
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -179,7 +183,16 @@ const Table: React.FC<TableProps> = ({
                       className="filter-btn"
                       onClick={() => col.onFilterClick?.(col.key)}
                     >
-                      <ArrowDownIcon size={14} />
+                      <ArrowDownIcon
+                        size={14}
+                        style={{
+                          transform:
+                            sortBy === col.key && sortOrder === "desc"
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                          transition: "transform 0.2s ease",
+                        }}
+                      />
                     </button>
                   )}
                 </div>
