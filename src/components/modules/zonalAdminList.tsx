@@ -8,9 +8,40 @@ import { getStoredUser } from "../../middleware/AuthMiddleware";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
 
+const getRelatedCount = (item: any, key: string) =>
+  item.relatedData?.[key]?.count ?? item.relatedData?.[key]?.data?.length ?? 0;
+
+const sortRows = (rows: any[], sortBy: string, sortOrder: "asc" | "desc") => {
+  return [...rows].sort((firstRow, secondRow) => {
+    const firstValue = firstRow[sortBy] ?? "";
+    const secondValue = secondRow[sortBy] ?? "";
+
+    if (typeof firstValue === "number" && typeof secondValue === "number") {
+      return sortOrder === "asc"
+        ? firstValue - secondValue
+        : secondValue - firstValue;
+    }
+
+    const comparison = String(firstValue).localeCompare(String(secondValue), undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+
+    return sortOrder === "asc" ? comparison : -comparison;
+  });
+};
+
+const sortFieldMap: Record<string, string> = {
+  admin: "relatedData.admins.count",
+  organizations: "relatedData.organizations.count",
+  pe: "relatedData.teachers.count",
+  location: "roleData.city",
+};
+
 const  zonalAdminList: React.FC = () => {
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState("name");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -33,22 +64,29 @@ const  zonalAdminList: React.FC = () => {
         throw new Error("No access token found");
       }
 
-      const response = await authService.getUsersByFlag(accessToken, 6);
+      const response = await authService.getUsersByFlag(accessToken, 6, {
+        search: search.trim(),
+        sort,
+        sortBy: sortFieldMap[sortBy] ?? sortBy,
+        sortOrder: sort,
+      });
 
       const formattedRows = response.data.map((item: any) => ({
         id: item._id,
         userId: item.userId,
         name: item.name,
-        admin: "-",
-        organizations: "-",
+        admin: getRelatedCount(item, "admins"),
+        organizations: getRelatedCount(item, "organizations"),
         location:
-          [item.city, item.state].filter(Boolean).join(", ") || "-",
+          [item.roleData?.city ?? item.city, item.roleData?.state ?? item.state]
+            .filter(Boolean)
+            .join(", ") || "-",
         subscription: "-",
-        pe: "-",
+        pe: getRelatedCount(item, "teachers"),
         originalData: item,
       }));
 
-      setRows(formattedRows);
+      setRows(sortRows(formattedRows, sortBy, sort));
     } catch (error) {
       console.error("Error fetching users:", error);
       setRows([]);
@@ -58,8 +96,20 @@ const  zonalAdminList: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const timeoutId = window.setTimeout(() => {
+      fetchUsers();
+    }, search.trim() ? 400 : 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [search, sort, sortBy]);
+
+  const handleSort = (key: string) => {
+    setCurrentPage(1);
+    setSortBy(key);
+    setSort((prevSort) =>
+      sortBy === key && prevSort === "asc" ? "desc" : "asc"
+    );
+  };
 
   // Opens confirmation modal
   const handleDeleteSelected = (selectedRows: any[]) => {
@@ -101,12 +151,12 @@ const  zonalAdminList: React.FC = () => {
 
 
   const columns = [
-    { key: "name", title: "Name", showFilter: true,},
-    { key: "admin", title: "Admin", showFilter: true, },
-    { key: "organizations", title: "Organizations", showFilter: true, },
+    { key: "name", title: "Name", showFilter: true, onFilterClick: handleSort,},
+    { key: "admin", title: "Admin", showFilter: true, onFilterClick: handleSort, },
+    { key: "organizations", title: "Organizations", showFilter: true, onFilterClick: handleSort, },
     { key: "location", title: "Location" },
-    { key: "subscription", title: "Subscription", showFilter: true,},
-    { key: "pe", title: "PE", showFilter: true,},
+    { key: "subscription", title: "Subscription", showFilter: true, onFilterClick: handleSort,},
+    { key: "pe", title: "PE", showFilter: true, onFilterClick: handleSort,},
     {
       key: "actions",
       title: "Actions",
@@ -127,7 +177,16 @@ const  zonalAdminList: React.FC = () => {
 
   return (
     <div>
-      <SearchWithSort searchValue={search} onSearchChange={setSearch} sortValue={sort} onSortChange={setSort} />
+      <SearchWithSort
+        searchValue={search}
+        onSearchChange={setSearch}
+        sortValue={sort}
+        onSortChange={(value) => {
+          if (value === "asc" || value === "desc") {
+            setSort(value);
+          }
+        }}
+      />
       <Table
         columns={columns}
         rows={rows}
@@ -140,6 +199,8 @@ const  zonalAdminList: React.FC = () => {
         rowsPerPage={rowsPerPage}
         onPageChange={setCurrentPage}
         onRowsPerPageChange={setRowsPerPage}
+        sortBy={sortBy}
+        sortOrder={sort}
       />
 
       {showModal && (

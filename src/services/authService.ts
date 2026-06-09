@@ -54,10 +54,54 @@ interface UserListResponse {
     state: string | null;
     pincode: string | null;
     address: string | null;
+    phone: string | null;
+    country: string | null;
+    resetPasswordOTP: string | null;
+    resetPasswordOTPExpiry: string | null;
     profileImg: string | null;
     createdAt: string;
     updatedAt: string;
+    __v: number;
+    roleData?: {
+      _id: string;
+      zonalAdminId?: number;
+      userId: number;
+      user: string;
+      superAdminId?: number;
+      city: string | null;
+      state: string | null;
+      pincode: string | null;
+      address: string | null;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+    } | null;
+    relatedData?: {
+      admins?: {
+        count: number;
+        data: any[];
+      };
+      organizations?: {
+        count: number;
+        data: any[];
+      };
+      teachers?: {
+        count: number;
+        data: any[];
+      };
+      parents?: {
+        count: number;
+        data: any[];
+      };
+    };
   }>;
+}
+
+interface GetUsersByFlagOptions {
+  search?: string;
+  sort?: string;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 export const authService = {
@@ -188,11 +232,22 @@ export const authService = {
     return response.data;
   },
 
-  async getUsersByFlag(token: string,flag: number): Promise<UserListResponse> {
+  async getUsersByFlag(
+    token: string,
+    flag: number,
+    options: GetUsersByFlagOptions = {}
+  ): Promise<UserListResponse> {
+    const payload = {
+      flag,
+      ...(options.search ? { search: options.search } : {}),
+      ...(options.sort ? { sort: options.sort } : {}),
+      ...(options.sortBy ? { sortBy: options.sortBy } : {}),
+      ...(options.sortOrder ? { sortOrder: options.sortOrder } : {}),
+    };
     
     const response = await axios.post(
       `${BASE_URL}/auth/getAllUsers`,
-      { flag },
+      payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
