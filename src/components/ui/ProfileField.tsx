@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./UIstyles.css";
 import UploadCameraIcon from "../../assets/Images/UploadCameraIcon.svg";
+import DashboardButtons from "./Buttons";
+import { RefreshCcwIcon } from "lucide-animated";
+import PenIcon from "../../assets/Images/Pen.svg";
 
 interface ProfileFieldProps {
   label: string;
@@ -104,20 +107,10 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
         </div>
 
         {isPassword ? (
-          <button
-            className="field-btn"
-            onClick={onResetPassword}
-          >
-            Reset Password
-          </button>
+          <DashboardButtons text="Reset Password" onClick={onResetPassword} variant="greyborder" icon=<RefreshCcwIcon size={17} className="btn-icon"/> className="resetbtn"/>
         ) : editable ? (
-          <button
-            className="field-btn"
-            onClick={handleAction}
-          >
-            {isEditing ? "Save" : "Edit"}
-          </button>
-        ) : null}
+          <DashboardButtons text={isEditing ? "Save" : "Edit"} onClick={handleAction} variant="greyborder"   icon={<img src={PenIcon} alt="Edit" className="btn-icon" />}/>
+        ) : null}          
       </div>
     </>
   );

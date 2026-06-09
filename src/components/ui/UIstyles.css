@@ -5,42 +5,6 @@
 .loader::after { transform-origin: 50% calc(100% + 2px); transform: scaleY(-1); --s:3px; --d:180deg;}
 @keyframes l5-0 { 80%  {transform: rotate(0)} 100% {transform: rotate(0.5turn)} }
 @keyframes l5-1 { 10%,70%  {background-size:100% 205%,var(--s,0) 100%} 70%,100% {background-position: top,center} }  */
-.loader {
-  --R: 30px;
-  --g1: var(--SecondayColor) 96%, #0000;
-  --g2: #eeeeee 96%, #0000;
-  width: calc(2*var(--R));
-  aspect-ratio: 1;
-  border-radius: 50%;
-  display: grid;
-  -webkit-mask: linear-gradient(#000 0 0);
-  animation: l30 2s infinite linear;
-}
-.loader::before,
-.loader::after{
-  content:"";
-  grid-area: 1/1;
-  width: 50%;
-  background:
-    radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
-    radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
-    radial-gradient(farthest-side,var(--g2)) calc(var(--R) + 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
-    radial-gradient(farthest-side,var(--g1)) 0 calc(-1*var(--R)),
-    radial-gradient(farthest-side,var(--g2)) calc(var(--R) - 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
-    radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
-    radial-gradient(farthest-side,var(--g2)) calc(-1*var(--R))  0,
-    radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) + 0.5*var(--R)   - var(--R));
-   background-size: calc(2*var(--R)) calc(2*var(--R));
-   background-repeat :no-repeat;
-}
-.loader::after {
- transform: rotate(180deg);
- transform-origin: right;
-}
-
-@keyframes l30 {
-  100% {transform: rotate(-1turn)}
-}
 /* loader End*/
 
 /* HeadingPara Start */
@@ -56,6 +20,9 @@ button{cursor: pointer;}
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
+.GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px; color: var(--TextcolorDark); }
+.GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
+.GlobalButton.resetbtn button.greyborder{width: 150px; padding: 14px 5px 11px 3px;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}
@@ -131,7 +98,7 @@ button{cursor: pointer;}
 /* Table Wrapper */
 .custom-table-wrapper { width: 100%; position: relative;}
 /* Table Container */
-.GlobalTable { width: 100%; overflow-x: auto; border: solid 1px var(--GreyBorders); border-radius: 15px;}
+.GlobalTable { width: 100%; overflow-x: auto; border: solid 1px var(--GreyBorders); border-radius: 10px;}
 .GlobalTable .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; } 
 /* Header */
 .custom-table thead{background: var(--lightBackground);}
@@ -141,7 +108,8 @@ button{cursor: pointer;}
 .custom-table .table-head-content .filter-btn{position: absolute; right: -9px; border: none; background: transparent; top: 2px;}
 /* Rows */
 .custom-table td:not(:nth-child(2)){text-align: center;}
-.custom-table td { padding: 10px; font-size: 14px; color: var(--TextcolorDark); border-bottom: 1px solid var(--GreyBorders); }
+.custom-table tr td{ padding: 10px; font-size: 14px; color: var(--TextcolorDark);}
+.custom-table tr:not(:last-child) td{ border-bottom: 1px solid var(--GreyBorders); }
 .custom-table .GlobalButton{display: grid; justify-content: center;}
 .custom-table .GlobalButton button{margin: 0px;}
 .custom-table tbody tr { transition: all 0.3s ease; }
