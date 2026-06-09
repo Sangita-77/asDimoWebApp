@@ -1,10 +1,46 @@
 /* loader Start*/
-.loader-wrapper{position: absolute; z-index: 9999; left: 49%; top: 48%;}
-.loader{ --c1:var(--SecondayColor); --c2:var(--PrimaryColor); width: 30px; height: 60px; border-top: 4px solid var(--c1); border-bottom: 4px solid var(--c1); background: linear-gradient(90deg, var(--c1) 2px, var(--c2) 0 5px,var(--c1) 0) 50%/7px 8px no-repeat; display: grid; overflow: hidden; animation: l5-0 2s infinite linear; }
+ /* .loader-wrapper{position: absolute; z-index: 9999; left: 49%; top: 48%;} */
+/*.loader{ --c1:var(--SecondayColor); --c2:var(--PrimaryColor); width: 30px; height: 60px; border-top: 4px solid var(--c1); border-bottom: 4px solid var(--c1); background: linear-gradient(90deg, var(--c1) 2px, var(--c2) 0 5px,var(--c1) 0) 50%/7px 8px no-repeat; display: grid; overflow: hidden; animation: l5-0 2s infinite linear; }
 .loader::before, .loader::after { content: ""; grid-area: 1/1; width: 75%; height: calc(50% - 4px); margin: 0 auto; border: 2px solid var(--c1); border-top: 0; box-sizing: content-box; border-radius: 0 0 40% 40%; -webkit-mask-composite: destination-out; mask-composite: exclude; background: linear-gradient(var(--d,0deg),var(--c2) 50%,#0000 0) bottom /100% 205%, linear-gradient(var(--c2) 0 0) center/0 100%; background-repeat: no-repeat; animation: inherit; animation-name: l5-1; }
 .loader::after { transform-origin: 50% calc(100% + 2px); transform: scaleY(-1); --s:3px; --d:180deg;}
 @keyframes l5-0 { 80%  {transform: rotate(0)} 100% {transform: rotate(0.5turn)} }
-@keyframes l5-1 { 10%,70%  {background-size:100% 205%,var(--s,0) 100%} 70%,100% {background-position: top,center} } 
+@keyframes l5-1 { 10%,70%  {background-size:100% 205%,var(--s,0) 100%} 70%,100% {background-position: top,center} }  */
+.loader {
+  --R: 30px;
+  --g1: var(--SecondayColor) 96%, #0000;
+  --g2: #eeeeee 96%, #0000;
+  width: calc(2*var(--R));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  -webkit-mask: linear-gradient(#000 0 0);
+  animation: l30 2s infinite linear;
+}
+.loader::before,
+.loader::after{
+  content:"";
+  grid-area: 1/1;
+  width: 50%;
+  background:
+    radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+    radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+    radial-gradient(farthest-side,var(--g2)) calc(var(--R) + 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+    radial-gradient(farthest-side,var(--g1)) 0 calc(-1*var(--R)),
+    radial-gradient(farthest-side,var(--g2)) calc(var(--R) - 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+    radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+    radial-gradient(farthest-side,var(--g2)) calc(-1*var(--R))  0,
+    radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) + 0.5*var(--R)   - var(--R));
+   background-size: calc(2*var(--R)) calc(2*var(--R));
+   background-repeat :no-repeat;
+}
+.loader::after {
+ transform: rotate(180deg);
+ transform-origin: right;
+}
+
+@keyframes l30 {
+  100% {transform: rotate(-1turn)}
+}
 /* loader End*/
 
 /* HeadingPara Start */
@@ -93,21 +129,19 @@ button{cursor: pointer;}
 
 /* Table Start */
 /* Table Wrapper */
-.custom-table-wrapper { width: 100%; }
-.table-head-content {position: relative;}
-.table-head-content .filter-btn{position: absolute; right: -9px; border: none; background: transparent; top: 2px;}
+.custom-table-wrapper { width: 100%; position: relative;}
 /* Table Container */
 .GlobalTable { width: 100%; overflow-x: auto; border: solid 1px var(--GreyBorders); border-radius: 15px;}
 .GlobalTable .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; } 
 /* Header */
 .custom-table thead{background: var(--lightBackground);}
 .custom-table th { padding: 16px 15px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap; color: #374151; }
-.custom-table thead tr th:not(:last-child){border-right: 1px solid var(--GreyBorders);}
 .custom-table thead tr th:not(:nth-child(2)){text-align: center;}
+.custom-table .table-head-content {position: relative;}
+.custom-table .table-head-content .filter-btn{position: absolute; right: -9px; border: none; background: transparent; top: 2px;}
 /* Rows */
 .custom-table td:not(:nth-child(2)){text-align: center;}
 .custom-table td { padding: 10px; font-size: 14px; color: var(--TextcolorDark); border-bottom: 1px solid var(--GreyBorders); }
-.custom-table td:not(:last-child){border-right: 1px solid var(--GreyBorders);}
 .custom-table .GlobalButton{display: grid; justify-content: center;}
 .custom-table .GlobalButton button{margin: 0px;}
 .custom-table tbody tr { transition: all 0.3s ease; }
@@ -134,6 +168,49 @@ button{cursor: pointer;}
 /* Gradient Box */
 /* Hidden on desktop */
 .mobile-select-all { display: none; }
+/* Delete Button */
+.table-top-actions {position: absolute; right: 0; top: -60px;}
+
+.bulk-delete-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bulk-delete-btn:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+.bulk-delete-btn:active {
+  transform: scale(0.95);
+}
+
+.delete-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Table End */
 
 /* Search Start */
