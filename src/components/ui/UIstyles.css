@@ -1,12 +1,9 @@
 /* loader Start*/
- /* .loader-wrapper{position: absolute; z-index: 9999; left: 49%; top: 48%;} */
-/*.loader{ --c1:var(--SecondayColor); --c2:var(--PrimaryColor); width: 30px; height: 60px; border-top: 4px solid var(--c1); border-bottom: 4px solid var(--c1); background: linear-gradient(90deg, var(--c1) 2px, var(--c2) 0 5px,var(--c1) 0) 50%/7px 8px no-repeat; display: grid; overflow: hidden; animation: l5-0 2s infinite linear; }
-.loader::before, .loader::after { content: ""; grid-area: 1/1; width: 75%; height: calc(50% - 4px); margin: 0 auto; border: 2px solid var(--c1); border-top: 0; box-sizing: content-box; border-radius: 0 0 40% 40%; -webkit-mask-composite: destination-out; mask-composite: exclude; background: linear-gradient(var(--d,0deg),var(--c2) 50%,#0000 0) bottom /100% 205%, linear-gradient(var(--c2) 0 0) center/0 100%; background-repeat: no-repeat; animation: inherit; animation-name: l5-1; }
-.loader::after { transform-origin: 50% calc(100% + 2px); transform: scaleY(-1); --s:3px; --d:180deg;}
-@keyframes l5-0 { 80%  {transform: rotate(0)} 100% {transform: rotate(0.5turn)} }
-@keyframes l5-1 { 10%,70%  {background-size:100% 205%,var(--s,0) 100%} 70%,100% {background-position: top,center} }  */
-/* loader End*/
-
+.loader-wrapper{position: absolute; z-index: 9999; left: 55%; top: 48%;}
+.loader { width: 50px; aspect-ratio: 1; border-radius: 50%; border: 8px solid #0000; border-right-color: #105bbd80; position: relative; animation: l24 1s infinite linear; }
+.loader:before, .loader:after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: inherit; animation: inherit; animation-duration: 2s; }
+.loader:after { animation-duration: 4s; }
+@keyframes l24 { 100% {transform: rotate(1turn)} }
 /* HeadingPara Start */
 h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
 /* HeadingPara End */
@@ -105,7 +102,10 @@ button{cursor: pointer;}
 .custom-table th { padding: 16px 15px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap; color: #374151; }
 .custom-table thead tr th:not(:nth-child(2)){text-align: center;}
 .custom-table .table-head-content {position: relative;}
-.custom-table .table-head-content .filter-btn{position: absolute; right: -9px; border: none; background: transparent; top: 2px;}
+/* Filter Button */
+.custom-table .table-head-content .filter-btn{position: absolute;  border: none; background: transparent; top: 3px; margin-left: 8px;}
+.custom-table .table-head-content .filter-btn .rotated{transform: rotate(180deg); transition: transform 0.2s ease; margin-top: -3px;}
+
 /* Rows */
 .custom-table td:not(:nth-child(2)){text-align: center;}
 .custom-table tr td{ padding: 10px; font-size: 14px; color: var(--TextcolorDark);}
@@ -133,52 +133,13 @@ button{cursor: pointer;}
 .rows-per-page { display: flex; align-items: center; gap: 10px; color: var(--TextcolorDark);} 
 .custom-select { min-width: 80px; height: 38px; padding: 0 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; cursor: pointer; background: #fff; }
 .custom-select:focus { border-color: var(--ColorBlue); } 
-/* Gradient Box */
 /* Hidden on desktop */
 .mobile-select-all { display: none; }
 /* Delete Button */
 .table-top-actions {position: absolute; right: 0; top: -60px;}
-
-.bulk-delete-btn {
-  position: relative;
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 12px;
-  background: #fee2e2;
-  color: #dc2626;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bulk-delete-btn:hover {
-  background: #fecaca;
-  transform: translateY(-1px);
-}
-
-.bulk-delete-btn:active {
-  transform: scale(0.95);
-}
-
-.delete-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 999px;
-  background: #dc2626;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.bulk-delete-btn { position: relative; width: 42px; height: 42px; border: none; border-radius: 12px; background: var(--GreenButtonHover); color: var(--ColorDenger); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
+.bulk-delete-btn:hover { background: var(--ColorDengerHover); transform: translateY(-1px); }
+.delete-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; background: var(--ColorDenger); color: var(--TextcolorLight); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
 /* Table End */
 
 /* Search Start */

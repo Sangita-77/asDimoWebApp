@@ -8,6 +8,7 @@ import { getStoredUser } from "../../middleware/AuthMiddleware";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
 
+
 const getRelatedCount = (item: any, key: string) =>
   item.relatedData?.[key]?.count ?? item.relatedData?.[key]?.data?.length ?? 0;
 
@@ -219,32 +220,19 @@ const  zonalAdminList: React.FC = () => {
                   : `${selectedUserIds.length} users?`}
               </p>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "12px",
-                  marginTop: "20px",
-                }}
-              >
-                <button
-                  type="button"
-                  className="dashboardBtn"
-                  onClick={() => {
-                    setShowModal(false);
-                    setSelectedUserIds([]);
-                  }}
-                >
-                  Cancel
-                </button>
+              <div className="logout-popup-actions d-flex">
+                {/* <button type="button" className="dashboardBtn" onClick={() => { setShowModal(false); setSelectedUserIds([]); }} > Cancel </button> */}
 
-                <button
-                  type="button"
-                  className="dashboardBtn"
-                  onClick={confirmDelete}
-                >
-                  Delete
-                </button>
+                <DashboardButtons text="Cancel" 
+                onClick={() => { setShowModal(false); setSelectedUserIds([]); }} 
+                />
+
+                {/* <button type="button" className="dashboardBtn" onClick={confirmDelete} > Delete </button> */}
+
+                <DashboardButtons text="Delete" 
+                onClick={confirmDelete}
+                />
+
               </div>
             </div>
           }

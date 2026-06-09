@@ -263,7 +263,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
 
 
               <div className="NotificationFooter">
-                View All Notifications
+                All Notifications
               </div>
             </div>
           )}

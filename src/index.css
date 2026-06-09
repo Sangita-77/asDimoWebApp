@@ -27,6 +27,8 @@
      --NeonGreen: #67A401;
      --TranshparentGreen: #05413834;
      --lightBackground: #F4F8FF;
+     --ColorDenger: #dc2626;
+     --ColorDengerHover: #fecaca;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }

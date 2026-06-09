@@ -190,20 +190,34 @@ const Table: React.FC<TableProps> = ({
                   <span>{col.title}</span>
 
                   {col.showFilter && (
-                    <button
+                    // <button
+                    //   type="button"
+                    //   className="filter-btn"
+                    //   onClick={() => col.onFilterClick?.(col.key)}
+                    // >
+                    //   <ArrowDownIcon
+                    //     size={14}
+                    //     style={{
+                    //       transform:
+                    //         sortBy === col.key && sortOrder === "desc"
+                    //           ? "rotate(180deg)"
+                    //           : "rotate(0deg)",
+                    //       transition: "transform 0.2s ease",
+                    //     }}
+                    //   />
+                    // </button>
+                                        <button
                       type="button"
                       className="filter-btn"
                       onClick={() => col.onFilterClick?.(col.key)}
                     >
                       <ArrowDownIcon
                         size={14}
-                        style={{
-                          transform:
-                            sortBy === col.key && sortOrder === "desc"
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)",
-                          transition: "transform 0.2s ease",
-                        }}
+                        className={
+                          sortBy === col.key && sortOrder === "desc"
+                            ? "rotated"
+                            : ""
+                        }
                       />
                     </button>
                   )}
