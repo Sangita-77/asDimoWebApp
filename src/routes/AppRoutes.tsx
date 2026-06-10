@@ -9,6 +9,9 @@ SUPERADMINSETTINGS: "/superadmin/settings",
 SUP_ZONALADMIN: "/superadmin/zonal-admin",
 // SUP_ZONALADMIN_DETAILS: "/superadmin/zonal-admin",
 SUP_ADMIN: "/superadmin/admin",
+SUP_ORGANIZATION: "/superadmin/organization",
+SUP_THERAPIST: "/superadmin/therapist",
+SUP_PARENT: "/superadmin/parent",
 // Super Admin Routes End.............
 
 

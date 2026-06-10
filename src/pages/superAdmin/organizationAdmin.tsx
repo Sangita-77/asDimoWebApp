@@ -1,25 +1,26 @@
 import ZonalAdminList from "../../components/modules/zonalAdminList";
 import { Heading1 } from "../../components/ui/HeadingPara";
 
-const SupZonaladmin: React.FC = () => {
+const SupOrganization: React.FC = () => {
 
   return (
     <>
-      <Heading1 text="Zonal Admin" />
+      <Heading1 text="Organization Admin" />
       {/* <ZonalAdminList /> */}
       <ZonalAdminList
-        flag={6}
+        flag={1}
         columns={[
           { key: "name", title: "Name", sortable: true },
-          { key: "admin", title: "Admin", sortable: true },
-          { key: "organizations", title: "Organizations", sortable: true },
-          { key: "location", title: "Location" },
+          { key: "admin_name", title: "Admin", sortable: true },
+          { key: "email", title: "Email", sortable: true },
+          { key: "therapists", title: "Therapists", sortable: true },
           { key: "subscription", title: "Subscription", sortable: true },
           { key: "pe", title: "PE", sortable: true },
+          { key: "location", title: "Location" },
         ]}
       />
     </>
   );
 };
 
-export default SupZonaladmin;
+export default SupOrganization;
