@@ -12,7 +12,10 @@ import SuperAdminDashboard from "./pages/superAdmin/index";
 
 import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 
+import SupAdmin from "./pages/superAdmin/Admin";
+
 import SuperAdminSettings from "./pages/superAdmin/Settings";
+
 
 
 import ZonalAdminIndex from "./pages/zonalAdmin";
@@ -36,6 +39,7 @@ function App() {
         >
           <Route index element={<SuperAdminDashboard />} />
           <Route path="zonal-admin" element={<SupZonaladmin />} />
+          <Route path="admin" element={<SupAdmin />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 
