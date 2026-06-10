@@ -9,7 +9,9 @@ import { basename } from "./api/config";
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
-import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
+
+import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
+
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
 
