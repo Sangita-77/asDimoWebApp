@@ -3,14 +3,12 @@ import Table from "../ui/Table";
 import DashboardButtons from "../ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
 import Loader from "../ui/Loaders";
-import { authService } from "../../services/authService";
+// import { authService } from "../../services/authService";
 import { getStoredUser } from "../../middleware/AuthMiddleware";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
 
 
-const getRelatedCount = (item: any, key: string) =>
-  item.relatedData?.[key]?.count ?? item.relatedData?.[key]?.data?.length ?? 0;
 
 const sortRows = (rows: any[], sortBy: string, sortOrder: "asc" | "desc") => {
   return [...rows].sort((firstRow, secondRow) => {
@@ -32,14 +30,7 @@ const sortRows = (rows: any[], sortBy: string, sortOrder: "asc" | "desc") => {
   });
 };
 
-const sortFieldMap: Record<string, string> = {
-  admin: "relatedData.admins.count",
-  organizations: "relatedData.organizations.count",
-  pe: "relatedData.teachers.count",
-  location: "roleData.city",
-};
-
-const  zonalAdminList: React.FC = () => {
+const  AdminList: React.FC = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("name");
@@ -65,27 +56,12 @@ const  zonalAdminList: React.FC = () => {
         throw new Error("No access token found");
       }
 
-      const response = await authService.getUsersByFlag(accessToken, 6, {
-        search: search.trim(),
-        sort,
-        sortBy: sortFieldMap[sortBy] ?? sortBy,
-        sortOrder: sort,
-      });
+const formattedRows = [
+  { id: "1", name: "John Doe", zonaladmin: "Swati", organizations: 3, location: "Kolkata, WB", subscription: "-", pe: 2, },
+  { id: "2", name: "Jane Smith", zonaladmin: "Sageeta", organizations: 1, location: "Delhi", subscription: "-", pe: 5, },
+];
 
-      const formattedRows = response.data.map((item: any) => ({
-        id: item._id,
-        userId: item.userId,
-        name: item.name,
-        admin: getRelatedCount(item, "admins"),
-        organizations: getRelatedCount(item, "organizations"),
-        location:
-          [item.roleData?.city ?? item.city, item.roleData?.state ?? item.state]
-            .filter(Boolean)
-            .join(", ") || "-",
-        subscription: "-",
-        pe: getRelatedCount(item, "teachers"),
-        originalData: item,
-      }));
+setRows(formattedRows);
 
       setRows(sortRows(formattedRows, sortBy, sort));
     } catch (error) {
@@ -121,28 +97,28 @@ const  zonalAdminList: React.FC = () => {
   };
 
   // Actual delete API call
-  const confirmDelete = async () => {
-    try {
-      const accessToken = localStorage.getItem("token");
+//   const confirmDelete = async () => {
+//     try {
+//       const accessToken = localStorage.getItem("token");
 
-      if (!accessToken) {
-        throw new Error("No access token found");
-      }
+//       if (!accessToken) {
+//         throw new Error("No access token found");
+//       }
 
-      await authService.deleteUsers(accessToken, selectedUserIds);
+//       await authService.deleteUsers(accessToken, selectedUserIds);
 
-      setRows((prevRows) =>
-        prevRows.filter((row) => !selectedUserIds.includes(row.id))
-      );
+//       setRows((prevRows) =>
+//         prevRows.filter((row) => !selectedUserIds.includes(row.id))
+//       );
 
-      setShowModal(false);
-      setSelectedUserIds([]);
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert("Failed to delete users");
-      setShowModal(false);
-    }
-  };
+//       setShowModal(false);
+//       setSelectedUserIds([]);
+//     } catch (error) {
+//       console.error("Delete error:", error);
+//       alert("Failed to delete users");
+//       setShowModal(false);
+//     }
+//   };
 
   const handleViewDetails = (row: any) => {
     console.log("View Details:", row.originalData);
@@ -153,9 +129,8 @@ const  zonalAdminList: React.FC = () => {
 
   const columns = [
     { key: "name", title: "Name", showFilter: true, onFilterClick: handleSort,},
-    { key: "admin", title: "Admin", showFilter: true, onFilterClick: handleSort, },
+    { key: "zonaladmin", title: "Zonal Admin", showFilter: true, onFilterClick: handleSort, },
     { key: "organizations", title: "Organizations", showFilter: true, onFilterClick: handleSort, },
-    { key: "location", title: "Location" },
     { key: "subscription", title: "Subscription", showFilter: true, onFilterClick: handleSort,},
     { key: "pe", title: "PE", showFilter: true, onFilterClick: handleSort,},
     { key: "actions", title: "Actions",
@@ -219,17 +194,9 @@ const  zonalAdminList: React.FC = () => {
               </p>
 
               <div className="logout-popup-actions d-flex">
-                {/* <button type="button" className="dashboardBtn" onClick={() => { setShowModal(false); setSelectedUserIds([]); }} > Cancel </button> */}
-
-                <DashboardButtons text="Cancel" 
-                onClick={() => { setShowModal(false); setSelectedUserIds([]); }} 
-                />
-
-                {/* <button type="button" className="dashboardBtn" onClick={confirmDelete} > Delete </button> */}
-
-                <DashboardButtons text="Delete" 
-                onClick={confirmDelete}
-                />
+                
+                <DashboardButtons text="Cancel" onClick={() => { setShowModal(false); setSelectedUserIds([]); }} />
+                 <DashboardButtons text="Delete" /> 
 
               </div>
             </div>
@@ -240,4 +207,4 @@ const  zonalAdminList: React.FC = () => {
   );
 };
 
-export default zonalAdminList;
+export default AdminList;

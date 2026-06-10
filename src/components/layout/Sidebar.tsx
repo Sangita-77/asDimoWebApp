@@ -8,6 +8,7 @@ import { useLogout } from "../../services/useLogout";
 
 import Logo from "../../assets/Images/Logo.svg";
 import DashBoardIcon from "../../assets/Images/DashBoardIcon.svg";
+import ZonalAdminIcon from "../../assets/Images/ZonalAdminIcon.svg";
 import SettingsIcon from "../../assets/Images/SettingsIcon.svg";
 import LogOutIcon from "../../assets/Images/LogOutIcon.svg";
 import DashboardButtons from "../ui/Buttons";
@@ -41,7 +42,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const menuItems = [
     { name: "Dashboard", path: routes.SUPERADMIN, icon: DashBoardIcon, },
-    { name: "Zonal Admin", path: routes.SUP_ZONALADMIN, icon: DashBoardIcon, },
+    { name: "Zonal Admin", path: routes.SUP_ZONALADMIN, icon: ZonalAdminIcon, },
+    { name: "Admin", path: routes.SUP_ADMIN, icon: DashBoardIcon, },
     { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
   ];
 
