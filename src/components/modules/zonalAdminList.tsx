@@ -148,7 +148,7 @@ const ZonalAdminList: React.FC<ZonalAdminListProps> = ({
           sortOrder: sort,
         }
       );
-      console.log("API Response:", response);
+      // console.log("API Response:", response);
       const formattedRows = response.data.map((item: any) => ({
         id: item._id,
         userId: item.userId,
