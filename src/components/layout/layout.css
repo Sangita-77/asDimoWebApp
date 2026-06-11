@@ -1,5 +1,5 @@
 /* Start Sidebar Start */
-.sidebar { width: 300px; background: var(--PrimaryColor); position: fixed; top: 0; left: -300px; height: 100vh; transition: all 0.3s ease; z-index: 1000; padding: 24px 18px;} 
+.sidebar { width: 300px; background: var(--PrimaryColor); position: fixed; top: 0; left: -300px; height: 100vh; transition: all 0.3s ease; z-index: 1000; padding: 24px 18px; display: flex; flex-direction: column; } 
 .sidebar.open { left: 0; } 
 .sidebar .AdminLogo { width: 100%; text-align: center; padding-bottom: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 25px; }
 .sidebar .AdminLogo img { max-width: 250px; height: auto; }
@@ -11,6 +11,11 @@
 .sidebar a.active::before { content: ""; position: absolute; left: -33px; top: 50%; transform: translateY(-50%); width: 6px; height: 70%; background: var(--SecondayColor); border-radius: 10px; }
 .sidebar-close { position: absolute; top: 15px; right: 15px; width: 38px; height: 38px; border: none; border-radius: 50%; cursor: pointer; background: rgba(255, 255, 255, 0.15); color: #fff; font-size: 18px; transition: 0.3s; }
 .sidebar-close:hover { background: rgba(255, 255, 255, 0.25); transform: rotate(90deg); }
+.sidebar-menu-container { flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) transparent; padding-right: 8px; }
+.sidebar-menu-container::-webkit-scrollbar { width: 6px; }
+.sidebar-menu-container::-webkit-scrollbar-track { background: transparent; }
+.sidebar-menu-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+.sidebar-menu-container::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
 /* Start Sidebar End */
 
 /* Navbar Start */

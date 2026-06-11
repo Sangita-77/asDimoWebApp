@@ -67,7 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         <img src={Logo} alt="Logo" />
       </div>
 
-      <ul>
+      <div className="sidebar-menu-container">
+        <ul>
         {menuItems.map((item) => (
           <li key={item.name}>
             <NavLink
@@ -101,7 +102,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             <span>Logout</span>
           </a>
         </li>
-      </ul>
+        </ul>
+      </div>
 
       {showLogoutModal && (
         <ModalBox
