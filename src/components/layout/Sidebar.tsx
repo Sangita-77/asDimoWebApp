@@ -47,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { name: "Organization", path: routes.SUP_ORGANIZATION, icon: DashBoardIcon, },
     { name: "Doctors/Therapist", path: routes.SUP_THERAPIST, icon: DashBoardIcon, },
     { name: "Users/Parents", path: routes.SUP_PARENT, icon: DashBoardIcon, },
+    { name: "Appointments", path: routes.SUP_APPOINTMENT, icon: DashBoardIcon, },
     { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
   ];
 
