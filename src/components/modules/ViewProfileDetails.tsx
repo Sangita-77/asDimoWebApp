@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProfileField from "../ui/ProfileField";
+import { ProfileImageField } from "../ui/ProfileField";
 import { Heading2, Heading3 } from "../../components/ui/HeadingPara";
 import DashboardButtons from "../ui/Buttons";
 import "./ModulesStyles.css";
@@ -255,14 +256,28 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
     <div className="d-flex ViewProfileDetails">
       <div className="Profile_Editable">
         <div className="boxShadow">
-          <ProfileField
+          {/* <ProfileField
             label="Profile"
             value={name}
             showProfileImage
             profileImage={profileImage}
             onImageChange={handleImageChange}
             editable={true}
+          /> */}
+
+
+          <ProfileImageField
+            profileImage={profileImage}
+            userName={name}
+            onImageChange={handleImageChange}
           />
+
+          <ProfileField
+            label="Profile"
+            value={name}
+            editable={true}
+          />
+
 
           <ProfileField
             label="Email"

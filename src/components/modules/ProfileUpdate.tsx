@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProfileField from "../ui/ProfileField";
+import { ProfileImageField } from "../ui/ProfileField";
 import ModalBox from "../ui/ModalBox";
 import "../ui/UIstyles.css";
 import { filebasename } from "../../api/config";
@@ -116,10 +117,24 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     <div className="profile-page">
       <div className="profile-card">
 
-        <ProfileField
+        {/* <ProfileField
           showProfileImage
           profileImage={profile.profileImg}
           onImageChange={updateProfileImage}
+          label="Full Name"
+          value={profile.name}
+          onSave={(value) =>
+            updateField("name", value)
+          }
+        />  */}
+
+        <ProfileImageField
+          profileImage={profile.profileImg}
+          userName={profile.name}
+          onImageChange={updateProfileImage}
+        />
+
+        <ProfileField
           label="Full Name"
           value={profile.name}
           onSave={(value) =>

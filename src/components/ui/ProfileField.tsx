@@ -10,30 +10,84 @@ interface ProfileFieldProps {
   label: string;
   value: string;
   onSave?: (value: string) => void;
-  showProfileImage?: boolean;
+  // showProfileImage?: boolean;
   editable?: boolean;
   isPassword?: boolean;
   onResetPassword?: () => void;
-  profileImage?: string;
-  onImageChange?: (file: File) => void;
+  // profileImage?: string;
+  // onImageChange?: (file: File) => void;
 }
+
+
+
+export const ProfileImageField: React.FC<{
+  profileImage?: string;
+  userName?: string;
+  onImageChange?: (file: File) => void;
+}> = ({ profileImage, userName, onImageChange }) => {
+  const [uploadedImage, setUploadedImage] = useState("");
+
+  const handleImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+
+      setUploadedImage(imageUrl);
+      onImageChange?.(file);
+    }
+  };
+
+  const imageSrc = uploadedImage || profileImage;
+
+  return (
+    <div className="profile-image-container">
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt="Profile"
+          className="profile-image"
+        />
+      ) : (
+        <div className="profile-placeholder">
+          {userName?.charAt(0)?.toUpperCase() || "U"}
+        </div>
+      )}
+
+      <label className="upload-image-btn">
+        <img src={UploadCameraIcon} alt="Upload" />
+        Upload
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={handleImageUpload}
+        />
+      </label>
+    </div>
+  );
+
+};
+
 
 const ProfileField: React.FC<ProfileFieldProps> = ({
   label,
   value,
   onSave,
-  showProfileImage = false,
+  // showProfileImage = false,
   editable = true,
   isPassword = false,
   onResetPassword,
-  profileImage,
-  onImageChange,
+  // profileImage,
+  // onImageChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fieldValue, setFieldValue] = useState(value);
 
   // Local uploaded image preview
-  const [uploadedImage, setUploadedImage] = useState("");
+  // const [uploadedImage, setUploadedImage] = useState("");
 
   // Update field value whenever API data changes
   useEffect(() => {
@@ -59,26 +113,26 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
   //   }
   // };
 
-  const handleImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
+  // const handleImageUpload = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const file = e.target.files?.[0];
 
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
+  //   if (file) {
+  //     const imageUrl = URL.createObjectURL(file);
 
-      setUploadedImage(imageUrl);
+  //     setUploadedImage(imageUrl);
 
-      onImageChange?.(file);
-    }
-  };
+  //     onImageChange?.(file);
+  //   }
+  // };
 
   // Show uploaded image first, otherwise API image
-  const imageSrc = uploadedImage || profileImage;
+  // const imageSrc = uploadedImage || profileImage;
 
   return (
     <>
-      {showProfileImage && (
+      {/* {showProfileImage && (
         <div className="profile-image-container">
           {imageSrc ? (
             <img src={imageSrc} alt="Profile" className="profile-image" />
@@ -94,7 +148,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
             <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
           </label>
         </div>
-      )}
+      )} */}
 
       <div className="profile-field">
         <div className="field-info">
