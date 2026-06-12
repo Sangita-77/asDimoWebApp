@@ -7,7 +7,7 @@ LOGIN: "/",
 SUPERADMIN: "/superadmin",
 SUPERADMINSETTINGS: "/superadmin/settings",
 SUP_ZONALADMIN: "/superadmin/zonal-admin",
-// SUP_ZONALADMIN_DETAILS: "/superadmin/zonal-admin",
+SUP_ZONALADMIN_DETAILS: "/superadmin/zonal-admin-details",
 SUP_ADMIN: "/superadmin/admin",
 // Super Admin Routes End.............
 

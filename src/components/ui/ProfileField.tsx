@@ -4,6 +4,7 @@ import UploadCameraIcon from "../../assets/Images/UploadCameraIcon.svg";
 import DashboardButtons from "./Buttons";
 import { RefreshCcwIcon } from "lucide-animated";
 import PenIcon from "../../assets/Images/Pen.svg";
+import SaveIcon from "../../assets/Images/SaveIcon.svg";
 
 interface ProfileFieldProps {
   label: string;
@@ -109,7 +110,14 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
         {isPassword ? (
           <DashboardButtons text="Reset Password" onClick={onResetPassword} variant="greyborder" icon=<RefreshCcwIcon size={17} className="btn-icon"/> className="resetbtn"/>
         ) : editable ? (
-          <DashboardButtons text={isEditing ? "Save" : "Edit"} onClick={handleAction} variant="greyborder"   icon={<img src={PenIcon} alt="Edit" className="btn-icon" />}/>
+          <DashboardButtons text={isEditing ? "Save" : "Edit"} onClick={handleAction} variant="greyborder"  
+          icon={
+          isEditing ? (
+            <img src={SaveIcon} alt="Save" className="btn-icon" />
+          ) : (
+            <img src={PenIcon} alt="Edit" className="btn-icon" />
+          )
+        }/>
         ) : null}          
       </div>
     </>
@@ -117,3 +125,6 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
 };
 
 export default ProfileField;
+
+
+// SaveIcon

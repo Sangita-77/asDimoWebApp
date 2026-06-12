@@ -10,6 +10,7 @@ import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
 import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
+import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
 import SupAdmin from "./pages/superAdmin/Admin";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
@@ -36,6 +37,7 @@ function App() {
         >
           <Route index element={<SuperAdminDashboard />} />
           <Route path="zonal-admin" element={<SupZonaladmin />} />
+          <Route path="zonal-admin-details" element={<ZonalAdminDetails />} />
           <Route path="admin" element={<SupAdmin />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
