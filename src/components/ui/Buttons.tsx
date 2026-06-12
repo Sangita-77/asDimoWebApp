@@ -11,7 +11,7 @@ interface GlobalButtons {
   disabled?: boolean;
   className?: string;
   iconPosition?: "left" | "right"; 
-  width?: "full" | "padding"; 
+  width?: "full" | ""; 
 }
 
 const DashboardButtons: React.FC<GlobalButtons> = ({
@@ -24,7 +24,7 @@ const DashboardButtons: React.FC<GlobalButtons> = ({
   disabled = false,
   className = "",
   iconPosition = "left",
-  width = "padding",
+  width = "",
 }) => {
   return (
     <div className={`GlobalButton ${className}`}>

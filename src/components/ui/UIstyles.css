@@ -6,6 +6,8 @@
 @keyframes l24 { 100% {transform: rotate(1turn)} }
 /* HeadingPara Start */
 h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
+h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
+h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
 /* HeadingPara End */
 
 
@@ -17,8 +19,9 @@ button{cursor: pointer;}
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
-.GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px; color: var(--TextcolorDark); }
+.GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px;}
 .GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
+.GlobalButton.resetbtn button.greyborder{width: 150px; padding: 14px 5px 11px 3px;}
 .GlobalButton.resetbtn button.greyborder{width: 150px; padding: 14px 5px 11px 3px;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
@@ -150,6 +153,19 @@ button{cursor: pointer;}
 .sort-select { height: 45px; min-width: 180px; padding: 0 40px 0 14px; border: 1px solid var(--GreyBorders); border-radius: 5px; font-size: 14px; cursor: pointer; outline: none; transition: all 0.2s ease; }
 .sort-select:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
 /* Search End */
+
+
+/* Table Card Start */
+.table-card { background: var(--GreyBackGround); margin-bottom: 25px; border-radius: 10px; }
+.table-card-title { margin-bottom: 12px; } 
+.table-card-row { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid var(--GreyBorders); } 
+.table-card-row:last-child { border-bottom: none; }
+.table-card-label { font-weight: 400; color: var(--TextcolorBlack); text-transform: capitalize; }
+.table-card .table-card-row:nth-child(1){display: none;}
+/* Table Card End */
+
+
+
 
 
 

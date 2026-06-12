@@ -1,5 +1,5 @@
 // import AdminList from "../../components/modules/AdminList";
-import ZonalAdminList from "../../components/modules/zonalAdminList";
+import ZonalAdminList from "../../components/modules/GlobalTableList";
 import { Heading1 } from "../../components/ui/HeadingPara";
 
 const SupAdmin: React.FC = () => {

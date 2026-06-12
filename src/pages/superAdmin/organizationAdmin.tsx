@@ -1,4 +1,4 @@
-import ZonalAdminList from "../../components/modules/zonalAdminList";
+import GlobalTableList from "../../components/modules/GlobalTableList";
 import { Heading1 } from "../../components/ui/HeadingPara";
 
 const SupOrganization: React.FC = () => {
@@ -7,7 +7,7 @@ const SupOrganization: React.FC = () => {
     <>
       <Heading1 text="Organization Admin" />
       {/* <ZonalAdminList /> */}
-      <ZonalAdminList
+      <GlobalTableList
         flag={1}
         columns={[
           { key: "name", title: "Name", sortable: true },

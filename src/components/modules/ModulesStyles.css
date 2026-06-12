@@ -1,3 +1,11 @@
 /* ViewProfileDetails Start */
-.ViewProfileDetails .Profile_Editable{width: 60%; margin-top: 50px;}
+.ViewProfileDetails .Profile_Editable{width: 68%; margin-top: 50px;}
+.TotalCount{align-items: center;}
+.TotalCount .Heading2{width: 80%;}
+.TotalCount .Heading3{width: 20%; text-align: right;}
+.ORGList{margin-top: 50px; margin-left: 30px; width: 32%;}
+.ORGList .GlobalButton .greyborder{padding-left: 15px;}
+.OrganisationList{align-items: center; margin-bottom: 20px;}
+.ORGList .GlobalButton{width: 30%; text-align: right;}
+.ORGList .Heading2{width: 70%;}
 /* ViewProfileDetails End */

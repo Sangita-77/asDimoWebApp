@@ -6,6 +6,8 @@ import Loader from "../ui/Loaders";
 import { authService } from "../../services/authService";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
+import { useNavigate } from "react-router-dom";
+import  { routes } from "../../routes/AppRoutes"
 
 interface ColumnConfig {
   key: string;
@@ -63,10 +65,11 @@ const sortFieldMap: Record<string, string> = {
   subscription: "subscription",
 };
 
-const ZonalAdminList: React.FC<ZonalAdminListProps> = ({
+const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   flag,
   columns: dynamicColumns,
 }) => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("name");
@@ -93,8 +96,11 @@ const ZonalAdminList: React.FC<ZonalAdminListProps> = ({
   const handleViewDetails = (row: any) => {
     console.log("View Details:", row.originalData);
 
+
     // navigate(`/zonal-admin/viewdetails/${row.originalData._id}`);
+       navigate( `${routes.SUP_ZONALADMIN_DETAILS}` );
   };
+
 
   const columnRenderMap: Record<string, any> = {
     name: {
@@ -318,4 +324,4 @@ const ZonalAdminList: React.FC<ZonalAdminListProps> = ({
   );
 };
 
-export default ZonalAdminList;
+export default GlobalTableList;
