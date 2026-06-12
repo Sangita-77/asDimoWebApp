@@ -13,6 +13,7 @@ import SuperAdminDashboard from "./pages/superAdmin/index";
 
 import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
+import AdminDetails from "./pages/superAdmin/AdminDetails";
 import SupOrganization from "./pages/superAdmin/organizationAdmin";
 import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
@@ -26,7 +27,11 @@ import ZonalAdminIndex from "./pages/zonalAdmin";
 
 import OrganizationAdminIndex from "./pages/organization";
 
+
 import AdminIndex from "./pages/Admins/Index"
+
+
+
 
 
 function App() {
@@ -48,6 +53,7 @@ function App() {
           <Route path="zonal-admin" element={<SupZonaladmin />} />
           <Route path="zonal-admin-details" element={<ZonalAdminDetails />} />
           <Route path="admin" element={<SupAdmin />} />
+          <Route path="admin-details" element={<AdminDetails />} />
           <Route path="organization" element={<SupOrganization />} />
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="parent" element={<SupParent />} />
