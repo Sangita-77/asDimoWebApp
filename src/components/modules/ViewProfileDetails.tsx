@@ -187,6 +187,8 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
         setPhone(user.phone || "");
         setUserFlag(user.flag ?? null);
 
+        console.log("User role data:", relatedData);
+
         setZone(
           `${user.roleData?.city || user.city || ""}${
             user.roleData?.state
