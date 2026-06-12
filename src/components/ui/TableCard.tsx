@@ -1,24 +1,48 @@
 import React from "react";
 import "./UIstyles.css";
 
+interface TableField {
+  label: string;
+  path: string;
+}
+
 interface TableCardProps {
   title?: string;
   data: Record<string, any>;
+  fields?: TableField[];
 }
 
-const TableCard: React.FC<TableCardProps> = ({ title, data }) => {
+const getNestedValue = (obj: any, path: string) => {
+  const value = path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+  // console.log("Path:", path);
+  // console.log("Value:", value);
+
+  return value;
+};
+const TableCard: React.FC<TableCardProps> = ({
+  title,
+  data,
+  fields = [],
+}) => {
   return (
     <div className="table-card">
-      {title && <h3 className="table-card-title">{title}</h3>}
+      {title && <h3>{title}</h3>}
 
-      {Object.entries(data).map(([key, value]) => (
-        <div key={key} className="table-card-row">
-          <span className="table-card-label">{key}:</span>
-          <span className="table-card-value">{String(value)}</span>
+      {fields.map((field) => (
+        <div key={field.path} className="table-card-row">
+          <span className="table-card-label">
+            {field.label}:
+          </span>
+
+          <span className="table-card-value">
+            {String(getNestedValue(data, field.path) ?? "-")}
+          </span>
         </div>
       ))}
     </div>
   );
 };
+
 
 export default TableCard;

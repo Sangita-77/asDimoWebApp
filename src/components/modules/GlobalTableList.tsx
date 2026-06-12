@@ -94,11 +94,17 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   };
 
   const handleViewDetails = (row: any) => {
-    console.log("View Details:", row.originalData);
+    const { userId, flag } = row.originalData;
 
-
-    // navigate(`/zonal-admin/viewdetails/${row.originalData._id}`);
-       navigate( `${routes.SUP_ZONALADMIN_DETAILS}` );
+    if (flag === 6) {
+      navigate(routes.SUP_ZONALADMIN_DETAILS, {
+        state: { userId , flag },
+      });
+    } else if (flag === 7) {
+      navigate(routes.SUP_ADMIN_DETAILS, {
+        state: { userId , flag },
+      });
+    }
   };
 
 
@@ -154,7 +160,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           sortOrder: sort,
         }
       );
-      // console.log("API Response:", response);
+      console.log("API Response:", response);
       const formattedRows = response.data.map((item: any) => ({
         id: item._id,
         userId: item.userId,

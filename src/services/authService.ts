@@ -275,4 +275,19 @@ export const authService = {
     return response.data;
   },
 
+  async getUserById(token: string, userId: number | string) {
+    const response = await axios.post(
+      `${BASE_URL}/auth/getAllUsersById`,
+      { userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };

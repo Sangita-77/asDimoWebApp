@@ -13,6 +13,7 @@ SUP_ORGANIZATION: "/superadmin/organization",
 SUP_THERAPIST: "/superadmin/therapist",
 SUP_PARENT: "/superadmin/parent",
 SUP_APPOINTMENT: "/superadmin/appointment",
+SUP_ADMIN_DETAILS: "/superadmin/admin-details",
 // Super Admin Routes End.............
 
 

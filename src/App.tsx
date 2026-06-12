@@ -30,6 +30,8 @@ import ZonalAdminIndex from "./pages/zonalAdmin";
 
 import OrganizationAdminIndex from "./pages/organization";
 
+import AdminDetails from "./pages/superAdmin/AdminDetails";
+
 function App() {
   return (
     <BrowserRouter basename={basename}>
@@ -49,6 +51,7 @@ function App() {
           <Route path="zonal-admin" element={<SupZonaladmin />} />
           <Route path="zonal-admin-details" element={<ZonalAdminDetails />} />
           <Route path="admin" element={<SupAdmin />} />
+          <Route path="admin-details" element={<AdminDetails />} />
           <Route path="organization" element={<SupOrganization />} />
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="parent" element={<SupParent />} />
