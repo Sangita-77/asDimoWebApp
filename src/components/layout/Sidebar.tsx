@@ -72,11 +72,13 @@ const menuConfig = {
 
   OrganizationAdmin: [
     { name: "Dashboard", path: routes.ORGANIZATIONADMIN, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.ORGANIZATION_SETTINGS, icon: SettingsIcon, }
   ],
 
 
   Admin: [
     { name: "Dashboard", path: routes.ADMIN, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.ADMIN_SETTINGS, icon: SettingsIcon, }
   ],
 
 };

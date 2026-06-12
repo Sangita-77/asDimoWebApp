@@ -19,6 +19,7 @@ SUP_ADMIN_DETAILS: "/superadmin/admin-details",
 
 // ORG Admin Routes Start.............
 ORGANIZATIONADMIN: "/organizationadmin",
+ORGANIZATION_SETTINGS: "/organizationadmin/settings",
 // ORG Admin Routes End.............
 
 
@@ -32,6 +33,8 @@ ZONAL_SETTINGS: "/zonaladmin/settings",
 
 // Admin Routes Start.............
 ADMIN: "/admin",
+ADMIN_SETTINGS: "/admin/settings",
+
 // Admin Routes Start.............
 
 

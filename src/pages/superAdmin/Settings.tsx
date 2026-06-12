@@ -4,8 +4,11 @@ import Tabs from "../../components/ui/Tabs";
 import ProfileUpdate from "../../components/modules/ProfileUpdate";
 import Loader from "../../components/ui/Loaders";
 import { authService } from "../../services/authService";
+import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
+
 
 const CustomerDocuments: React.FC = () => {
+  const role = getCurrentUserRole();  
   const [profileData, setProfileData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,20 +35,27 @@ const CustomerDocuments: React.FC = () => {
     fetchProfile();
   }, []);
 
-  const tabsData = [
-    {
-      label: "General",
-      content: loading ? (
-        <Loader />
-      ) : (
-        <ProfileUpdate profileData={profileData} />
-      ),
-    },
-    {
-      label: "Edit Billing plans",
-      content: "",
-    },
-  ];
+
+const tabsData: {
+  label: string;
+  content: React.ReactNode;
+}[] = [
+  {
+    label: "General",
+    content: loading ? (
+      <Loader />
+    ) : (
+      <ProfileUpdate profileData={profileData} />
+    ),
+  },
+];
+
+if (role === "SuperAdmin") {
+  tabsData.push({
+    label: "Edit Billing Plans",
+    content: <div>Edit Billing Plans Content</div>,
+  });
+};
 
   return (
     <div className="CustomerDocuments">

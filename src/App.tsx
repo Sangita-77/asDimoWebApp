@@ -87,6 +87,7 @@ function App() {
           }
         >
           <Route index element={<OrganizationAdminIndex />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 
 
@@ -100,6 +101,7 @@ function App() {
           }
         >
           <Route index element={<AdminIndex />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 
 
