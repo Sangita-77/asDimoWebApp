@@ -5,7 +5,7 @@ LOGIN: "/",
 
 // Super Admin Routes Start.............
 SUPERADMIN: "/superadmin",
-SUPERADMINSETTINGS: "/superadmin/settings",
+SUPERADMIN_SETTINGS: "/superadmin/settings",
 SUP_ZONALADMIN: "/superadmin/zonal-admin",
 SUP_ZONALADMIN_DETAILS: "/superadmin/zonal-admin-details",
 SUP_ADMIN: "/superadmin/admin",
@@ -24,6 +24,7 @@ ORGANIZATIONADMIN: "/organizationadmin",
 
 // Zonal Admin Routes Start.............
 ZONALADMIN: "/zonaladmin",
+ZONAL_SETTINGS: "/zonaladmin/settings",
 // Zonal Admin Routes Start.............
 
 

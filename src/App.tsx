@@ -10,9 +10,6 @@ import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
 
-// import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
-
-
 
 import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
@@ -21,7 +18,6 @@ import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
 import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";
-
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
 
@@ -29,6 +25,9 @@ import SuperAdminSettings from "./pages/superAdmin/Settings";
 import ZonalAdminIndex from "./pages/zonalAdmin";
 
 import OrganizationAdminIndex from "./pages/organization";
+
+import AdminIndex from "./pages/Admins/Index"
+
 
 function App() {
   return (
@@ -58,30 +57,47 @@ function App() {
 
         {/* ================= ZONAL ADMIN ================= */} 
 
-        <Route path={routes.ZONALADMIN} element={
+        <Route
+          path={routes.ZONALADMIN}
+          element={
             <AuthMiddleware allowedFlags={["zonalAdmin"]}>
-              <ZonalAdminIndex />
+              <DashboardLayOut />
             </AuthMiddleware>
           }
-        />
+        >
+
+          <Route index element={<ZonalAdminIndex />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+        </Route>
+
+
 
         {/* ================= ORGANIZATION ADMIN ================= */}
 
         <Route path={routes.ORGANIZATIONADMIN} element={
             <AuthMiddleware allowedFlags={["OrganizationAdmin"]}>
-              <OrganizationAdminIndex />
+              <DashboardLayOut />
             </AuthMiddleware>
           }
-        />
+        >
+          <Route index element={<OrganizationAdminIndex />} />
+        </Route>
+
+
 
         {/* ================= ADMIN ================= */}
 
         <Route path={routes.ADMIN} element={
             <AuthMiddleware allowedFlags={["Admin"]}>
-              <OrganizationAdminIndex />
+              <DashboardLayOut />
             </AuthMiddleware>
           }
-        />
+        >
+          <Route index element={<AdminIndex />} />
+        </Route>
+
+
+
       </Routes>
     </BrowserRouter>
   );

@@ -187,7 +187,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
         ☰
       </span>
 
-      <h3>{profileRole}</h3>
+      {/* <h3>{profileRole}</h3> */}
 
       <div className="d-flex ProfilePreview">
 

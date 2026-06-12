@@ -9,10 +9,17 @@ import { useLogout } from "../../services/useLogout";
 import Logo from "../../assets/Images/Logo.svg";
 import DashBoardIcon from "../../assets/Images/DashBoardIcon.svg";
 import ZonalAdminIcon from "../../assets/Images/ZonalAdminIcon.svg";
+import AdminIcon from "../../assets/Images/AdminIcon.svg";
+import ORGicon from "../../assets/Images/ORGicon.svg";
+import DoctorIcon from "../../assets/Images/DoctorIcon.svg";
+import UserIcon from "../../assets/Images/UserIcon.svg";
+import AppointmentIcon from "../../assets/Images/AppointmentIcon.svg";
 import SettingsIcon from "../../assets/Images/SettingsIcon.svg";
 import LogOutIcon from "../../assets/Images/LogOutIcon.svg";
 import DashboardButtons from "../ui/Buttons";
 import ModalBox from "../ui/ModalBox";
+import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
+
 
 interface SidebarProps {
   open: boolean;
@@ -40,16 +47,44 @@ const Sidebar: React.FC<SidebarProps> = ({
     await logout();
   };
 
-  const menuItems = [
+const role = getCurrentUserRole();
+
+
+const menuConfig = {
+
+  SuperAdmin: [
     { name: "Dashboard", path: routes.SUPERADMIN, icon: DashBoardIcon, },
     { name: "Zonal Admin", path: routes.SUP_ZONALADMIN, icon: ZonalAdminIcon, },
-    { name: "Admin", path: routes.SUP_ADMIN, icon: DashBoardIcon, },
-    { name: "Organization", path: routes.SUP_ORGANIZATION, icon: DashBoardIcon, },
-    { name: "Doctors/Therapist", path: routes.SUP_THERAPIST, icon: DashBoardIcon, },
-    { name: "Users/Parents", path: routes.SUP_PARENT, icon: DashBoardIcon, },
-    { name: "Appointments", path: routes.SUP_APPOINTMENT, icon: DashBoardIcon, },
-    { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
-  ];
+    { name: "Admin", path: routes.SUP_ADMIN, icon: AdminIcon, },
+    { name: "Organization", path: routes.SUP_ORGANIZATION, icon: ORGicon, },
+    { name: "Doctors/Therapist", path: routes.SUP_THERAPIST, icon: DoctorIcon, },
+    { name: "Users/Parents", path: routes.SUP_PARENT, icon: UserIcon, },
+    { name: "Appointments", path: routes.SUP_APPOINTMENT, icon: AppointmentIcon, },
+    { name: "Settings", path: routes.SUPERADMIN_SETTINGS, icon: SettingsIcon, }
+  ],
+
+
+  zonalAdmin: [
+    { name: "Dashboard", path: routes.ZONALADMIN, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.ZONAL_SETTINGS, icon: SettingsIcon, }
+  ],
+
+
+  OrganizationAdmin: [
+    { name: "Dashboard", path: routes.ORGANIZATIONADMIN, icon: DashBoardIcon, },
+  ],
+
+
+  Admin: [
+    { name: "Dashboard", path: routes.ADMIN, icon: DashBoardIcon, },
+  ],
+
+};
+
+const menuItems =
+  role && role in menuConfig
+    ? menuConfig[role as keyof typeof menuConfig]
+    : [];
 
   return (
     <div className={`sidebar ${open ? "open" : ""}`}>
@@ -69,27 +104,33 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <div className="sidebar-menu-container">
         <ul>
-        {menuItems.map((item) => (
-          <li key={item.name}>
-            <NavLink
-              to={item.path}
-              end={item.path === routes.SUPERADMIN}
-              className={({ isActive }) =>
-                isActive
-                  ? "nav-link active"
-                  : "nav-link"
-              }
-              onClick={() => {
-                if (!isDesktop) {
-                  closeSidebar();
-                }
-              }}
-            >
-              <img src={item.icon} alt={item.name} />
-              <span>{item.name}</span>
-            </NavLink>
-          </li>
-        ))}
+          {menuItems.map((item) => {
+            const isDashboardRoute =
+              item.path === routes.SUPERADMIN ||
+              item.path === routes.ZONALADMIN ||
+              item.path === routes.ORGANIZATIONADMIN ||
+              item.path === routes.ADMIN;
+
+            return (
+              <li key={item.name}>
+                <NavLink
+                  to={item.path}
+                  end={isDashboardRoute}
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  onClick={() => {
+                    if (!isDesktop) {
+                      closeSidebar();
+                    }
+                  }}
+                >
+                  <img src={item.icon} alt={item.name} />
+                  <span>{item.name}</span>
+                </NavLink>
+              </li>
+            );
+          })}
 
         <li>
           <a

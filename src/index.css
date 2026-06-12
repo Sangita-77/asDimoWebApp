@@ -27,10 +27,9 @@
      --GreyBorders: #DEDEDE;
      --NeonGreen: #67A401;
      --TranshparentGreen: #05413834;
-     --lightBackground: #F4F8FF;
+     --lightBackground: #ebf0f8;
      --ColorDenger: #dc2626;
      --ColorDengerHover: #fecaca;
-     --GreyBackGround: #e9e9e9c2;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }

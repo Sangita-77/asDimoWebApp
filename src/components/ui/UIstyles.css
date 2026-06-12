@@ -156,7 +156,7 @@ button{cursor: pointer;}
 
 
 /* Table Card Start */
-.table-card { background: var(--GreyBackGround); margin-bottom: 25px; border-radius: 10px; }
+.table-card { background: var(--lightBackground); margin-bottom: 25px; border-radius: 10px; }
 .table-card-title { margin-bottom: 12px; } 
 .table-card-row { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid var(--GreyBorders); } 
 .table-card-row:last-child { border-bottom: none; }

@@ -33,19 +33,9 @@ const DashboardLayOut: React.FC = () => {
 
   return (
     <div className="dashboard">
-      <Sidebar
-        open={isDesktop ? true : open}
-        isDesktop={isDesktop}
-        closeSidebar={() => setOpen(false)}
-      />
+      <Sidebar open={isDesktop ? true : open} isDesktop={isDesktop} closeSidebar={() => setOpen(false)} />
 
-      <div className={`main ${isDesktop ? "desktop" : ""}`}>
-        <Navbar
-          toggle={() =>
-            !isDesktop &&
-            setOpen((prev) => !prev)
-          }
-        />
+      <div className={`main ${isDesktop ? "desktop" : ""}`}> <Navbar toggle={() => !isDesktop && setOpen((prev) => !prev) } />
 
         <div className="content">
           <Outlet />

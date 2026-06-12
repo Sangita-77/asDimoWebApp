@@ -1,2 +1,2 @@
-const OrganizationAdminIndex = () => <h1>Admin Page</h1>;
-export default OrganizationAdminIndex;
+const AdminIndex = () => <h1>Admin Page</h1>;
+export default AdminIndex;
