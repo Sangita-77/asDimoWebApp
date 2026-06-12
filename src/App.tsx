@@ -9,9 +9,20 @@ import { basename } from "./api/config";
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
+<<<<<<< HEAD
 import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
 import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
+=======
+
+import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
+
+import SupOrganization from "./pages/superAdmin/organizationAdmin";
+import SupTherapist from "./pages/superAdmin/therapistAdmin";
+import SupParent from "./pages/superAdmin/parentAdmin";
+>>>>>>> 3a5a2bcbf37e90319f79ec7a5abf35d427ba251d
 import SupAdmin from "./pages/superAdmin/Admin";
+import SupAppointment from "./pages/superAdmin/appoinmentList";
+
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
 
@@ -39,6 +50,10 @@ function App() {
           <Route path="zonal-admin" element={<SupZonaladmin />} />
           <Route path="zonal-admin-details" element={<ZonalAdminDetails />} />
           <Route path="admin" element={<SupAdmin />} />
+          <Route path="organization" element={<SupOrganization />} />
+          <Route path="therapist" element={<SupTherapist />} />
+          <Route path="parent" element={<SupParent />} />
+          <Route path="appointment" element={<SupAppointment />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 

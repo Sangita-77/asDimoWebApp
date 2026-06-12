@@ -44,6 +44,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     { name: "Dashboard", path: routes.SUPERADMIN, icon: DashBoardIcon, },
     { name: "Zonal Admin", path: routes.SUP_ZONALADMIN, icon: ZonalAdminIcon, },
     { name: "Admin", path: routes.SUP_ADMIN, icon: DashBoardIcon, },
+    { name: "Organization", path: routes.SUP_ORGANIZATION, icon: DashBoardIcon, },
+    { name: "Doctors/Therapist", path: routes.SUP_THERAPIST, icon: DashBoardIcon, },
+    { name: "Users/Parents", path: routes.SUP_PARENT, icon: DashBoardIcon, },
+    { name: "Appointments", path: routes.SUP_APPOINTMENT, icon: DashBoardIcon, },
     { name: "Settings", path: routes.SUPERADMINSETTINGS, icon: SettingsIcon, },
   ];
 
@@ -63,7 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         <img src={Logo} alt="Logo" />
       </div>
 
-      <ul>
+      <div className="sidebar-menu-container">
+        <ul>
         {menuItems.map((item) => (
           <li key={item.name}>
             <NavLink
@@ -97,7 +102,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             <span>Logout</span>
           </a>
         </li>
-      </ul>
+        </ul>
+      </div>
 
       {showLogoutModal && (
         <ModalBox

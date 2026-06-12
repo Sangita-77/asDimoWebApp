@@ -66,8 +66,13 @@ const Table: React.FC<TableProps> = ({
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const paginatedRows = useMemo(() => {
-    return rows;
-  }, [rows]);
+    if (!pagination) {
+      return rows;
+    }
+
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return rows.slice(startIndex, startIndex + rowsPerPage);
+  }, [rows, currentPage, rowsPerPage, pagination]);
 
   // Checkbox Handlers
   const isAllSelected =
