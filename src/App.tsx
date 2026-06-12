@@ -9,17 +9,16 @@ import { basename } from "./api/config";
 import DashboardLayOut from "./components/layout/DashboardLayout";
 
 import SuperAdminDashboard from "./pages/superAdmin/index";
-<<<<<<< HEAD
-import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
-import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
-=======
+
+// import SupZonaladmin from "./pages/superAdmin/ZonalAdmin";
+
+
 
 import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
-
+import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
 import SupOrganization from "./pages/superAdmin/organizationAdmin";
 import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
->>>>>>> 3a5a2bcbf37e90319f79ec7a5abf35d427ba251d
 import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";
 
