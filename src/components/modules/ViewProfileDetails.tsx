@@ -8,6 +8,7 @@ import TableCard from "../ui/TableCard";
 import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
 import Loader from "../ui/Loaders";
+import { filebasename } from "../../api/config";
 
 interface Props {
   userId?: number | string;
@@ -267,7 +268,7 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
 
 
           <ProfileImageField
-            profileImage={profileImage}
+            profileImage={`${filebasename}${profileImage}`}
             userName={name}
             onImageChange={handleImageChange}
           />
