@@ -3,7 +3,21 @@ import PlaceholderImage from "../../assets/Images/PlaceholderImage.svg";
 import { Heading2 } from "./HeadingPara";
 import DashboardButtons from "./Buttons";
 
-interface Field {
+// interface Field {
+//   name: string;
+//   label: string;
+//   type?: string;
+//   placeholder?: string;
+//   width?: "half" | "full" | "quarter";
+//   fieldType?: "input" | "select";
+//   required?: boolean;
+//   options?: {
+//     label: string;
+//     value: string;
+//   }[];
+// }
+
+export type Field = {
   name: string;
   label: string;
   type?: string;
@@ -15,7 +29,7 @@ interface Field {
     label: string;
     value: string;
   }[];
-}
+};
 
 interface ProfileFormProps {
   fields: Field[];

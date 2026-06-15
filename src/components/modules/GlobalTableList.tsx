@@ -267,6 +267,28 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     return <Loader fullScreen />;
   }
 
+  const getAddButtonText = (flag: number) => {
+    switch (flag) {
+      case 6:
+        return "Add New Zonal Admin";
+
+      case 7:
+        return "Add New Admin";
+
+      case 1:
+        return "Add New Organization Admin";
+
+      case 3:
+        return "Add New Therapist";
+
+      case 2:
+        return "Add New Parent";
+
+      default:
+        return "Add New User";
+    }
+  };
+
   return (
     <div>
        <div className="d-flex TableSearchWrap">
@@ -280,7 +302,15 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           }
         }}
       />
-      <DashboardButtons text="Add New Admin"/>
+      {/* <DashboardButtons text="Add New Admin"/> */}
+      <DashboardButtons
+        text={getAddButtonText(flag)}
+        onClick={() =>
+          navigate(routes.SUP_ADDINFORMATION, {
+            state: { flag },
+          })
+        }
+      />
        </div>
 
       <Table

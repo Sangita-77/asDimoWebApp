@@ -290,4 +290,21 @@ export const authService = {
     return response.data;
   },
 
+  async register(
+    token: string,
+    payload: any
+  ) {
+    const response = await axios.post(
+      `${BASE_URL}/auth/register`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+
 };
