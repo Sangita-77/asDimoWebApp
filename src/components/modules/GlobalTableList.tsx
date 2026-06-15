@@ -104,6 +104,10 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       navigate(routes.SUP_ADMIN_DETAILS, {
         state: { userId , flag },
       });
+    } else if (flag === 3) {
+      navigate(routes.SUP_THERAPIST_DETAILS, {
+        state: { userId , flag },
+      });
     }
   };
 

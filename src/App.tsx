@@ -19,6 +19,7 @@ import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
 import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";
+import SupTherapistDetails from "./pages/superAdmin/TherapistDetails";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="admin-details" element={<AdminDetails />} />
           <Route path="organization" element={<SupOrganization />} />
           <Route path="therapist" element={<SupTherapist />} />
+          <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="parent" element={<SupParent />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="settings" element={<SuperAdminSettings />} />
