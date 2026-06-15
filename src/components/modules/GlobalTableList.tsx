@@ -269,6 +269,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
 
   return (
     <div>
+       <div className="d-flex TableSearchWrap">
       <SearchWithSort
         searchValue={search}
         onSearchChange={setSearch}
@@ -279,6 +280,8 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           }
         }}
       />
+      <DashboardButtons text="Add New Admin"/>
+       </div>
 
       <Table
         columns={tableColumns}
