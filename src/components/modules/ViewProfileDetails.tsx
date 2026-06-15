@@ -221,8 +221,8 @@ const [showResetModal, setShowResetModal] = useState(false);
         const res = await authService.getUserById(token, userId);
 
         const user = res?.data || res;
-        console.log("Fetched user data:", user);
-        console.log("Fetched user flag:", user.flag);
+        // console.log("Fetched user data:", user);
+        // console.log("Fetched user flag:", user.flag);
 
         if (!user) return;
 
@@ -247,7 +247,7 @@ const [showResetModal, setShowResetModal] = useState(false);
         setCountry(user.country || "");
         setId(user.id || user._id || "");
 
-        // console.log("User role datadddddddddddddd:", user);
+        console.log(relatedData);
 
         setZone(
           `${user.city || ""}${
