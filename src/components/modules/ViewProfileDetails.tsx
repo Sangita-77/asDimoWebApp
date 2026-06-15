@@ -24,7 +24,7 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [relatedData, setRelatedData] = useState<any>(null);
+  // const [relatedData, setRelatedData] = useState<any>(null);
   const [userFlag, setUserFlag] = useState<number | null>(null);
   const [memberList, setMemberList] = useState<any[]>([]);
   const [listTitle, setListTitle] = useState("Organisation List");
@@ -38,6 +38,7 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
   const [id, setId] = useState("");
+  // const [lastLogin, setLastLogin] = useState("");
 
   const handleImageChange = async (file: File) => {
     try {
@@ -236,7 +237,7 @@ const [showResetModal, setShowResetModal] = useState(false);
 
         setName(user.name || "");
         setProfileImage(user.profileImg || "");
-        setRelatedData(user.relatedData || null);
+        // setRelatedData(user.relatedData || null);
         setEmail(user.email || "");
         setPhone(user.phone || "");
         setUserFlag(user.flag ?? null);
@@ -246,8 +247,9 @@ const [showResetModal, setShowResetModal] = useState(false);
         setAddress(user.address || "");
         setCountry(user.country || "");
         setId(user.id || user._id || "");
+        // setLastLogin(user.lastLogin || "");
 
-        console.log(relatedData);
+        console.log(user);
 
         setZone(
           `${user.city || ""}${
@@ -360,13 +362,13 @@ const [showResetModal, setShowResetModal] = useState(false);
           case "pincode":
             setPincode(value);
             
-            setRelatedData((prev: any) => ({
-              ...prev,
-              roleData: {
-                ...prev?.roleData,
-                [field]: value,
-              },
-            }));
+            // setRelatedData((prev: any) => ({
+            //   ...prev,
+            //   roleData: {
+            //     ...prev?.roleData,
+            //     [field]: value,
+            //   },
+            // }));
             break;
         }
 
@@ -393,6 +395,16 @@ const [showResetModal, setShowResetModal] = useState(false);
             profileImage={profileImage}
             onImageChange={handleImageChange}
             editable={true}
+          /> */}
+
+          {/* <ProfileField
+            label="Last Login"
+            value={
+              lastLogin
+                ? new Date(lastLogin).toLocaleString("en-IN")
+                : "Never"
+            }
+            editable={false}
           /> */}
 
 
