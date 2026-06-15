@@ -33,6 +33,23 @@ const location = useLocation();
     }
   };
 
+  const getSucHeading = (flag: number) => {
+    switch (flag) {
+      case 6:
+        return "Zonal Admin";
+      case 7:
+        return "Admin";
+      case 1:
+        return "Organization Admin";
+      case 3:
+        return "Therapist";
+      case 2:
+        return "Parent";
+      default:
+        return "User";
+    }
+  };
+
   const handleSubmit = async (data: any) => {
     try {
       const token = localStorage.getItem("token");
@@ -53,7 +70,7 @@ const location = useLocation();
         flag,
 
         ...(flag === 6 && {
-          superAdminId: data.superAdminId,
+          superAdminId: 1,
         }),
 
         ...(flag === 7 && {
@@ -82,7 +99,8 @@ const location = useLocation();
         payload
       );
 
-      alert("User created successfully");
+      // alert("User created successfully");
+      window.location.reload
 
       navigate(-1);
     } catch (error: any) {
@@ -117,6 +135,7 @@ const location = useLocation();
       width: "half",
       required: true,
     },
+    { name: "role", label: "Role", type: "text", value: `${getSucHeading(flag)}`, width: "half", readOnly: true,},
 
     ...(flag === 1
       ? [
@@ -181,8 +200,8 @@ const location = useLocation();
 
   return (
     <>
-    <Heading1 text="ADD NEW Zonal Admin" />
-    <Paragraph text="Dashboard > Zonal Admin > Add New Zonal Admin" />
+    <Heading1 text={getHeading(flag)} />
+    <Paragraph text={`Dashboard > ${getSucHeading(flag)} > ${getHeading(flag)}`} />
     <div className="boxShadow AddInformation">
         {/* <AddNewAdminorg/> */}
     <FormAdd

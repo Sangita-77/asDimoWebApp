@@ -29,6 +29,9 @@ export type Field = {
     label: string;
     value: string;
   }[];
+  readOnly?: boolean;
+  value?: string;
+
 };
 
 interface ProfileFormProps {
@@ -125,9 +128,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                   name={field.name}
                   type={field.type || "text"}
                   placeholder={field.placeholder}
-                  value={formData[field.name] || ""}
+                  value={formData[field.name] ?? field.value ?? ""}
                   onChange={handleChange}
                   required={field.required}
+                  readOnly={field.readOnly}
                 />
               )}
           </div>
@@ -181,8 +185,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           name={field.name}
           type={field.type || "text"}
           placeholder={field.placeholder}
-          value={formData[field.name] || ""}
+          value={formData[field.name] ?? field.value ?? ""}
           onChange={handleChange}
+          readOnly={field.readOnly}
         />
       )}
       </div>
