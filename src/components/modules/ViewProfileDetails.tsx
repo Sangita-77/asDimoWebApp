@@ -135,6 +135,30 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
           },
         ];
 
+        case 3:
+        return [
+          {
+            label: "Flag",
+            path: "flag",
+          },
+          {
+            label: "Name",
+            path: "name",
+          },
+                    {
+            label: "Phone No",
+            path: "phone",
+          },
+          {
+            label: "Email",
+            path: "email",
+          },
+          {
+            label: "Address",
+            path: "fullAddress",
+          },
+        ];
+
       default:
         return [
           {
@@ -170,7 +194,7 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
 
         const user = res?.data || res;
         console.log("Fetched user data:", user);
-        // console.log("Fetched user flag:", user.flag);
+        console.log("Fetched user flag:", user.flag);
 
         if (!user) return;
 
@@ -189,7 +213,7 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
         setPhone(user.phone || "");
         setUserFlag(user.flag ?? null);
 
-        console.log("User role data:", relatedData);
+        console.log("User role data:", user.relatedData);
 
         setZone(
           `${user.roleData?.city || user.city || ""}${
@@ -230,6 +254,18 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
             );
             break;
 
+            case 3:
+              setListTitle("Patient List");
+              setMemberList(
+                (user.relatedData?.parents?.data || []).map(
+                  (parent: any) => ({
+                    ...flattenMember(parent),
+                    
+                  })
+                )
+              );
+            break;
+
           default:
             setListTitle("Organisation List");
             setMemberList(
@@ -268,7 +304,11 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
 
 
           <ProfileImageField
-            profileImage={`${filebasename}${profileImage}`}
+            profileImage={
+              profileImage
+                ? `${filebasename}${profileImage}`
+                : ""
+            }
             userName={name}
             onImageChange={handleImageChange}
           />
