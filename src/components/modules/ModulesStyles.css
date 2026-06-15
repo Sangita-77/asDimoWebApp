@@ -13,3 +13,9 @@
 /* FormAdd Start */
 .AddInformation{margin-top: 30px;}
 /* FormAdd Start */
+
+/* Global Table List Start */
+.TableSearchWrap{align-items: center;}
+.TableSearchWrap .search-sort-container{width: 50%;}
+.TableSearchWrap .GlobalButton {width: 50%; display: flex; justify-content: end; margin-top: -125px;}
+/* Global Table List End */
