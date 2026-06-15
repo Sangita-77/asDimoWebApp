@@ -18,6 +18,7 @@ button{cursor: pointer;}
 /* variants */
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
+.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 10px 30px; font-size: 20px !important; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
 .GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px;}
 .GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
@@ -31,21 +32,32 @@ button{cursor: pointer;}
 /* Button End */
 
 
-/* Form start */
+/*Profile_Editable Form start */
 .form-group{display: flex; flex-direction: column; margin-bottom: 10px;}
-.form-group label{color: var(--TextcolorDark); font-size: 18px; text-transform: uppercase;}
+.Profile_Editable .form-group label{color: var(--TextcolorDark); font-size: 18px; text-transform: uppercase;}
 .form-group input{height: 45px; padding: 10px; border-radius: 5px; border: solid 1px var(--BorderColor);}
-.form-group input::placeholder{font-size: 16px;}
-.input-wrapper { position: relative; }
+.Profile_Editable .form-group input::placeholder{font-size: 16px;}
+.Profile_Editable .input-wrapper { position: relative; }
 .input-wrapper input { width: 100%; padding: 12px 45px 12px 12px; } 
 .input-wrapper .eye-btn { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; font-size: 18px; }
-.input-wrapper .input-error { border-color: red !important; } 
-.input-wrapper .error-text { color: red; font-size: 13px; margin-top: 5px; }
-.input-wrapper .password-rules { margin-top: 10px; } 
-.input-wrapper .password-rules p { font-size: 13px; margin: 4px 0; } 
+.Profile_Editable .input-wrapper .error-text { color: red; font-size: 13px; margin-top: 5px; }
+.Profile_Editable .input-wrapper .password-rules { margin-top: 10px; } 
+.Profile_Editable .input-wrapper .password-rules p { font-size: 13px; margin: 4px 0; } 
 .form-group .valid { color: green; }
 .form-group .invalid { color: red; }
-/* Form End */
+/*Profile_Editable Form End */
+
+
+/* Login form Satrt */
+.login-box .form-group label{color: var(--TextcolorDark); font-size: 18px; text-transform: uppercase;}
+.login-box .form-group input:placeholder{font-size: 16px;}
+.login-box .input-wrapper { position: relative; }
+.login-box .input-wrapper .eye-btn { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; font-size: 18px; }
+.login-box .input-wrapper .input-error { border-color: red !important; } 
+.login-box .input-wrapper .error-text { color: red; font-size: 13px; margin-top: 5px; }
+.login-box .input-wrapper .password-rules { margin-top: 10px; } 
+/* Login form End */
+
 
 
 /* ModalBox Start */
@@ -166,7 +178,118 @@ button{cursor: pointer;}
 
 
 
+.add_information {
+  margin-top: 30px;
+}
 
+.add_information .top-section {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.add_information .profile-upload {
+  flex-shrink: 0;
+}
+
+.add_information .profile-preview {
+  width: 190px;
+  height: 223px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  cursor: pointer;
+}
+
+.add_information .right-fields {
+  flex: 1;
+}
+
+.add_information .right-fields .form-group {
+  margin-bottom: 16px;
+}
+
+.add_information .bottom-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.add_information .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.add_information .form-group label { margin-bottom: 6px; font-size: 17px; font-weight: 500; color: var(--TextcolorDark); margin-top: 5px; } 
+.add_information .form-group input,
+.add_information .form-group select {
+  width: 100%;
+  height: 50px;
+  padding: 0 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.add_information .form-group input:focus,
+.add_information .form-group select:focus {
+  border-color: #1677ff;
+}
+
+/* Width Classes */
+.full-width {
+  flex: 0 0 100%;
+}
+
+.half-width {
+  flex: 0 0 calc(50% - 8px);
+}
+
+.quarter-width {
+  flex: 0 0 calc(25% - 12px);
+}
+
+/* Submit Button Right Align */
+.add_information .submit-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.add_information .submit-btn {
+  min-width: 140px;
+  height: 42px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.required-star {
+  color: red;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .add_information .top-section {
+    flex-direction: column;
+  }
+
+  .add_information .profile-preview {
+    width: 140px;
+    height: 140px;
+  }
+
+  .half-width,
+  .quarter-width {
+    flex: 0 0 100%;
+  }
+}
 
 
 /* Responsive */
