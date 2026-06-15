@@ -14,6 +14,7 @@ interface ProfileFieldProps {
   editable?: boolean;
   isPassword?: boolean;
   onResetPassword?: () => void;
+  onClick?: () => void;
   // profileImage?: string;
   // onImageChange?: (file: File) => void;
 }
@@ -80,6 +81,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
   editable = true,
   isPassword = false,
   onResetPassword,
+  onClick,
   // profileImage,
   // onImageChange,
 }) => {
@@ -161,18 +163,30 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
           )}
         </div>
 
-        {isPassword ? (
-          <DashboardButtons text="Reset Password" onClick={onResetPassword} variant="greyborder" icon=<RefreshCcwIcon size={17} className="btn-icon"/> className="resetbtn"/>
-        ) : editable ? (
-          <DashboardButtons text={isEditing ? "Save" : "Edit"} onClick={handleAction} variant="greyborder"  
-          icon={
-          isEditing ? (
-            <img src={SaveIcon} alt="Save" className="btn-icon" />
-          ) : (
-            <img src={PenIcon} alt="Edit" className="btn-icon" />
-          )
-        }/>
-        ) : null}          
+          {isPassword ? (
+            <DashboardButtons
+              text="Reset Password"
+              onClick={onResetPassword}
+              variant="greyborder"
+              icon={<RefreshCcwIcon size={17} className="btn-icon" />}
+              className="resetbtn"
+            />
+          ) : editable && label !== "Zone" ? (
+            <DashboardButtons
+              text={isEditing ? "Save" : "Edit"}
+              onClick={handleAction}
+              variant="greyborder"
+              icon={
+                isEditing ? (
+                  <img src={SaveIcon} alt="Save" className="btn-icon" />
+                ) : (
+                  <img src={PenIcon} alt="Edit" className="btn-icon" />
+                )
+              }
+            />
+          ) : label === "Zone" ? (
+              <DashboardButtons text="Details" icon={<img src={PenIcon} alt="Save" className="btn-icon" />} onClick={onClick} variant="greyborder" />
+          ) : null}         
       </div>
     </>
   );
