@@ -9,6 +9,7 @@ import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
 import Loader from "../ui/Loaders";
 import { filebasename } from "../../api/config";
+import ModalBox from "../ui/ModalBox";
 
 interface Props {
   userId?: number | string;
@@ -76,6 +77,8 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
       ).length || 0
     );
   };
+
+const [showResetModal, setShowResetModal] = useState(false);
 
   const getFieldsByFlag = (flag: number | null): TableField[] => {
     switch (flag) {
@@ -289,13 +292,14 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
           <ProfileField
             label="Phone"
             value={phone}
-            editable={false}
+            editable={true}
           />
 
           <ProfileField
             label="Zone"
             value={zone}
             editable={true}
+            onClick={() => setShowResetModal(true)}
           />
         </div>
 
@@ -339,6 +343,23 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
           )}
         </div>
       </div>
+      {showResetModal && (
+        <ModalBox
+          header={<h3>Zone Details</h3>}
+          onCancel={() =>
+            setShowResetModal(false)
+          }
+          body={
+            <div className="ZoneDetails">
+               <ProfileField label="City" value="city" editable={true} />
+               <ProfileField label="State" value="state" editable={true} />
+               <ProfileField label="Pincode" value="pincode" editable={true} />
+               <ProfileField label="Address" value="address" editable={true} />
+               <ProfileField label="Country" value="country" editable={true} />
+            </div>
+          }
+        />
+      )}
     </div>
   );
 };
