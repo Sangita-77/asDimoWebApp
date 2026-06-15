@@ -32,12 +32,37 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [phone, setPhone] = useState("");
   const [zone, setZone] = useState("");
   const [totalUsers, setTotalUsers] = useState(0);
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [address, setAddress] = useState("");
+  const [country, setCountry] = useState("");
+  const [id, setId] = useState("");
 
-  const handleImageChange = (file: File) => {
-    const imageUrl = URL.createObjectURL(file);
-    setProfileImage(imageUrl);
+  const handleImageChange = async (file: File) => {
+    try {
+      const token = tokenManager.getAccessToken();
 
-    // Upload API here
+      if (!token || !userId) return;
+
+      const formData = new FormData();
+      formData.append("profileImg", file);
+
+      const response =
+        await authService.updateProfile(
+          token,
+          id,
+          formData
+        );
+
+      setProfileImage(
+        response?.data?.profileImg ||
+        response?.profileImg ||
+        ""
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const flattenMember = (item: any) => ({
@@ -148,7 +173,7 @@ const [showResetModal, setShowResetModal] = useState(false);
             label: "Name",
             path: "name",
           },
-                    {
+          {
             label: "Phone No",
             path: "phone",
           },
@@ -196,8 +221,8 @@ const [showResetModal, setShowResetModal] = useState(false);
         const res = await authService.getUserById(token, userId);
 
         const user = res?.data || res;
-        console.log("Fetched user data:", user);
-        console.log("Fetched user flag:", user.flag);
+        // console.log("Fetched user data:", user);
+        // console.log("Fetched user flag:", user.flag);
 
         if (!user) return;
 
@@ -215,13 +240,19 @@ const [showResetModal, setShowResetModal] = useState(false);
         setEmail(user.email || "");
         setPhone(user.phone || "");
         setUserFlag(user.flag ?? null);
+        setCity(user.city || "");
+        setState(user.state || "");
+        setPincode(user.pincode || "");
+        setAddress(user.address || "");
+        setCountry(user.country || "");
+        setId(user.id || user._id || "");
 
-        console.log("User role data:", user.relatedData);
+        console.log(relatedData);
 
         setZone(
-          `${user.roleData?.city || user.city || ""}${
-            user.roleData?.state
-              ? `, ${user.roleData?.state}`
+          `${user.city || ""}${
+            user.state
+              ? `, ${user.state}`
               : user.state
               ? `, ${user.state}`
               : ""
@@ -288,9 +319,68 @@ const [showResetModal, setShowResetModal] = useState(false);
     fetchProfile();
   }, [userId]);
 
+
+    const updateField = async (
+      field: string,
+      value: string
+    ) => {
+      try {
+        const token = tokenManager.getAccessToken();
+
+        if (!token || !userId) return;
+
+        const formData = new FormData();
+        formData.append(field, value);
+
+        await authService.updateProfile(
+          token,
+          id,
+          formData
+        );
+
+        switch (field) {
+          case "name":
+            setName(value);
+            break;
+          case "phone":
+            setPhone(value);
+            break;
+          case "city":
+            setCity(value);
+            break;
+          case "state":
+            setState(value);
+            break;
+          case "address":
+            setAddress(value);
+            break;
+          case "country":
+            setCountry(value);
+            break;
+          case "pincode":
+            setPincode(value);
+            
+            setRelatedData((prev: any) => ({
+              ...prev,
+              roleData: {
+                ...prev?.roleData,
+                [field]: value,
+              },
+            }));
+            break;
+        }
+
+        console.log(`${field} updated`);
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (loading) {
       return <Loader fullScreen />;
     }
+
 
   return (
     <div className="d-flex ViewProfileDetails">
@@ -316,10 +406,18 @@ const [showResetModal, setShowResetModal] = useState(false);
             onImageChange={handleImageChange}
           />
 
-          <ProfileField
+          {/* <ProfileField
             label="Profile"
             value={name}
             editable={true}
+          /> */}
+
+          <ProfileField
+            label="Profile"
+            value={name}
+            onSave={(value) =>
+              updateField("name", value)
+            }
           />
 
 
@@ -332,7 +430,9 @@ const [showResetModal, setShowResetModal] = useState(false);
           <ProfileField
             label="Phone"
             value={phone}
-            editable={true}
+            onSave={(value) =>
+              updateField("phone", value)
+            }
           />
 
           <ProfileField
@@ -391,11 +491,61 @@ const [showResetModal, setShowResetModal] = useState(false);
           }
           body={
             <div className="ZoneDetails">
-               <ProfileField label="City" value="city" editable={true} />
+               {/* <ProfileField label="City" value="city" editable={true} />
                <ProfileField label="State" value="state" editable={true} />
                <ProfileField label="Pincode" value="pincode" editable={true} />
                <ProfileField label="Address" value="address" editable={true} />
-               <ProfileField label="Country" value="country" editable={true} />
+               <ProfileField label="Country" value="country" editable={true} /> */}
+
+               <ProfileField
+                  label="City"
+                  value={
+                    city || ""
+                  }
+                  onSave={(value) =>
+                    updateField("city", value)
+                  }
+                />
+
+                <ProfileField
+                  label="State"
+                  value={
+                    state || ""
+                  }
+                  onSave={(value) =>
+                    updateField("state", value)
+                  }
+                />
+
+                <ProfileField
+                  label="Pincode"
+                  value={
+                    pincode || ""
+                  }
+                  onSave={(value) =>
+                    updateField("pincode", value)
+                  }
+                />
+
+                <ProfileField
+                  label="Address"
+                  value={
+                    address || ""
+                  }
+                  onSave={(value) =>
+                    updateField("address", value)
+                  }
+                />
+
+                <ProfileField
+                  label="Country"
+                  value={
+                    country || ""
+                  }
+                  onSave={(value) =>
+                    updateField("country", value)
+                  }
+                />
             </div>
           }
         />
