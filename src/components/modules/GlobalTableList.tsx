@@ -90,7 +90,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     setCurrentPage(1);
 
     setSort((prevSort) =>
-      sortBy === key && prevSort === "asc" ? "desc" : "asc"
+      sortBy === key && prevSort === "desc" ? "asc" : "desc"
     );
 
     setSortBy(key);
