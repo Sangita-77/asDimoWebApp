@@ -41,7 +41,7 @@ const sortRows = (
       typeof firstValue === "number" &&
       typeof secondValue === "number"
     ) {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? firstValue - secondValue
         : secondValue - firstValue;
     }
