@@ -1,17 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, } from "react";
 import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon, ArrowDownIcon } from 'lucide-animated';
-// import Buttons from "../ui/Buttons";
+import ExportIcon from "../../assets/Images/ExportIcon.svg";
+import DashboardButtons from "./Buttons";
 
 interface TableColumn {
   key: string;
   title: string;
   width?: string;
-  render?: (
-    value: any,
-    row: any,
-    rowIndex: number
-  ) => React.ReactNode;
-
+  render?: ( value: any, row: any, rowIndex: number ) => React.ReactNode; 
   showFilter?: boolean;
   onFilterClick?: (key: string) => void;
 } 
@@ -25,21 +21,13 @@ interface TableProps {
   pagination?: boolean;
   rowsPerPageOptions?: number[];
   onBulkDelete?: boolean;
-  onDeleteSelected?: (
-    selectedRows: any[]
-  ) => void;
-
-  // ADD THESE
+  onDeleteSelected?: ( selectedRows: any[] ) => void;
+onSelectionChange?: ( selectedRows: any[] ) => void;
   currentPage?: number;
   totalPages?: number;
   rowsPerPage?: number;
-  onPageChange?: (
-    page: number
-  ) => void;
-
-  onRowsPerPageChange?: (
-    value: number
-  ) => void;
+  onPageChange?: ( page: number ) => void; 
+  onRowsPerPageChange?: ( value: number ) => void;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
@@ -53,17 +41,21 @@ const Table: React.FC<TableProps> = ({
   rowsPerPageOptions = [10, 20, 50, 200],
   onBulkDelete = false,
   onDeleteSelected,
-
+  onSelectionChange,
   currentPage = 1,
   totalPages = 1,
   rowsPerPage = 10,
-
   onPageChange,
   onRowsPerPageChange,
   sortBy,
   sortOrder = "asc",
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+    useEffect(() => {
+    onSelectionChange?.(
+      selectedRows.map((index) => rows[index])
+    );
+  }, [selectedRows, rows, onSelectionChange]);
 
   const paginatedRows = useMemo(() => {
     if (!pagination) {
@@ -73,6 +65,15 @@ const Table: React.FC<TableProps> = ({
     const startIndex = (currentPage - 1) * rowsPerPage;
     return rows.slice(startIndex, startIndex + rowsPerPage);
   }, [rows, currentPage, rowsPerPage, pagination]);
+
+
+
+useEffect(() => {
+  onSelectionChange?.(
+    selectedRows.map((index) => rows[index])
+  );
+}, [selectedRows, rows, onSelectionChange]);
+
 
   // Checkbox Handlers
   const isAllSelected =
@@ -131,20 +132,50 @@ const Table: React.FC<TableProps> = ({
       setSelectedRows([]);
     };
 
+const handleExportSelected = () => {
+  const selectedData = selectedRows.map(
+    (index) => rows[index]
+  );
+
+  if (!selectedData.length) {
+    alert("Please select at least one row.");
+    return;
+  }
+
+  const headers = Object.keys(selectedData[0]);
+
+  const csvContent = [
+    headers.join(","),
+    ...selectedData.map((row) =>
+      headers
+        .map((header) => `"${row[header] ?? ""}"`)
+        .join(",")
+    ),
+  ].join("\n");
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "selected_rows.csv";
+  link.click();
+
+  URL.revokeObjectURL(url);
+};
+
   return (
     <div className={`custom-table-wrapper ${className}`}>
       {/* Top Actions */}
-      {selectable && onBulkDelete && selectedRows.length > 0 && (
-        // <div className="table-top-actions">
-        //   <Buttons
-        //   textsize="md"
-        //   text={`(${selectedRows.length})`}
-        //   variant="red"
-        //   icon={<DeleteIcon size={25}/>}
-        //   onClick={handleBulkDelete}
-        // />
-        // </div>
+      {selectable && selectedRows.length > 0 && (
         <div className="table-top-actions">
+
+          {/* <button className="export-btn" onClick={handleExportSelected} > Export ({selectedRows.length}) </button> */}
+          <DashboardButtons text="Export" variant="blueborder" textsize="sm" icon={<img src={ExportIcon} alt="Add" className="btn-icon" />} onClick={handleExportSelected}/> 
+          {onBulkDelete && (
           <button
             className="bulk-delete-btn"
             onClick={handleBulkDelete}
@@ -155,8 +186,22 @@ const Table: React.FC<TableProps> = ({
               {selectedRows.length}
             </span>
           </button>
-        </div> 
+          )}
+        </div>
       )}
+      {/* {selectable && onBulkDelete && selectedRows.length > 0 && (
+        // <div className="table-top-actions">
+        //   <Buttons
+        //   textsize="md"
+        //   text={`(${selectedRows.length})`}
+        //   variant="red"
+        //   icon={<DeleteIcon size={25}/>}
+        //   onClick={handleBulkDelete}
+        // />
+        // </div>
+        <div className="table-top-actions">
+        </div> 
+      )} */}
       {selectable && (
         <div className="mobile-select-all">
           <label>
@@ -211,7 +256,7 @@ const Table: React.FC<TableProps> = ({
                     //     }}
                     //   />
                     // </button>
-                                        <button
+                    <button
                       type="button"
                       className="filter-btn"
                       onClick={() => col.onFilterClick?.(col.key)}

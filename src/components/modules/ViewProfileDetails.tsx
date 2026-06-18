@@ -489,7 +489,7 @@ const [showResetModal, setShowResetModal] = useState(false);
               />
             ))
           ) : (
-            <div style={{ padding: 12 }}>
+            <div style={{ textAlign: "center"  }}>
               No records found
             </div>
           )}

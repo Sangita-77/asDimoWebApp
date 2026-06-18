@@ -8,6 +8,8 @@
 h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
 h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
+p.PageDescription{color: var(--TextcolorDark); font-weight: 400; font-size: 18px; line-height: 30px; color: var(--TextcolorDark);}
+p.PageDescription span{padding:10px; font-weight: 600; color: var(--TextcolorBlack);}
 /* HeadingPara End */
 
 
@@ -18,15 +20,19 @@ button{cursor: pointer;}
 /* variants */
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
-.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 10px 30px; font-size: 20px !important; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
+.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 10px 30px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
 .GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px;}
 .GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
 .GlobalButton.resetbtn button.greyborder{width: 150px; padding: 14px 5px 11px 3px;}
 .GlobalButton.resetbtn button.greyborder{width: 150px; padding: 14px 5px 11px 3px;}
+.GlobalButton button.DarkGreen{background: var(--DarkGreen); color: var(--TextcolorLight); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
+.GlobalButton button.DarkGreen:hover{background: var(--PrimaryColor); transition: .5s; }
+.GlobalButton button.blueborder{border: solid 1px var(--ColorBlue); background: transparent; padding: 10px 18px 10px 8px; color: var(--ColorBlue); border-radius: 5px; font-weight: 600 !important;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}
+.GlobalButton button.lg{font-weight: 600; font-size: 16px;}
 /* icon */
 .GlobalButton button .btn-icon{padding: 0 7px;}
 /* Button End */
@@ -66,9 +72,9 @@ button{cursor: pointer;}
 /* Modal Container */
 .modalBox { width: 100%; max-width: 380px;  background: #ffffff; border-radius: 16px;  overflow: hidden;  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 20px 50px rgba(0, 0, 0, 0.12);  animation: modalSlideUp 0.3s ease; }
 /* Header */
-.modalHeader { display: flex; align-items: center; justify-content: space-between;  padding: 15px;  border-bottom: 1px solid #ececec;  font-size: 20px; font-weight: 600; background: var(--GreenButtonHover);}
+.modalHeader { display: flex; align-items: center; justify-content: space-between;  padding: 15px;  border-bottom: 2px solid var(--GreyBorders);  font-size: 20px; font-weight: 600; }
 /* Close Button */
-.modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: var(--SecondayColor); color: var(--TextcolorLight);  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
+.modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: var(--DarkGreen); color: var(--TextcolorLight);  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
 .modalCloseBtn:hover {transform: rotate(90deg);  background: var(--SecondayColor); color: var(--TextcolorLight);}
 /* Body */
 .modalBody { padding: 24px; color: #555; font-size: 15px; line-height: 1.6; }
@@ -151,7 +157,7 @@ button{cursor: pointer;}
 /* Hidden on desktop */
 .mobile-select-all { display: none; }
 /* Delete Button */
-.table-top-actions {position: absolute; right: 0; top: -60px;}
+.table-top-actions {position: absolute; right: 0; top: -60px; display: flex; gap: 20px;}
 .bulk-delete-btn { position: relative; width: 42px; height: 42px; border: none; border-radius: 12px; background: var(--GreenButtonHover); color: var(--ColorDenger); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
 .bulk-delete-btn:hover { background: var(--ColorDengerHover); transform: translateY(-1px); }
 .delete-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; background: var(--ColorDenger); color: var(--TextcolorLight); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }

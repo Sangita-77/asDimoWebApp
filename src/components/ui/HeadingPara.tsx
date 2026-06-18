@@ -14,7 +14,7 @@ export const Heading3 = ({ text }: { text: string }) => (
 
 
 // Paragraphs Start
-export const Paragraph = ({ text }: { text: string }) => (
+export const Paragraph = ({ text }: { text: React.ReactNode }) => (
   <p className="PageDescription">{text}</p>
 );
 export const Paragraph2 = ({ text }: { text: string }) => (

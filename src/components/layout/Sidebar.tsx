@@ -164,7 +164,7 @@ const menuItems =
               <div className="logout-popup-actions d-flex">
                 <DashboardButtons
                   text="Cancel"
-                  variant="solid"
+                  variant="DarkGreen"
                   textsize="sm"
                   onClick={() =>
                     setShowLogoutModal(false)
@@ -173,7 +173,7 @@ const menuItems =
 
                 <DashboardButtons
                   text="Logout"
-                  variant="solid"
+                  variant="DarkGreen"
                   textsize="sm"
                   onClick={handleLogout}
                 />

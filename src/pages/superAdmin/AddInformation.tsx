@@ -6,6 +6,9 @@ import FormAdd from "../../components/ui/FormAdd";
 import { authService } from "../../services/authService";
 import { useLocation, useNavigate } from "react-router-dom";
 import { countries } from "../../components/ui/countries";
+import DashboardButtons from "../../components/ui/Buttons";
+import { routes } from "../../routes/AppRoutes";
+import { ArrowLeftIcon } from "lucide-animated";
 
 
 const AddInformation: React.FC = () => {
@@ -32,6 +35,48 @@ const location = useLocation();
         return "User Information";
     }
   };
+
+
+const getPageConfig = (flag: number) => {
+  switch (flag) {
+    case 6:
+      return {
+        route: routes.SUP_ZONALADMIN,
+        text: "Back To Zonal Admin",
+      };
+
+    case 7:
+      return {
+        route: routes.SUP_ADMIN,
+        text: "Back To Admin",
+      };
+
+     case 1:
+      return {
+        route: routes.SUP_ORGANIZATION,
+        text: "Back To Organization",
+    };  
+
+     case 3:
+      return {
+        route: routes.SUP_THERAPIST,
+        text: "Back To Therapist",
+    };  
+
+     case 2:
+      return {
+        route: routes.SUP_PARENT,
+        text: "Back To Parent",
+    };  
+
+    default:
+      return {
+        route: routes.SUP_PARENT,
+        text: "Back To Parent",
+      };
+  }
+};
+const pageConfig = getPageConfig(flag);
 
   const getSucHeading = (flag: number) => {
     switch (flag) {
@@ -200,8 +245,17 @@ const location = useLocation();
 
   return (
     <>
-    <Heading1 text={getHeading(flag)} />
-    <Paragraph text={`Dashboard > ${getSucHeading(flag)} > ${getHeading(flag)}`} />
+    <div className="d-flex">
+        <div className="AddInfoWordWrap">
+            <Heading1 text={getHeading(flag)} />
+            <Paragraph text={ <> Dashboard <span>&gt;</span> {getSucHeading(flag)}{" "} <span>&gt;</span> {getHeading(flag)} </> } />
+        </div>
+        <div className="BacktoListButton"> <DashboardButtons text={pageConfig.text} onClick={() => navigate(pageConfig.route)} icon={<ArrowLeftIcon size={18} />} />
+        </div>
+    </div>
+
+
+
     <div className="boxShadow AddInformation">
         {/* <AddNewAdminorg/> */}
     <FormAdd

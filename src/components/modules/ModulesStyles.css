@@ -17,5 +17,15 @@
 /* Global Table List Start */
 .TableSearchWrap{align-items: center;}
 .TableSearchWrap .search-sort-container{width: 50%;}
-.TableSearchWrap .GlobalButton {width: 50%; display: flex; justify-content: end; margin-top: -125px;}
+.TableSearchWrap .AddUpdateButton {width: 50%; display: flex; justify-content: end; margin-top: -125px; gap: 20px;}
 /* Global Table List End */
+
+/* View Details Start */
+.GlobalModalBox .profile-field{padding: 10px 0;}
+.GlobalModalBox .profile-field .GlobalButton button{background: var(--GreenButtonHover); padding: 7px 15px 5px 0px; border: solid 1px var(--GreenButtonHover);}
+/* View Details End */
+
+/* AddInformation Start*/
+.AddInfoWordWrap{width: 70%;}
+.BacktoListButton {display: flex; justify-content: end; width: 30%; align-items: center;}
+/* AddInformation End*/
