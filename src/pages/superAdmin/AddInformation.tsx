@@ -103,49 +103,101 @@ const pageConfig = getPageConfig(flag);
         throw new Error("No token found");
       }
 
-      const payload = {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        city: data.city,
-        state: data.State,
-        pincode: data.zipcode,
-        country: data.country,
-        flag,
+      // console.log(".................",data);
+      // console.log("image---------------",data.profileImg);
 
-        ...(flag === 6 && {
-          superAdminId: 1,
-        }),
+      // const payload = {
+      //   name: data.name,
+      //   email: data.email,
+      //   phone: data.phone,
+      //   address: data.address,
+      //   city: data.city,
+      //   state: data.State,
+      //   pincode: data.zipcode,
+      //   country: data.country,
+      //   flag,
 
-        ...(flag === 7 && {
-          zonalAdminId: data.zonalAdminId,
-        }),
+      //   ...(flag === 6 && {
+      //     superAdminId: 1,
+      //   }),
 
-        ...(flag === 1 && {
-          adminId: data.adminId,
-          organization_type: Number(
-            data.organization_type
-          ),
-        }),
+      //   ...(flag === 7 && {
+      //     zonalAdminId: data.zonalAdminId,
+      //   }),
 
-        ...(flag === 3 && {
-          organizationAdminId:
-            data.organizationAdminId,
-        }),
+      //   ...(flag === 1 && {
+      //     adminId: data.adminId,
+      //     organization_type: Number(
+      //       data.organization_type
+      //     ),
+      //   }),
 
-        ...(flag === 2 && {
-          therapistId: data.therapistId,
-        }),
-      };
+      //   ...(flag === 3 && {
+      //     organizationAdminId:
+      //       data.organizationAdminId,
+      //   }),
 
-      await authService.register(
-        token,
-        payload
-      );
+      //   ...(flag === 2 && {
+      //     therapistId: data.therapistId,
+      //   }),
+      // };
+
+      // await authService.register(
+      //   token,
+      //   payload
+      // );
+
+      const formData = new FormData();
+
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("address", data.address);
+      formData.append("city", data.city);
+      formData.append("state", data.State);
+      formData.append("pincode", data.zipcode);
+      formData.append("country", data.country);
+      formData.append("flag", String(flag));
+
+      if (data.profileImage) {
+        formData.append("profileImg", data.profileImage);
+      }
+
+      if (flag === 6) {
+        formData.append("superAdminId", "1");
+      }
+
+      if (flag === 7) {
+        formData.append("zonalAdminId", data.zonalAdminId);
+      }
+
+      if (flag === 1) {
+        formData.append("adminId", data.adminId);
+        formData.append(
+          "organization_type",
+          String(data.organization_type)
+        );
+      }
+
+      if (flag === 3) {
+        formData.append(
+          "organizationAdminId",
+          data.organizationAdminId
+        );
+      }
+
+      if (flag === 2) {
+        formData.append("therapistId", data.therapistId);
+      }
+
+      // for (const pair of formData.entries()) {
+      //   console.log(pair[0], pair[1]);
+      // }
+
+      await authService.register(token, formData);
 
       // alert("User created successfully");
-      window.location.reload
+      window.location.reload();
 
       navigate(-1);
     } catch (error: any) {
