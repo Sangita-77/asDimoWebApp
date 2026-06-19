@@ -49,6 +49,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [preview, setPreview] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -74,10 +76,23 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   onSubmit(formData);
+  // };
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    setIsSubmitting(true);
+    await onSubmit(formData);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
 <form className="add_information" onSubmit={handleSubmit}>
@@ -194,8 +209,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     ))}
 </div>
 
-<div className="submit-section">
+{/* <div className="submit-section">
   <DashboardButtons text="Add" type="submit" variant="neon"
+  />
+</div> */}
+<div className="submit-section">
+  <DashboardButtons
+    text={isSubmitting ? "Adding..." : "Add"}
+    type="submit"
+    variant="neon"
+    disabled={isSubmitting}
   />
 </div>
 </form>
