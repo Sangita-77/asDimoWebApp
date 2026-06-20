@@ -8,7 +8,7 @@ const SupOrganization: React.FC = () => {
       <Heading1 text="Organization Admin" />
       {/* <ZonalAdminList /> */}
       <GlobalTableList
-        flag={1}
+        flag={[1, 5]}
         columns={[
           { key: "name", title: "Name", sortable: true },
           { key: "admin_name", title: "Admin", sortable: true },
