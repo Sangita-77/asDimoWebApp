@@ -176,10 +176,31 @@ button{cursor: pointer;}
 /* Table Card Start */
 .table-card { background: var(--lightBackground); margin-bottom: 25px; border-radius: 10px; }
 .table-card-title { margin-bottom: 12px; } 
-.table-card-row { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid var(--GreyBorders); } 
+.table-card-row { display: flex; justify-content: space-between; padding: 15px 15px; border-bottom: 1px solid var(--GreyBorders); } 
 .table-card-row:last-child { border-bottom: none; }
-.table-card-label { font-weight: 400; color: var(--TextcolorBlack); text-transform: capitalize; }
+.table-card-label {width: 40%; font-weight: 400; color: var(--TextcolorBlack); text-transform: capitalize; }
+.table-card-value{width: 60%;}
 .table-card .table-card-row:nth-child(1){display: none;}
+.table-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.table-card-profile {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.table-card-name h4 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
 /* Table Card End */
 
 
@@ -229,15 +250,9 @@ button{cursor: pointer;}
 }
 
 .add_information .form-group label { margin-bottom: 6px; font-size: 17px; font-weight: 500; color: var(--TextcolorDark); margin-top: 5px; } 
-.add_information .form-group input,
-.add_information .form-group select {
-  width: 100%;
-  height: 50px;
-  padding: 0 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  outline: none;
-  box-sizing: border-box;
+.add_information .form-group input, .add_information .form-group select { width: 100%; height: 50px; padding: 0 12px; border: 1px solid var(--BorderColor); border-radius: 6px; outline: none; box-sizing: border-box; }
+.add_information .form-group  select option:first-child {
+  display: none;
 }
 
 .add_information .form-group input:focus,

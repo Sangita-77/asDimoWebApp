@@ -15,7 +15,8 @@ import SupZonaladmin from "./pages/superAdmin/zonalAdmin";
 import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
 import AdminDetails from "./pages/superAdmin/AdminDetails";
 import SupOrganization from "./pages/superAdmin/organizationAdmin";
-import SupTherapist from "./pages/superAdmin/therapistAdmin";
+import SupORGadminDetails from "./pages/superAdmin/organizationAdminDetails";
+import SupTherapist from "./pages/superAdmin/TherapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
 import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";
@@ -58,6 +59,7 @@ function App() {
           <Route path="admin" element={<SupAdmin />} />
           <Route path="admin-details" element={<AdminDetails />} />
           <Route path="organization" element={<SupOrganization />} />
+          <Route path="organization-details" element={<SupORGadminDetails />} />
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="parent" element={<SupParent />} />

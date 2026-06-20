@@ -1,12 +1,13 @@
 /* ViewProfileDetails Start */
-.ViewProfileDetails .Profile_Editable{width: 68%; margin-top: 50px;}
-.TotalCount{align-items: center;}
+.ViewProfileDetails:not(.ORG) .Profile_Editable{width: 60%; margin-top: 50px;}
+.TotalCount{align-items: center; padding: 10px 0px;}
+.TotalCount:not(:last-child){border-bottom: solid 2px var(--GreyBorders);}
 .TotalCount .Heading2{width: 80%;}
 .TotalCount .Heading3{width: 20%; text-align: right;}
-.ORGList{margin-top: 50px; margin-left: 30px; width: 32%;}
+.ViewProfileDetails:not(.ORG) .ORGList{margin-top: 50px; margin-left: 30px; width: 40%;}
 .ORGList .GlobalButton .greyborder{padding-left: 15px;}
 .OrganisationList{align-items: center; margin-bottom: 20px;}
-.ORGList .GlobalButton{width: 30%; text-align: right;}
+.ORGList .GlobalButton{width: 30%; display: flex; justify-content: end;}
 .ORGList .Heading2{width: 70%;}
 /* ViewProfileDetails End */
 
@@ -29,3 +30,9 @@
 .AddInfoWordWrap{width: 70%;}
 .BacktoListButton {display: flex; justify-content: end; width: 30%; align-items: center;}
 /* AddInformation End*/
+
+
+
+
+
+

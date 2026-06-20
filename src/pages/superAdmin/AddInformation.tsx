@@ -210,30 +210,12 @@ const pageConfig = getPageConfig(flag);
     }
   };
 
-  const fields: Field[] = [
-    {
-      name: "name",
-      label: "Full Name",
-      placeholder: "Enter Full Name",
-      required: true,
-    },
-    {
-      name: "email",
-      label: "Email Address",
-      type: "email",
-      placeholder: "Enter Email Address",
-      required: true,
-    },
-    {
-      name: "phone",
-      label: "Phone Number",
-      type: "tel",
-      placeholder: "Enter Phone Number",
-      width: "half",
-      required: true,
-    },
-    { name: "role", label: "Role", type: "text", value: `${getSucHeading(flag)}`, width: "half", readOnly: true,},
 
+  const fields: Field[] = [
+    { name: "name", label: "Full Name", placeholder: "Enter Full Name", required: true, },
+    { name: "email", label: "Email Address", type: "email", placeholder: "Enter Email Address", required: true, },
+    { name: "phone", label: "Phone Number", type: "tel", placeholder: "Enter Phone Number", width: "half", required: true, },
+    { name: "role", label: "Role", type: "text", value: `${getSucHeading(flag)}`, width: "half", readOnly: true,},
     ...(flag === 1
       ? [
           {
@@ -253,46 +235,72 @@ const pageConfig = getPageConfig(flag);
             ],
             required: true,
           },
-        ]
-      : []),
+          {
+            name: "under_admin",
+            label: "Under Admin",
+            fieldType: "select" as const,
+            width: "half" as const,
+    //         options: [
+    // Admin list
+    //         ],
+            required: true,
+          },
+            ]
+          : []),
 
+
+...(flag === 7
+  ? [
     {
-      name: "address",
-      label: "Address Information",
-      type: "text",
-      placeholder: "Enter Full Address",
+      name: "under_zonaladmin",
+      label: "Under Zonal Admin",
+      fieldType: "select" as const,
+      width: "full" as const,
+      options: [
+    // Zonal Admin list
+      ],
       required: true,
     },
-    {
-      name: "city",
-      label: "City",
-      placeholder: "Enter City",
-      width: "quarter",
-      required: true,
-    },
-    {
-      name: "State",
-      label: "State / Province",
-      placeholder:
-        "Enter State / Province",
-      width: "quarter",
-      required: true,
-    },
-    {
-      name: "zipcode",
-      label: "Zip Code",
-      placeholder: "Enter Zip Code",
-      width: "quarter",
-      required: true,
-    },
-    {
-      name: "country",
-      label: "Country",
-      fieldType: "select",
-      width: "quarter",
-      options: countries,
-      required: true,
-    },
+    ]
+: [3, 5].includes(flag)
+  ? [
+      {
+        name: "therapist_type",
+        label: "Therapist Type",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "",
+        options: [
+          {
+            label: "Global",
+            value: "0",
+          },
+          {
+            label: "Under Organization",
+            value: "1",
+          },
+        ],
+        required: true,
+      },
+      {
+        name: "organization_name",
+        label: "Organization Name",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "Select Organization",
+        options: [
+          // Organization list
+        ],
+        required: true,
+      },
+    ]
+  :  []),
+
+    { name: "address", label: "Address Information", type: "text", placeholder: "Enter Full Address", required: true, },
+    { name: "city", label: "City", placeholder: "Enter City", width: "quarter", required: true, },
+    { name: "State", label: "State / Province", placeholder: "Enter State / Province", width: "quarter", required: true, },
+    { name: "zipcode", label: "Zip Code", placeholder: "Enter Zip Code", width: "quarter", required: true, },
+    { name: "country", label: "Country", fieldType: "select", width: "quarter", options: countries, required: true, },
   ];
 
   return (

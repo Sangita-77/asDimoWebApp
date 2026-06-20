@@ -31,7 +31,10 @@ export type Field = {
   }[];
   readOnly?: boolean;
   value?: string;
-
+  showWhen?: {
+  field: string;
+  value: string;
+};
 };
 
 interface ProfileFormProps {
@@ -114,9 +117,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                       [e.target.name]: e.target.value,
                     })
                   }
+                  required={field.required}
                 >
-                  <option value="">Select {field.label}</option>
-
+                <option value="" disabled>
+                  {field.placeholder || `Select ${field.label}`}
+                </option>
                   {field.options?.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}

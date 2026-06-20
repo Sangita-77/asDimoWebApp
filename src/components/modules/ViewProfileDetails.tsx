@@ -24,7 +24,6 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [relatedData, setRelatedData] = useState<any>(null);
   const [userFlag, setUserFlag] = useState<number | null>(null);
   const [memberList, setMemberList] = useState<any[]>([]);
   const [listTitle, setListTitle] = useState("Organisation List");
@@ -38,7 +37,6 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
   const [id, setId] = useState("");
-  // const [lastLogin, setLastLogin] = useState("");
 
   const handleImageChange = async (file: File) => {
     try {
@@ -110,98 +108,38 @@ const [showResetModal, setShowResetModal] = useState(false);
     switch (flag) {
       case 6:
         return [
-          {
-            label: "Flag",
-            path: "flag",
-          },
-          {
-            label: "Name",
-            path: "name",
-          },
-          {
-            label: "Email",
-            path: "email",
-          },
-          {
-            label: "Organization Count",
-            path: "organizationCount",
-          },
-          {
-            label: "Phone No",
-            path: "phone",
-          },
-          {
-            label: "Address",
-            path: "fullAddress",
-          },
+          { label: "Flag", path: "flag", },
+          { label: "Name", path: "name", },
+          { label: "Email", path: "email", },
+          { label: "Organization Count", path: "organizationCount", },
+          { label: "Phone No", path: "phone", },
+          { label: "Address", path: "fullAddress", },
         ];
 
       case 7:
         return [
-          {
-            label: "Flag",
-            path: "flag",
-          },
-          {
-            label: "Name",
-            path: "name",
-          },
-          {
-            label: "Email",
-            path: "email",
-          },
-          {
-            label: "Total Therapists",
-            path: "totalTherapists",
-          },
-          {
-            label: "Phone No",
-            path: "phone",
-          },
-          {
-            label: "Address",
-            path: "fullAddress",
-          },
+          { label: "Flag", path: "flag", },
+          { label: "Name", path: "name", },
+          { label: "Email", path: "email", },
+          { label: "Total Therapists", path: "totalTherapists", },
+          { label: "Phone No", path: "phone", },
+          { label: "Address", path: "fullAddress", },
         ];
 
         case 3:
         return [
-          {
-            label: "Flag",
-            path: "flag",
-          },
-          {
-            label: "Name",
-            path: "name",
-          },
-          {
-            label: "Phone No",
-            path: "phone",
-          },
-          {
-            label: "Email",
-            path: "email",
-          },
-          {
-            label: "Address",
-            path: "fullAddress",
-          },
+          { label: "Flag", path: "flag", },
+          { label: "Name", path: "name", },
+          { label: "Phone No", path: "phone", },
+          { label: "Email", path: "email", },
+          { label: "Address", path: "fullAddress", },
         ];
 
       default:
         return [
-          {
-            label: "Flag",
-            path: "flag",
-          },
-          {
-            label: "Name",
-            path: "name",
-          },
-          {
-            label: "Email",
-            path: "email",
-          },
+          { label: "Flag", path: "flag", },
+          { label: "Name", path: "name", },
+          { label: "Email", path: "email", },
         ];
     }
   };
@@ -303,7 +241,7 @@ const [showResetModal, setShowResetModal] = useState(false);
             break;
 
           default:
-            setListTitle("Organisation List");
+            setListTitle("Organization List");
             setMemberList(
               (user.relatedData?.organizations?.data ||
                 user.relatedData?.admins?.data ||
@@ -361,14 +299,6 @@ const [showResetModal, setShowResetModal] = useState(false);
             break;
           case "pincode":
             setPincode(value);
-            
-            // setRelatedData((prev: any) => ({
-            //   ...prev,
-            //   roleData: {
-            //     ...prev?.roleData,
-            //     [field]: value,
-            //   },
-            // }));
             break;
         }
 
@@ -388,71 +318,11 @@ const [showResetModal, setShowResetModal] = useState(false);
     <div className="d-flex ViewProfileDetails">
       <div className="Profile_Editable">
         <div className="boxShadow">
-          {/* <ProfileField
-            label="Profile"
-            value={name}
-            showProfileImage
-            profileImage={profileImage}
-            onImageChange={handleImageChange}
-            editable={true}
-          /> */}
-
-          {/* <ProfileField
-            label="Last Login"
-            value={
-              lastLogin
-                ? new Date(lastLogin).toLocaleString("en-IN")
-                : "Never"
-            }
-            editable={false}
-          /> */}
-
-
-          <ProfileImageField
-            profileImage={
-              profileImage
-                ? `${filebasename}${profileImage}`
-                : ""
-            }
-            userName={name}
-            onImageChange={handleImageChange}
-          />
-
-          {/* <ProfileField
-            label="Profile"
-            value={name}
-            editable={true}
-          /> */}
-
-          <ProfileField
-            label="Profile"
-            value={name}
-            onSave={(value) =>
-              updateField("name", value)
-            }
-          />
-
-
-          <ProfileField
-            label="Email"
-            value={email}
-            editable={false}
-          />
-
-          <ProfileField
-            label="Phone"
-            value={phone}
-            onSave={(value) =>
-              updateField("phone", value)
-            }
-          />
-
-          <ProfileField
-            label="Zone"
-            value={zone}
-            editable={true}
-            onClick={() => setShowResetModal(true)}
-          />
+          <ProfileImageField profileImage={ profileImage ? `${filebasename}${profileImage}` : "" } userName={name} onImageChange={handleImageChange} />
+          <ProfileField label="Profile" value={name} onSave={(value) => updateField("name", value) } />
+          <ProfileField label="Email" value={email} editable={false} /> 
+          <ProfileField label="Phone" value={phone} onSave={(value) => updateField("phone", value) } />
+          <ProfileField label="Zone" value={zone} editable={true} onClick={() => setShowResetModal(true)} />
         </div>
 
         <div className="boxShadow">
@@ -496,68 +366,14 @@ const [showResetModal, setShowResetModal] = useState(false);
         </div>
       </div>
       {showResetModal && (
-        <ModalBox
-          header={<h3>Zone Details</h3>}
-          onCancel={() =>
-            setShowResetModal(false)
-          }
+        <ModalBox header={<h3>Zone Details</h3>} onCancel={() => setShowResetModal(false) }
           body={
             <div className="ZoneDetails">
-               {/* <ProfileField label="City" value="city" editable={true} />
-               <ProfileField label="State" value="state" editable={true} />
-               <ProfileField label="Pincode" value="pincode" editable={true} />
-               <ProfileField label="Address" value="address" editable={true} />
-               <ProfileField label="Country" value="country" editable={true} /> */}
-
-               <ProfileField
-                  label="City"
-                  value={
-                    city || ""
-                  }
-                  onSave={(value) =>
-                    updateField("city", value)
-                  }
-                />
-
-                <ProfileField
-                  label="State"
-                  value={
-                    state || ""
-                  }
-                  onSave={(value) =>
-                    updateField("state", value)
-                  }
-                />
-
-                <ProfileField
-                  label="Pincode"
-                  value={
-                    pincode || ""
-                  }
-                  onSave={(value) =>
-                    updateField("pincode", value)
-                  }
-                />
-
-                <ProfileField
-                  label="Address"
-                  value={
-                    address || ""
-                  }
-                  onSave={(value) =>
-                    updateField("address", value)
-                  }
-                />
-
-                <ProfileField
-                  label="Country"
-                  value={
-                    country || ""
-                  }
-                  onSave={(value) =>
-                    updateField("country", value)
-                  }
-                />
+               <ProfileField label="City" value={ city || "" } onSave={(value) => updateField("city", value) } />
+               <ProfileField label="State" value={ state || "" } onSave={(value) => updateField("state", value) } />
+               <ProfileField label="Pincode" value={ pincode || "" } onSave={(value) => updateField("pincode", value) } />
+               <ProfileField label="Address" value={ address || "" } onSave={(value) => updateField("address", value) } />
+               <ProfileField label="Country" value={ country || "" } onSave={(value) => updateField("country", value) } />
             </div>
           }
         />
