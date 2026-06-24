@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DownloadIcon from "../../assets/Images/DownloadIcon.svg";
+import {DownloadIcon} from 'lucide-animated';
 import DashboardButtons from "./Buttons";
 
 interface Point {
@@ -42,7 +42,7 @@ const AnalyticsGraph: React.FC<AnalyticsGraphProps> = ({
 const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
 
   return (
-    <div className="analytics-graph">
+    <div className="analytics-graph boxShadow">
       <div className="graph-top">
         <div>
           <h2>{title}</h2>
@@ -52,7 +52,7 @@ const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
         <div className="graph-stat">
           {/* <h1>{total}</h1> */}
           {/* <span>{growth}</span> */}
-          <DashboardButtons text="Save Report" icon={ <img src={DownloadIcon} alt="Download" className="btn-icon" /> }  variant="blueborder" textsize="md"/>
+          <DashboardButtons text="Save Report" textsize="sm"  icon={<DownloadIcon size={18} className="icon"/>} variant="blueborder"/>
         </div>
       </div>
 

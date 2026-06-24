@@ -126,6 +126,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     name: {
       key: "name",
       title: "Name",
+      fixed: true,
       onFilterClick: handleSort,
     },
     admin: {
@@ -272,6 +273,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   tableColumns.push({
     key: "actions",
     title: "Actions",
+    fixed: true,
     render: (_value: any, row: any) => (
       <DashboardButtons
         text="View Details"
@@ -352,6 +354,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         onRowsPerPageChange={setRowsPerPage}
         sortBy={sortBy}
         sortOrder={sort}
+        showChooseColumns={true}
       />
 
       {showModal && (

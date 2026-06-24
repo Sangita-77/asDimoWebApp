@@ -68,7 +68,7 @@ const AppointmentTable: React.FC = () => {
 
      return (
         <>
-       <Table columns={columns} rows={rows} pagination displayLimit={8} selectable/>
+       <Table columns={columns} rows={rows} pagination displayLimit={8} selectable />
         </>
       );
 };
