@@ -8,7 +8,8 @@ const SupParent: React.FC = () => {
       <Heading1 text="Parent Admin" />
       {/* <ZonalAdminList /> */}
       <GlobalTableList
-        flag={2}
+        // flag={2}
+        flag={[2, 4]}
         columns={[
           { key: "parent_name", title: "Users", sortable: true },
           { key: "children_details", title: "Children Details", sortable: true },

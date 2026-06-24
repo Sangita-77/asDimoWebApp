@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Heading1, Paragraph } from "../../components/ui/HeadingPara";
 import type { Field } from "../../components/ui/FormAdd";
@@ -16,8 +16,80 @@ const location = useLocation();
   const navigate = useNavigate();
 
   const flag = Number(location.state?.flag);
+  const [adminOptions, setAdminOptions] = useState<Field["options"]>([]);
+  const [zonalAdminOptions, setZonalAdminOptions] =
+    useState<Field["options"]>([]);
+  const [organizationOptions, setOrganizationOptions] = useState<Field["options"]>([]);
+  const [therapistOptions, settherapistOptions] = useState<Field["options"]>([]);
 
   console.log("Flag in AddNewAdminorg:", flag);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const formatUserOptions = (users: any[]) =>
+      users.map((user) => ({
+        label: user.email ? `${user.name} (${user.email})` : user.name,
+        value: String(user.userId),
+      }));
+
+    const fetchSelectOptions = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        if (flag === 7) {
+          const response = await authService.getUsersByFlag(token, 6);
+
+          if (isMounted) {
+            setZonalAdminOptions(formatUserOptions(response.data));
+          }
+        }
+
+        if (flag === 1) {
+          const response = await authService.getUsersByFlag(token, 7);
+
+          if (isMounted) {
+            setAdminOptions(formatUserOptions(response.data));
+          }
+        }
+
+        if (flag === 3) {
+          const response = await authService.getUsersByFlag(token, 1);
+
+          if (isMounted) {
+            setOrganizationOptions(formatUserOptions(response.data));
+          }
+        }
+
+        if (flag === 2) {
+          const response = await authService.getUsersByFlag(token, 3);
+
+          if (isMounted) {
+            settherapistOptions(formatUserOptions(response.data));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching select options:", error);
+
+        if (isMounted) {
+          setAdminOptions([]);
+          setZonalAdminOptions([]);
+          setOrganizationOptions([]);
+          settherapistOptions([]);
+        }
+      }
+    };
+
+    fetchSelectOptions();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [flag]);
 
   const getHeading = (flag: number) => {
     switch (flag) {
@@ -138,7 +210,7 @@ const pageConfig = getPageConfig(flag);
       //   }),
 
       //   ...(flag === 2 && {
-      //     therapistId: data.therapistId,
+      //     teacherId: data.teacherId,
       //   }),
       // };
 
@@ -148,6 +220,12 @@ const pageConfig = getPageConfig(flag);
       // );
 
       const formData = new FormData();
+      const submitFlag =
+        data.user_scope === "global" && flag === 3
+          ? 5
+          : data.user_scope === "global" && flag === 2
+          ? 4
+          : flag;
 
       formData.append("name", data.name);
       formData.append("email", data.email);
@@ -157,7 +235,7 @@ const pageConfig = getPageConfig(flag);
       formData.append("state", data.State);
       formData.append("pincode", data.zipcode);
       formData.append("country", data.country);
-      formData.append("flag", String(flag));
+      formData.append("flag", String(submitFlag));
 
       if (data.profileImage) {
         formData.append("profileImg", data.profileImage);
@@ -180,14 +258,21 @@ const pageConfig = getPageConfig(flag);
       }
 
       if (flag === 3) {
-        formData.append(
-          "organizationAdminId",
-          data.organizationAdminId
-        );
+        if (data.organizationAdminId) {
+          formData.append(
+            "organizationAdminId",
+            data.organizationAdminId
+          );
+        }
       }
 
       if (flag === 2) {
-        formData.append("therapistId", data.therapistId);
+        if (data.teacherId) {
+          formData.append(
+            "teacherId",
+            data.teacherId
+          );
+        }
       }
 
       // for (const pair of formData.entries()) {
@@ -236,13 +321,11 @@ const pageConfig = getPageConfig(flag);
             required: true,
           },
           {
-            name: "under_admin",
+            name: "adminId",
             label: "Under Admin",
             fieldType: "select" as const,
             width: "half" as const,
-    //         options: [
-    // Admin list
-    //         ],
+            options: adminOptions,
             required: true,
           },
             ]
@@ -252,45 +335,79 @@ const pageConfig = getPageConfig(flag);
 ...(flag === 7
   ? [
     {
-      name: "under_zonaladmin",
+      name: "zonalAdminId",
       label: "Under Zonal Admin",
       fieldType: "select" as const,
       width: "full" as const,
-      options: [
-    // Zonal Admin list
-      ],
+      options: zonalAdminOptions,
       required: true,
     },
     ]
-: [3, 5].includes(flag)
+: [3].includes(flag)
   ? [
       {
-        name: "therapist_type",
-        label: "Therapist Type",
+        name: "user_scope",
+        label: "User Type",
         fieldType: "select" as const,
         width: "full" as const,
         placeholder: "",
         options: [
           {
             label: "Global",
-            value: "0",
+            value: "global",
           },
           {
-            label: "Under Organization",
-            value: "1",
+            label: "Non-Global",
+            value: "non_global",
           },
         ],
         required: true,
       },
       {
-        name: "organization_name",
+        name: "organizationAdminId",
         label: "Organization Name",
         fieldType: "select" as const,
         width: "full" as const,
         placeholder: "Select Organization",
+        options: organizationOptions,
+        showWhen: {
+          field: "user_scope",
+          value: "non_global",
+        },
+        required: true,
+      },
+    ]
+: [2].includes(flag)
+  ? [
+      {
+        name: "user_scope",
+        label: "User Type",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "",
         options: [
-          // Organization list
+          {
+            label: "Global",
+            value: "global",
+          },
+          {
+            label: "Non-Global",
+            value: "non_global",
+          },
         ],
+        required: true,
+      },
+      {
+        name: "teacherId",
+        label: "Therapist Name",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "Select Therapist",
+        options: therapistOptions,
+        showWhen: {
+          field: "user_scope",
+          value: "non_global",
+        },
         required: true,
       },
     ]

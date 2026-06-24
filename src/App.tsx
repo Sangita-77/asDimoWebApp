@@ -16,7 +16,7 @@ import ZonalAdminDetails from "./pages/superAdmin/ZonalAdminDetails";
 import AdminDetails from "./pages/superAdmin/AdminDetails";
 import SupOrganization from "./pages/superAdmin/organizationAdmin";
 import SupORGadminDetails from "./pages/superAdmin/organizationAdminDetails";
-import SupTherapist from "./pages/superAdmin/TherapistAdmin";
+import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
 import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";

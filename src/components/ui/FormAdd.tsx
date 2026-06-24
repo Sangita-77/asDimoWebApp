@@ -55,13 +55,32 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFormData({
+  const isFieldVisible = (field: Field, data = formData) =>
+    !field.showWhen || data[field.showWhen.field] === field.showWhen.value;
+
+  const updateFormData = (name: string, value: any) => {
+    const nextFormData = {
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    };
+
+    fields.forEach((field) => {
+      if (!isFieldVisible(field, nextFormData)) {
+        delete nextFormData[field.name];
+      }
     });
+
+    setFormData(nextFormData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateFormData(e.target.name, e.target.value);
+  };
+
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    updateFormData(e.target.name, e.target.value);
   };
 
   const handleImageChange = (
@@ -113,6 +132,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     <div className="right-fields">
       {heading && <Heading2 text={heading} />}
       {fields
+        .filter((field) => isFieldVisible(field))
         .filter(
           (field) => field.name === "name" || field.name === "email"
         )
@@ -126,12 +146,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <select
                   name={field.name}
                   value={formData[field.name] || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
+                  onChange={handleSelectChange}
                   required={field.required}
                 >
                 <option value="" disabled>
@@ -161,6 +176,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 <div className="bottom-fields">
   {fields
+    .filter((field) => isFieldVisible(field))
     .filter(
       (field) => field.name !== "name" && field.name !== "email"
     )
@@ -184,12 +200,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <select
             name={field.name}
             value={formData[field.name] || ""}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                [e.target.name]: e.target.value,
-              })
-            }
+            onChange={handleSelectChange}
             required={field.required}
           >
           <option value="">Select {field.label}</option>

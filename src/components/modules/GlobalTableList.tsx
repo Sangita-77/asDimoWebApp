@@ -19,7 +19,7 @@ interface ColumnConfig {
 }
 
 interface ZonalAdminListProps {
-  flag: number;
+  flag: number | number[];
   columns: ColumnConfig[];
 }
 
@@ -73,6 +73,9 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   columns: dynamicColumns,
 }) => {
   const navigate = useNavigate();
+  const flags = Array.isArray(flag) ? flag : [flag];
+  const primaryFlag = flags[0];
+  const flagDependency = flags.join(",");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("name");
@@ -111,7 +114,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       navigate(routes.SUP_ORGANIZATION_DETAILS, {
         state: { userId , flag },
       });
-    } else if (flag === 3) {
+    } else if (flag === 3 || flag === 5) {
       navigate(routes.SUP_THERAPIST_DETAILS, {
         state: { userId , flag },
       });
@@ -164,18 +167,24 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         throw new Error("No access token found");
       }
 
-      const response = await authService.getUsersByFlag(
-        accessToken,
-        flag,
-        {
-          search: search.trim(),
-          sort,
-          sortBy: sortFieldMap[sortBy] ?? sortBy,
-          sortOrder: sort,
-        }
+      const responses = await Promise.all(
+        flags.map((currentFlag) =>
+          authService.getUsersByFlag(
+            accessToken,
+            currentFlag,
+            {
+              search: search.trim(),
+              sort,
+              sortBy: sortFieldMap[sortBy] ?? sortBy,
+              sortOrder: sort,
+            }
+          )
+        )
       );
-      console.log("API Response:", response);
-      const formattedRows = response.data.map((item: any) => ({
+      const users = responses.flatMap((response) => response.data || []);
+
+      console.log("API Response:", responses);
+      const formattedRows = users.map((item: any) => ({
         id: item._id,
         userId: item.userId,
         name: item.name,
@@ -217,7 +226,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     }, search.trim() ? 400 : 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [search, sort, sortBy, flag]);
+  }, [search, sort, sortBy, flagDependency]);
 
   const handleDeleteSelected = (selectedRows: any[]) => {
     const userIds = selectedRows.map((row) => row.id);
@@ -318,10 +327,10 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       variant="neon"
       textsize="sm"
       icon={<img src={PlusIcon} alt="Add" className="btn-icon" />}
-        text={getAddButtonText(flag)}
+        text={getAddButtonText(primaryFlag)}
         onClick={() =>
           navigate(routes.SUP_ADDINFORMATION, {
-            state: { flag },
+            state: { flag: primaryFlag },
           })
         }
       />
