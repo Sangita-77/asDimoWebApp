@@ -22,7 +22,7 @@ interface TableProps {
   rowsPerPageOptions?: number[];
   onBulkDelete?: boolean;
   onDeleteSelected?: ( selectedRows: any[] ) => void;
-onSelectionChange?: ( selectedRows: any[] ) => void;
+  onSelectionChange?: ( selectedRows: any[] ) => void;
   currentPage?: number;
   totalPages?: number;
   rowsPerPage?: number;
@@ -30,6 +30,7 @@ onSelectionChange?: ( selectedRows: any[] ) => void;
   onRowsPerPageChange?: ( value: number ) => void;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+  displayLimit?: number;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -49,6 +50,7 @@ const Table: React.FC<TableProps> = ({
   onRowsPerPageChange,
   sortBy,
   sortOrder = "asc",
+  displayLimit,
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
     useEffect(() => {
@@ -167,6 +169,10 @@ const handleExportSelected = () => {
   URL.revokeObjectURL(url);
 };
 
+const limitedRows = displayLimit
+  ? paginatedRows.slice(0, displayLimit)
+  : paginatedRows;
+
   return (
     <div className={`custom-table-wrapper ${className}`}>
       {/* Top Actions */}
@@ -219,7 +225,7 @@ const handleExportSelected = () => {
         <thead>
           <tr>
             {selectable && (
-              <th>
+              <th className="custom-checkbox">
               <div className="d-flex check-button"> 
               <input
                 type="checkbox"
@@ -279,14 +285,15 @@ const handleExportSelected = () => {
 
         <tbody>
           {paginatedRows.length > 0 ? (
-            paginatedRows.map((row, rowIndex) => {
+            // paginatedRows.map((row, rowIndex) => {
+               limitedRows.map((row, rowIndex) => {
               const actualIndex =
                 (currentPage - 1) * rowsPerPage + rowIndex;
 
               return (
                 <tr key={actualIndex}>
                   {selectable && (
-                    <td>
+                    <td className="custom-checkbox">
                     <div className="d-flex check-button"> 
                       <input
                         type="checkbox"

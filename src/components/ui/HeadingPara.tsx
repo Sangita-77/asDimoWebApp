@@ -10,6 +10,9 @@ export const Heading2 = ({ text }: { text: string }) => (
 export const Heading3 = ({ text }: { text: string }) => (
   <h3 className="Heading3">{text}</h3>
 );
+export const Heading4 = ({ text }: { text: string }) => (
+  <h4 className="Heading4">{text}</h4>
+);
 // Headings End
 
 
@@ -19,6 +22,9 @@ export const Paragraph = ({ text }: { text: React.ReactNode }) => (
 );
 export const Paragraph2 = ({ text }: { text: string }) => (
   <p className="PageDescription2">{text}</p>
+);
+export const Paragraph3 = ({ text }: { text: string }) => (
+  <p className="PageDescription3">{text}</p>
 );
 // Paragraphs End
 

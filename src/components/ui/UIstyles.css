@@ -8,8 +8,10 @@
 h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
 h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
+h4.Heading4{color: var(--TextcolorDark); font-weight: 600; font-size: 20px; line-height: 30px; padding-bottom: 5px;}
 p.PageDescription{color: var(--TextcolorDark); font-weight: 400; font-size: 18px; line-height: 30px; color: var(--TextcolorDark);}
 p.PageDescription span{padding:10px; font-weight: 600; color: var(--TextcolorBlack);}
+p.PageDescription3{color: var(--BorderColor); font-weight: 400; font-size: 14px; line-height: 24px;}
 /* HeadingPara End */
 
 
@@ -29,6 +31,8 @@ button{cursor: pointer;}
 .GlobalButton button.DarkGreen{background: var(--DarkGreen); color: var(--TextcolorLight); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
 .GlobalButton button.DarkGreen:hover{background: var(--PrimaryColor); transition: .5s; }
 .GlobalButton button.blueborder{border: solid 1px var(--ColorBlue); background: transparent; padding: 10px 18px 10px 8px; color: var(--ColorBlue); border-radius: 5px; font-weight: 600 !important;}
+.GlobalButton button.greenBorder{border: solid 2px var(--NeonGreen); border-radius: 8px; padding: 8px 0px 3px 12px; color: var(--NeonGreen); background-color: var(--TextcolorLight);}
+.GlobalButton button.greenBorder:hover{background: var(--GreenButtonHover); transition: .5s;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}
@@ -119,8 +123,8 @@ button{cursor: pointer;}
 .GlobalTable { width: 100%; overflow-x: auto; border: solid 1px var(--GreyBorders); border-radius: 10px;}
 .GlobalTable .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; } 
 /* Header */
-.custom-table thead{background: var(--lightBackground);}
-.custom-table th { padding: 16px 15px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap; color: #374151; }
+.custom-table thead{background: var(--TableHeader);}
+.custom-table th { padding: 16px 15px; text-align: left; font-size: 14px; font-weight: 600; white-space: nowrap;}
 .custom-table thead tr th:not(:nth-child(2)){text-align: center;}
 .custom-table .table-head-content {position: relative;}
 /* Filter Button */
@@ -171,6 +175,64 @@ button{cursor: pointer;}
 .sort-select { height: 45px; min-width: 180px; padding: 0 40px 0 14px; border: 1px solid var(--GreyBorders); border-radius: 5px; font-size: 14px; cursor: pointer; outline: none; transition: all 0.2s ease; }
 .sort-select:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
 /* Search End */
+
+
+/* DashboardCard Start */
+.mini-card { display: flex; align-items: start; gap: 25px; padding: 25px 16px; border-radius: 10px; box-shadow: 5px 5px 10px var(--GreyBorders); border: solid 1px var(--GreyBorders); } 
+.mini-card-image img { width: 68px; height: 68px; border-radius: 8px; object-fit: cover; }
+.mini-card .mini-card-content a{color: var(--ColorSky); text-decoration: none;}
+.mini-card .mini-card-content a:hover{color: var(--DarkGreen); transition: .5s;}
+.mini-card .mini-card-content a div {padding-top: 3px; padding-left: 4px;}
+/* DashboardCard End */
+
+
+/* AnalyticsCardTable Start */
+.profile-table { width: 100%; border-collapse: collapse; }
+.profile-table th:first-child, .profile-table td:first-child { padding: 16px; text-align: left; } 
+.profile-table th:not(:first-child),.profile-table td:not(:first-child) { text-align: center; }
+.profile-table tbody tr{ background: var(--TableHeader); margin-bottom: 10px; border-bottom: solid 10px var(--TextcolorLight); border-radius: 20px;}
+.doctor-info { display: flex; align-items: center; gap: 12px; } 
+.doctor-image { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: solid 1px var(--BorderColor);} 
+.doctor-info h5 { margin: 0; font-size: 14px; font-weight: 600; color: var(--TextcolorDark); }
+.doctor-info p { margin: 2px 0 0; font-size: 14px; color: var(--TextcolorDark); } 
+.status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 5px; font-size: 13px; font-weight: 600; text-transform: capitalize; width: 100px; }
+/* Upcoming */
+.status-badge.upcoming { background: var(--UpcomingStatus); color: var(--TextcolorLight); }
+/* Complete */
+.status-badge.complete { background: var(--CompleteStatus); color: var(--TextcolorLight); }
+/* Cancel */
+.status-badge.cancel, .status-badge.cancelled { background: var(--CancleStstus); color: var(--TextcolorLight); }
+/* Reschedule */
+.status-badge.reschedule, .status-badge.rescheduled { background: var(--RescheduleStstus); color: var(--TextcolorLight); }
+/* AnalyticsCardTable End */
+
+
+
+
+
+/* AnalyticsGraph Start */
+.point { transition: .25s; }
+.graph-tooltip { pointer-events: none; }
+.analytics-graph { background: var(--TextcolorLight); border-radius: 20px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,.08); margin: 50px 0px; }
+.graph-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.graph-top h2{ margin:0; font-size:24px; }
+.graph-top p{ color:#777; margin-top:5px; }
+.graph-stat{ text-align:right; }
+.graph-body { display: flex; align-items: flex-start; gap: 15px; }
+.graph-y-axis { width: 60px; height: 360px; display: flex; flex-direction: column; justify-content: space-between; text-align: right; font-size: 15px; font-weight: 600; padding-top: 5px;  border-right: solid 3px var(--lightBackground); padding-right: 20px;}
+.graph-y-axis span{color: var(--BorderColor); position: relative;}
+.graph-y-axis span::before { content: ""; position: absolute; top: 50%; right: -30px; transform: translateY(-50%); margin-right: 8px; width: 15px; height: 3px; background: var(--BorderColor); } 
+.graph-content { flex: 1; }
+.months { display: grid; grid-template-columns: repeat(12, 1fr); margin-top: 10px; text-align: center; color: #666; font-size: 13px; font-weight: 600; }
+.graph-svg{ width:100%; height:380px; }
+.grid{ stroke:var(--GreyBorders); stroke-width:1; }
+.line{ fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:2200; stroke-dashoffset:2200;  animation:drawLine 3s ease forwards; }
+.area { opacity: 1; animation: fadeArea 2s ease forwards; } 
+.point{stroke:white; stroke-width:5;  transform-origin:center; transform:scale(0);  animation:pop .5s ease forwards; }
+@keyframes drawLine{ to{ stroke-dashoffset:0; } }  @keyframes fadeArea{ to{ opacity:1; } } 
+@keyframes pop{ 0%{ transform:scale(0); } 70%{ transform:scale(1.4); } 100%{ transform:scale(1); } }
+/* AnalyticsGraph End */
+
 
 
 /* Table Card Start */

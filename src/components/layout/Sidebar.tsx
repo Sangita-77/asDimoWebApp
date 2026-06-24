@@ -16,6 +16,7 @@ import UserIcon from "../../assets/Images/UserIcon.svg";
 import AppointmentIcon from "../../assets/Images/AppointmentIcon.svg";
 import SettingsIcon from "../../assets/Images/SettingsIcon.svg";
 import LogOutIcon from "../../assets/Images/LogOutIcon.svg";
+import ReportIcon from "../../assets/Images/ReportIcon.svg";
 import DashboardButtons from "../ui/Buttons";
 import ModalBox from "../ui/ModalBox";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
@@ -59,10 +60,10 @@ const menuConfig = {
     { name: "Organization", path: routes.SUP_ORGANIZATION, icon: ORGicon, },
     { name: "Doctors/Therapist", path: routes.SUP_THERAPIST, icon: DoctorIcon, },
     { name: "Users/Parents", path: routes.SUP_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.SUP_REPORT, icon: ReportIcon, },
     { name: "Appointments", path: routes.SUP_APPOINTMENT, icon: AppointmentIcon, },
     { name: "Settings", path: routes.SUPERADMIN_SETTINGS, icon: SettingsIcon, }
   ],
-
 
   zonalAdmin: [
     { name: "Dashboard", path: routes.ZONALADMIN, icon: DashBoardIcon, },

@@ -25,12 +25,18 @@
      --GreenButtonHover: #DAEBE8;
      --GreenActiveColor: #D0E3D6;
      --ColorBlue: #3b82f6;
+     --ColorSky: #23B7E5;
      --GreyBorders: #DEDEDE;
      --NeonGreen: #67A401;
      --TranshparentGreen: #05413834;
      --lightBackground: #E9E9E9;
      --ColorDenger: #dc2626;
      --ColorDengerHover: #fecaca;
+     --TableHeader: #e7f5eb;
+     --CompleteStatus: #66C232;
+     --CancleStstus: #FF7068;
+     --RescheduleStstus: #16467B;
+     --UpcomingStatus: #ED9624;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }
