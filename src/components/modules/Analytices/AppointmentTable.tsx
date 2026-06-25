@@ -43,7 +43,7 @@ const doctors = [
     designation: "Dermatologist",
     date: "25 Jun 2026",
     time: "04:00 PM",
-    status: "Reschedule",
+    status: "Rescheduled",
   },
 ];
 

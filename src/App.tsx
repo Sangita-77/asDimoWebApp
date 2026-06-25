@@ -33,7 +33,9 @@ import ZonalAdminIndex from "./pages/zonalAdmin";
 import OrganizationAdminIndex from "./pages/organization";
 
 
-import AdminIndex from "./pages/Admins/Index"
+import AdminIndex from "./pages/Admins/Index";
+
+import TherapistIndex from "./pages/therapist/Index";
 
 
 
@@ -113,6 +115,17 @@ function App() {
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 
+        {/* ================= THERAPIST ================= */}
+
+        <Route path={routes.THERAPIST} element={
+            <AuthMiddleware allowedFlags={["TeachersOrg","teachersGlobal"]}>
+              <DashboardLayOut />
+            </AuthMiddleware>
+          }
+        >
+          <Route index element={<TherapistIndex />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+        </Route>
 
 
       </Routes>

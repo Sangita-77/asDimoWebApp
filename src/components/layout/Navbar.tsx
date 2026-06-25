@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./layout.css";
-// import user from "../../assets/Images/user.png";
+import {MenuIcon} from 'lucide-animated';
 import { BellIcon } from "lucide-animated";
 import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
@@ -183,9 +183,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggle }) => {
   
   return (
     <div className="navbar">
-      <span className="menu-toggle" onClick={toggle}>
-        ☰
-      </span>
+      <div className="menu-toggle" onClick={toggle}>
+        <MenuIcon/>
+      </div>
 
       {/* <h3>{profileRole}</h3> */}
 

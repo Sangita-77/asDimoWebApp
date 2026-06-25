@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./layout.css";
 import "../../components/ui/UIstyles.css";
 import { NavLink } from "react-router-dom";
-
 import { routes } from "../../routes/AppRoutes";
 import { useLogout } from "../../services/useLogout";
 
@@ -80,6 +79,16 @@ const menuConfig = {
   Admin: [
     { name: "Dashboard", path: routes.ADMIN, icon: DashBoardIcon, },
     { name: "Settings", path: routes.ADMIN_SETTINGS, icon: SettingsIcon, }
+  ],
+
+  TeachersOrg: [
+    { name: "Dashboard", path: routes.THERAPIST, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.THERAPIST_SETTINGS, icon: SettingsIcon, }
+  ],
+
+  teachersGlobal: [
+    { name: "Dashboard", path: routes.THERAPIST, icon: DashBoardIcon, },
+    { name: "Settings", path: routes.THERAPIST_SETTINGS, icon: SettingsIcon, }
   ],
 
 };

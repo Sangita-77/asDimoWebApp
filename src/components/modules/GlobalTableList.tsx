@@ -16,6 +16,7 @@ interface ColumnConfig {
   key: string;
   title: string;
   sortable?: boolean;
+  fixed?: boolean;
 }
 
 interface ZonalAdminListProps {
