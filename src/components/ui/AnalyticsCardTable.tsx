@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface ProfileRow {
-  id: number;
+  id: string | number;
   profileImage?: string;
   name?: string;
   designation?: string;

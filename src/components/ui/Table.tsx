@@ -179,22 +179,40 @@ const STORAGE_KEY = "table-columns";
 const [showColumnPicker, setShowColumnPicker] = useState(false);
 const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 useEffect(() => {
+  if (!showChooseColumns) {
+    setVisibleColumns(columns.map((c) => c.key));
+    return;
+  }
+
   const saved = localStorage.getItem(STORAGE_KEY);
 
   if (saved) {
-    setVisibleColumns(JSON.parse(saved));
+    try {
+      const parsed = JSON.parse(saved);
+      const validColumns = Array.isArray(parsed)
+        ? parsed.filter((key) => columns.some((c) => c.key === key))
+        : [];
+
+      setVisibleColumns(
+        validColumns.length > 0
+          ? validColumns
+          : columns.map((c) => c.key)
+      );
+    } catch {
+      setVisibleColumns(columns.map((c) => c.key));
+    }
   } else {
-    setVisibleColumns(columns.map(c => c.key));
+    setVisibleColumns(columns.map((c) => c.key));
   }
-}, [columns]);
+}, [columns, showChooseColumns]);
 useEffect(() => {
-  if (visibleColumns.length) {
+  if (showChooseColumns && visibleColumns.length) {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(visibleColumns)
     );
   }
-}, [visibleColumns]);
+}, [visibleColumns, showChooseColumns]);
 
 
 const toggleColumn = (key: string) => {

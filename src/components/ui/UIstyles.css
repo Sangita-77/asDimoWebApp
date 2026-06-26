@@ -211,14 +211,16 @@ button{cursor: pointer; transition: all 0.25s ease; }
 .doctor-info p { margin: 2px 0 0; font-size: 14px; color: var(--TextcolorDark); } 
 .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 5px; font-size: 13px; font-weight: 600; text-transform: capitalize; width: 100px; }
 /* Upcoming */
-.status-badge.upcoming { background: var(--UpcomingStatus); color: var(--TextcolorLight); }
+.status-badge.pending { background: var(--UpcomingStatus); color: var(--TextcolorLight); }
 /* Complete */
-.status-badge.complete { background: var(--CompleteStatus); color: var(--TextcolorLight); }
+.status-badge.completed { background: var(--CompleteStatus); color: var(--TextcolorLight); }
 /* Cancel */
 .status-badge.cancel, .status-badge.cancelled { background: var(--CancleStstus); color: var(--TextcolorLight); }
 /* Reschedule */
 .status-badge.reschedule, .status-badge.rescheduled { background: var(--RescheduleStstus); color: var(--TextcolorLight); }
 /* AnalyticsCardTable End */
+.status-badge.approved { background: rgb(29, 29, 146); color: var(--TextcolorLight); }
+.status-badge.rejected { background: rgb(185, 44, 44); color: var(--TextcolorLight); }
 
 
 

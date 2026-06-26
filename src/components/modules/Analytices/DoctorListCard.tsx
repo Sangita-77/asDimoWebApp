@@ -1,49 +1,27 @@
+import React from "react";
 import AnalyticsCardTable from "../../ui/AnalyticsCardTable";
-const DoctorListCard: React.FC = () => {
 
-const doctorsListheaders = [
-  { key: "doctor", title: "Doctors List" },
-];
+interface DoctorListCardProps {
+  doctors: Array<{
+    id: number | string;
+    profileImage?: string;
+    name: string;
+    designation: string;
+  }>;
+}
 
-
-const doctors = [
-  {
-    id: 1,
-    profileImage: "/images/profile1.png",
-    name: "Dr. P.K. Chakraborty",
-    designation: "Cardiologist",
-  },
-  {
-    id: 2,
-    profileImage: "/images/profile2.png",
-    name: "Dr. Rahul Sen",
-    designation: "Dentist",
-  },
-  {
-    id: 3,
-    profileImage: "/images/profile3.png",
-    name: "Dr. Priya Das",
-    designation: "Neurologist",
-  },
-  {
-    id: 4,
-    profileImage: "/images/profile4.png",
-    name: "Dr. Amit Roy",
-    designation: "Dermatologist",
-  },
-  {
-    id: 5,
-    profileImage: "/images/profile4.png",
-    name: "Dr. Amit Roy",
-    designation: "Dermatologist",
-  },
-];
+const DoctorListCard: React.FC<DoctorListCardProps> = ({ doctors }) => {
+  const doctorsListheaders = [{ key: "doctor", title: "Doctors List" }];
 
   return (
     <>
-    <AnalyticsCardTable data={doctors} headers={doctorsListheaders}/>
+      {doctors.length > 0 ? (
+        <AnalyticsCardTable data={doctors} headers={doctorsListheaders} />
+      ) : (
+        <div className="no-data">No doctors available</div>
+      )}
     </>
-      );
+  );
 };
 
 export default DoctorListCard;

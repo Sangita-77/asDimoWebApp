@@ -322,4 +322,14 @@ export const authService = {
       return response.data;
     },
 
+  getAppoinments: async (token: string) => {
+    const response = await axios.get(`${BASE_URL}/appointments`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
 };

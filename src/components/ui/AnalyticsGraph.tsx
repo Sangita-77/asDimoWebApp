@@ -18,10 +18,12 @@ interface AnalyticsGraphProps {
   linePath: string;
   areaPath: string;
   points: Point[];
+  yAxisLabels?: number[];
   graphColor?: string;
   gradientId: string;
   PointColor: string;
   rWidth: string;
+  onSaveReport?: () => void;
 }
 
 const AnalyticsGraph: React.FC<AnalyticsGraphProps> = ({
@@ -33,10 +35,12 @@ const AnalyticsGraph: React.FC<AnalyticsGraphProps> = ({
   linePath,
   areaPath,
   points,
+  yAxisLabels = [0, 100, 300, 700, 1000],
   graphColor,
   gradientId,
   PointColor,
   rWidth,
+  onSaveReport,
 }) => {
 
 const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
@@ -52,18 +56,26 @@ const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
         <div className="graph-stat">
           {/* <h1>{total}</h1> */}
           {/* <span>{growth}</span> */}
-          <DashboardButtons text="Save Report" textsize="sm"  icon={<DownloadIcon size={18} className="icon"/>} variant="blueborder"/>
+          <DashboardButtons
+            text="Save Report"
+            textsize="sm"
+            icon={<DownloadIcon size={18} className="icon" />}
+            variant="blueborder"
+            onClick={onSaveReport}
+            disabled={!onSaveReport}
+          />
         </div>
       </div>
 
 <div className="graph-body">
   {/* Y Axis */}
   <div className="graph-y-axis">
-    <span>1000</span>
-    <span>700</span>
-    <span>300</span>
-    <span>100</span>
-    <span>0</span>
+    {yAxisLabels
+      .slice()
+      .reverse()
+      .map((label) => (
+        <span key={label}>{label}</span>
+      ))}
   </div>
 
   <div className="graph-content">
@@ -73,16 +85,19 @@ const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
       preserveAspectRatio="none"
     >
       {/* Horizontal Grid */}
-      {[40, 120, 200, 280, 360].map((y) => (
-        <line
-          key={`h-${y}`}
-          x1="0"
-          y1={y}
-          x2="1100"
-          y2={y}
-          className="grid"
-        />
-      ))}
+      {yAxisLabels.map((_, index) => {
+        const y = 40 + index * 80;
+        return (
+          <line
+            key={`h-${index}`}
+            x1="0"
+            y1={y}
+            x2="1100"
+            y2={y}
+            className="grid"
+          />
+        );
+      })}
 
       {/* Vertical Grid */}
       {Array.from({ length: 12 }).map((_, i) => {
