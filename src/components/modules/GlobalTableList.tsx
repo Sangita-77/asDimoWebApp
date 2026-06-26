@@ -8,8 +8,8 @@ import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
 import { useNavigate } from "react-router-dom";
 import  { routes } from "../../routes/AppRoutes";
-import PlusIcon from "../../assets/Images/PlusIcon.svg";
-// import ExportIcon from "../../assets/Images/ExportIcon.svg";
+// import PlusIcon from "../../assets/Images/PlusIcon.svg";
+import {XIcon} from 'lucide-animated';
 
 
 interface ColumnConfig {
@@ -329,7 +329,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       <DashboardButtons
       variant="neon"
       textsize="sm"
-      icon={<img src={PlusIcon} alt="Add" className="btn-icon" />}
+      icon={<XIcon className="PlusIcon" size={20}/>}
         text={getAddButtonText(primaryFlag)}
         onClick={() =>
           navigate(routes.SUP_ADDINFORMATION, {

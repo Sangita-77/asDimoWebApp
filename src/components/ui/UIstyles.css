@@ -6,17 +6,19 @@
 @keyframes l24 { 100% {transform: rotate(1turn)} }
 /* HeadingPara Start */
 h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
+h1.PageTitle.Light{color: var(--TextcolorLight); text-transform: capitalize;}
 h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
 h4.Heading4{color: var(--TextcolorDark); font-weight: 600; font-size: 20px; line-height: 30px; padding-bottom: 5px;}
 p.PageDescription{color: var(--TextcolorDark); font-weight: 400; font-size: 18px; line-height: 30px; color: var(--TextcolorDark);}
+p.PageDescription.Light{color: var(--TextcolorLight);}
 p.PageDescription span{padding:10px; font-weight: 600; color: var(--TextcolorBlack);}
 p.PageDescription3{color: var(--BorderColor); font-weight: 400; font-size: 14px; line-height: 24px;}
 /* HeadingPara End */
 
 
 /* Button Start */
-button{cursor: pointer; transition: all 0.25s ease; }
+button{cursor: pointer; transition: all 0.25s ease;}
 /* ButtonSize */
 .GlobalButton button.full{width: 100%;}
 .GlobalButton button .icon{padding-right: 5px;}
@@ -288,6 +290,149 @@ button{cursor: pointer; transition: all 0.25s ease; }
 /* Form Add End */
 
 
+/*  */
+.appointment-calendar {
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header */
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.calendar-header button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.calendar-header button:hover:not(:disabled) {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.calendar-header button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Days */
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.day-card {
+  min-height: 92px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.12);
+}
+
+.weekday {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.day-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Appointment */
+
+.appointment {
+  border: 2px solid #4f46e5;
+  background: #eef2ff;
+}
+
+.appointment .day-number {
+  color: #4f46e5;
+}
+
+.appointment-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.appointment-badge {
+  position: absolute;
+  bottom: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+/* Today */
+
+.today {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.today .weekday,
+.today .day-number {
+  color: #fff;
+}
+
+/* Today + Appointment */
+
+.today.appointment {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border: 2px solid #312e81;
+}
+
+.today.appointment .appointment-dot {
+  background: #fff;
+}
+
+.today.appointment .appointment-badge {
+  color: #fff;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

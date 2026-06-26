@@ -121,7 +121,8 @@ const menuItems =
               item.path === routes.SUPERADMIN ||
               item.path === routes.ZONALADMIN ||
               item.path === routes.ORGANIZATIONADMIN ||
-              item.path === routes.ADMIN;
+              item.path === routes.ADMIN ||
+              item.path === routes.THERAPIST;
 
             return (
               <li key={item.name}>

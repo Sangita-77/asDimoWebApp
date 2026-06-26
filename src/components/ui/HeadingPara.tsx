@@ -4,6 +4,9 @@ import "./UIStyles.css";
 export const Heading1 = ({ text }: { text: string }) => (
   <h1 className="PageTitle">{text}</h1>
 );
+export const Heading1Light = ({ text }: { text: string }) => (
+  <h1 className="PageTitle Light">{text}</h1>
+);
 export const Heading2 = ({ text }: { text: string }) => (
   <h2 className="Heading2">{text}</h2>
 );
@@ -19,6 +22,9 @@ export const Heading4 = ({ text }: { text: string }) => (
 // Paragraphs Start
 export const Paragraph = ({ text }: { text: React.ReactNode }) => (
   <p className="PageDescription">{text}</p>
+);
+export const ParagraphLight = ({ text }: { text: React.ReactNode }) => (
+  <p className="PageDescription Light">{text}</p>
 );
 export const Paragraph2 = ({ text }: { text: string }) => (
   <p className="PageDescription2">{text}</p>

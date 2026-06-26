@@ -8,7 +8,7 @@
 .sidebar a { display: flex; align-items: center; gap: 12px; padding: 15px; border-radius: 10px; color: var(--TextcolorLight); text-decoration: none; font-size: 18px; font-weight: 500; transition: all 0.25s ease; } 
 .sidebar a:hover { background: var(--TranshparentGreen); transform: translateX(6px); }
 .sidebar a.active { background: var(--SecondayColor); color: #fff; font-weight: 600; position: relative;  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-.sidebar a.active::before { content: ""; position: absolute; left: -33px; top: 50%; transform: translateY(-50%); width: 6px; height: 70%; background: var(--SecondayColor); border-radius: 10px; }
+.sidebar a.active::before { content: ""; position: absolute; left: -33px; top: 50%; transform: translateY(-50%); width: 6px; height: 70%; background: var(--SecondayColor); border-radius: 10px; z-index: 999;}
 .sidebar-close{ position: absolute; top: 15px; right: 15px; width: 38px; height: 38px; border: none; border-radius: 50%; cursor: pointer; background: rgba(255, 255, 255, 0.15); color: var(--GreenActiveColor); font-size: 18px; transition: 0.3s; }
 .sidebar-close:hover { background: rgba(255, 255, 255, 0.25); transform: rotate(90deg); }
 .sidebar-menu-container { flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; scrollbar-width: none; padding-right: 8px; }

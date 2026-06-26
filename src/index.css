@@ -44,4 +44,5 @@ body{ font-family: "SourceSans", sans-serif; }
 .d-flex{display: flex;}
 .boxShadow{box-shadow: 0px 0px 11px #d1d1d3; border-radius: 15px; padding: 30px 30px 35px; margin-bottom: 30px;}
 button:focus-visible{outline: solid 0px;}
+.PlusIcon{rotate: 45deg;}
 /* Global CSS End */
