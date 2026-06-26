@@ -37,7 +37,7 @@ const getAppointmentMonthIndex = (dateString: string) => {
 const buildYAxisLabels = (counts: number[]) => {
   const maxValue = Math.max(...counts, 1);
   const step = Math.max(1, Math.ceil(maxValue / 4));
-  const maxTick = step * 4;
+  // const maxTick = step * 4;
 
   return Array.from({ length: 5 }, (_, index) => index * step);
 };
