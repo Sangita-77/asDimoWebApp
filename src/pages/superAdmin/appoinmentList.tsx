@@ -115,6 +115,7 @@ const AppointmentList: React.FC = () => {
         }
 
         const responseData = await response.json();
+        console.log("..responseData..",responseData);
 
         if (!responseData.success) {
           throw new Error(
