@@ -22,7 +22,7 @@ const location = useLocation();
   const [organizationOptions, setOrganizationOptions] = useState<Field["options"]>([]);
   const [therapistOptions, settherapistOptions] = useState<Field["options"]>([]);
 
-  console.log("Flag in AddNewAdminorg:", flag);
+  // console.log("Flag in AddNewAdminorg:", flag);
 
   useEffect(() => {
     let isMounted = true;

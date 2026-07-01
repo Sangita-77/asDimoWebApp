@@ -6,7 +6,7 @@ import Loader from "../ui/Loaders";
 import { authService } from "../../services/authService";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import  { routes } from "../../routes/AppRoutes";
 // import PlusIcon from "../../assets/Images/PlusIcon.svg";
 import {XIcon} from 'lucide-animated';
@@ -89,6 +89,9 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const location = useLocation();
+  const currentRole = location.pathname.split("/")[1];
+
 
   const handleSort = (key: string) => {
     setCurrentPage(1);
@@ -102,23 +105,58 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
 
   const handleViewDetails = (row: any) => {
     const { userId, flag } = row.originalData;
+    // console.log("...........currentRole.............",currentRole);
+
 
     if (flag === 6) {
       navigate(routes.SUP_ZONALADMIN_DETAILS, {
         state: { userId , flag },
       });
     } else if (flag === 7) {
-      navigate(routes.SUP_ADMIN_DETAILS, {
-        state: { userId , flag },
-      });
+      if(currentRole == "superadmin"){
+        navigate(routes.SUP_ADMIN_DETAILS, {
+          state: { userId , flag },
+        });
+      }else{
+        navigate(routes.ZONAL_ADMIN_DETAILS, {
+          state: { userId , flag },
+        });
+      }
+
     } else if (flag === 1) {
-      navigate(routes.SUP_ORGANIZATION_DETAILS, {
-        state: { userId , flag },
-      });
+      if(currentRole == "zonaladmin"){
+        navigate(routes.ZONAL_ORGANIZATION_DETAILS, {
+          state: { userId , flag },
+        });
+      }else if(currentRole == "admin"){
+        navigate(routes.ADMIN_ORGANIZATION_DETAILS, {
+          state: { userId , flag },
+        });
+      }else{
+        navigate(routes.SUP_ORGANIZATION_DETAILS, {
+          state: { userId , flag },
+        });
+      }
+
     } else if (flag === 3 || flag === 5) {
-      navigate(routes.SUP_THERAPIST_DETAILS, {
-        state: { userId , flag },
-      });
+      if(currentRole == "zonaladmin"){
+        navigate(routes.ZONAL_THERAPIST_DETAILS, {
+          state: { userId , flag },
+        });
+      }else if(currentRole == "admin"){
+        navigate(routes.ADMIN_THERAPIST_DETAILS, {
+          state: { userId , flag },
+        });
+      }else if(currentRole == "organizationadmin"){
+        navigate(routes.ORGANIZATIONADMIN_THERAPIST_DETAILS, {
+          state: { userId , flag },
+        });
+      }else{
+        navigate(routes.SUP_THERAPIST_DETAILS, {
+          state: { userId , flag },
+        });
+      }
+
     }
   };
 
@@ -185,7 +223,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       );
       const users = responses.flatMap((response) => response.data || []);
 
-      console.log("API Response:", responses);
+      // console.log("API Response:", responses);
       const formattedRows = users.map((item: any) => ({
         id: item._id,
         userId: item.userId,
@@ -311,6 +349,39 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     }
   };
 
+  const handleAddInformation = () => {
+      let route = routes.SUP_ADDINFORMATION;
+
+      switch (currentRole) {
+        case "superadmin":
+          route = routes.SUP_ADDINFORMATION;
+          break;
+
+        case "zonaladmin":
+          route = routes.ZONAL_ADDINFORMATION;
+          break;
+
+        case "admin":
+          route = routes.ADMIN_ADDINFORMATION;
+          break;
+
+        case "organizationadmin":
+          route = routes.ORGANIZATIONADMIN_ADDINFORMATION;
+          break;
+
+        case "therapist":
+          route = routes.THERAPIST_ADDINFORMATION;
+          break;
+
+        default:
+          route = routes.SUP_ADDINFORMATION;
+      }
+
+    navigate(route, {
+      state: { flag: primaryFlag },
+    });
+  };
+
   return (
     <div>
        <div className="d-flex TableSearchWrap">
@@ -331,11 +402,12 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       textsize="sm"
       icon={<XIcon className="PlusIcon" size={20}/>}
         text={getAddButtonText(primaryFlag)}
-        onClick={() =>
-          navigate(routes.SUP_ADDINFORMATION, {
-            state: { flag: primaryFlag },
-          })
-        }
+        // onClick={() =>
+        //   navigate(routes.SUP_ADDINFORMATION, {
+        //     state: { flag: primaryFlag },
+        //   })
+        onClick={handleAddInformation}
+        // }
       />
       {/* <DashboardButtons text="Export" variant="blueborder" textsize="sm" icon={<img src={ExportIcon} alt="Add" className="btn-icon" onClick={() => exportSelectedRows(selectedUsers)}/>}/>  */}
       </div>

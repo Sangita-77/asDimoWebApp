@@ -84,23 +84,18 @@ function App() {
         >
 
           <Route index element={<ZonalAdminIndex />} />
+          <Route path="admin" element={<SupAdmin />} />
+          <Route path="admin-details" element={<AdminDetails />} />
+          <Route path="organization" element={<SupOrganization />} />
+          <Route path="organization-details" element={<SupORGadminDetails />} />
+          <Route path="therapist" element={<SupTherapist />} />
+          <Route path="therapist-details" element={<SupTherapistDetails />} />
+          <Route path="parent" element={<SupParent />} />
+          <Route path="report" element={<Report />} />
+          <Route path="appointment" element={<SupAppointment />} />
+          <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
-
-
-
-        {/* ================= ORGANIZATION ADMIN ================= */}
-
-        <Route path={routes.ORGANIZATIONADMIN} element={
-            <AuthMiddleware allowedFlags={["OrganizationAdmin"]}>
-              <DashboardLayOut />
-            </AuthMiddleware>
-          }
-        >
-          <Route index element={<OrganizationAdminIndex />} />
-          <Route path="settings" element={<SuperAdminSettings />} />
-        </Route>
-
 
 
         {/* ================= ADMIN ================= */}
@@ -112,8 +107,37 @@ function App() {
           }
         >
           <Route index element={<AdminIndex />} />
+          <Route path="organization" element={<SupOrganization />} />
+          <Route path="organization-details" element={<SupORGadminDetails />} />
+          <Route path="therapist" element={<SupTherapist />} />
+          <Route path="therapist-details" element={<SupTherapistDetails />} />
+          <Route path="parent" element={<SupParent />} />
+          <Route path="report" element={<Report />} />
+          <Route path="appointment" element={<SupAppointment />} />
+          <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
+
+
+        {/* ================= ORGANIZATION ADMIN ================= */}
+
+        <Route path={routes.ORGANIZATIONADMIN} element={
+            <AuthMiddleware allowedFlags={["OrganizationAdmin"]}>
+              <DashboardLayOut />
+            </AuthMiddleware>
+          }
+        >
+          <Route index element={<OrganizationAdminIndex />} />
+          <Route path="therapist" element={<SupTherapist />} />
+          <Route path="therapist-details" element={<SupTherapistDetails />} />
+          <Route path="parent" element={<SupParent />} />
+          <Route path="report" element={<Report />} />
+          <Route path="appointment" element={<SupAppointment />} />
+          <Route path="add-information" element={<AddInformation />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+        </Route>
+
+
 
         {/* ================= THERAPIST ================= */}
 
@@ -124,6 +148,10 @@ function App() {
           }
         >
           <Route index element={<TherapistIndex />} />
+          <Route path="parent" element={<SupParent />} />
+          <Route path="report" element={<Report />} />
+          <Route path="appointment" element={<SupAppointment />} />
+          <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
 

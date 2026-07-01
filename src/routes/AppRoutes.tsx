@@ -21,15 +21,18 @@ SUP_ADDINFORMATION: "/superadmin/add-information",
 // Super Admin Routes End.............
 
 
-// ORG Admin Routes Start.............
-ORGANIZATIONADMIN: "/organizationadmin",
-ORGANIZATION_SETTINGS: "/organizationadmin/settings",
-// ORG Admin Routes End.............
-
-
-
 // Zonal Admin Routes Start.............
 ZONALADMIN: "/zonaladmin",
+ZONAL_ADMIN: "/zonaladmin/admin",
+ZONAL_ADMIN_DETAILS: "/zonaladmin/admin-details",
+ZONAL_ORGANIZATION: "/zonaladmin/organization",
+ZONAL_ORGANIZATION_DETAILS: "/zonaladmin/organization-details",
+ZONAL_THERAPIST: "/zonaladmin/therapist",
+ZONAL_THERAPIST_DETAILS: "/zonaladmin/therapist-details",
+ZONAL_PARENT: "/zonaladmin/parent",
+ZONAL_REPORT: "/zonaladmin/report",
+ZONAL_APPOINTMENT: "/zonaladmin/appointment",
+ZONAL_ADDINFORMATION: "/zonaladmin/add-information",
 ZONAL_SETTINGS: "/zonaladmin/settings",
 // Zonal Admin Routes Start.............
 
@@ -37,12 +40,36 @@ ZONAL_SETTINGS: "/zonaladmin/settings",
 
 // Admin Routes Start.............
 ADMIN: "/admin",
+ADMIN_ORGANIZATION: "/admin/organization",
+ADMIN_ORGANIZATION_DETAILS: "/admin/organization-details",
+ADMIN_THERAPIST: "/admin/therapist",
+ADMIN_THERAPIST_DETAILS: "/admin/therapist-details",
+ADMIN_PARENT: "/admin/parent",
+ADMIN_REPORT: "/admin/report",
+ADMIN_APPOINTMENT: "/admin/appointment",
+ADMIN_ADDINFORMATION: "/admin/add-information",
 ADMIN_SETTINGS: "/admin/settings",
 // Admin Routes Start.............
 
 
+// ORG Admin Routes Start.............
+ORGANIZATIONADMIN: "/organizationadmin",
+ORGANIZATIONADMIN_THERAPIST: "/organizationadmin/therapist",
+ORGANIZATIONADMIN_THERAPIST_DETAILS: "/organizationadmin/therapist-details",
+ORGANIZATIONADMIN_PARENT: "/organizationadmin/parent",
+ORGANIZATIONADMIN_REPORT: "/organizationadmin/report",
+ORGANIZATIONADMIN_APPOINTMENT: "/organizationadmin/appointment",
+ORGANIZATIONADMIN_ADDINFORMATION: "/organizationadmin/add-information",
+ORGANIZATION_SETTINGS: "/organizationadmin/settings",
+// ORG Admin Routes End.............
+
+
 // Admin Routes Start.............
 THERAPIST: "/therapist",
+THERAPIST_PARENT: "/therapist/parent",
+THERAPIST_REPORT: "/therapist/report",
+THERAPIST_APPOINTMENT: "/therapist/appointment",
+THERAPIST_ADDINFORMATION: "/therapist/add-information",
 THERAPIST_SETTINGS: "/therapist/settings",
 // Admin Routes Start.............
 

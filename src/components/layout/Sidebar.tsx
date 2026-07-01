@@ -66,28 +66,48 @@ const menuConfig = {
 
   zonalAdmin: [
     { name: "Dashboard", path: routes.ZONALADMIN, icon: DashBoardIcon, },
+    { name: "Admin", path: routes.ZONAL_ADMIN, icon: AdminIcon, },
+    { name: "Organization", path: routes.ZONAL_ORGANIZATION, icon: ORGicon, },
+    { name: "Doctors/Therapist", path: routes.ZONAL_THERAPIST, icon: DoctorIcon, },
+    { name: "Users/Parents", path: routes.ZONAL_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.ZONAL_REPORT, icon: ReportIcon, },
+    { name: "Appointments", path: routes.ZONAL_APPOINTMENT, icon: AppointmentIcon, },
     { name: "Settings", path: routes.ZONAL_SETTINGS, icon: SettingsIcon, }
   ],
+
+    Admin: [
+      { name: "Dashboard", path: routes.ADMIN, icon: DashBoardIcon, },
+      { name: "Organization", path: routes.ADMIN_ORGANIZATION, icon: ORGicon, },
+      { name: "Doctors/Therapist", path: routes.ADMIN_THERAPIST, icon: DoctorIcon, },
+      { name: "Users/Parents", path: routes.ADMIN_PARENT, icon: UserIcon, },
+      { name: "Report", path: routes.ADMIN_REPORT, icon: ReportIcon, },
+      { name: "Appointments", path: routes.ADMIN_APPOINTMENT, icon: AppointmentIcon, },
+      { name: "Settings", path: routes.ADMIN_SETTINGS, icon: SettingsIcon, }
+    ],
 
 
   OrganizationAdmin: [
     { name: "Dashboard", path: routes.ORGANIZATIONADMIN, icon: DashBoardIcon, },
+    { name: "Doctors/Therapist", path: routes.ORGANIZATIONADMIN_THERAPIST, icon: DoctorIcon, },
+    { name: "Users/Parents", path: routes.ORGANIZATIONADMIN_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.ORGANIZATIONADMIN_REPORT, icon: ReportIcon, },
+    { name: "Appointments", path: routes.ORGANIZATIONADMIN_APPOINTMENT, icon: AppointmentIcon, },
     { name: "Settings", path: routes.ORGANIZATION_SETTINGS, icon: SettingsIcon, }
-  ],
-
-
-  Admin: [
-    { name: "Dashboard", path: routes.ADMIN, icon: DashBoardIcon, },
-    { name: "Settings", path: routes.ADMIN_SETTINGS, icon: SettingsIcon, }
   ],
 
   TeachersOrg: [
     { name: "Dashboard", path: routes.THERAPIST, icon: DashBoardIcon, },
+    { name: "Users/Parents", path: routes.THERAPIST_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.THERAPIST_REPORT, icon: ReportIcon, },
+    { name: "Appointments", path: routes.THERAPIST_APPOINTMENT, icon: AppointmentIcon, },
     { name: "Settings", path: routes.THERAPIST_SETTINGS, icon: SettingsIcon, }
   ],
 
   teachersGlobal: [
     { name: "Dashboard", path: routes.THERAPIST, icon: DashBoardIcon, },
+    { name: "Users/Parents", path: routes.THERAPIST_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.THERAPIST_REPORT, icon: ReportIcon, },
+    { name: "Appointments", path: routes.THERAPIST_APPOINTMENT, icon: AppointmentIcon, },
     { name: "Settings", path: routes.THERAPIST_SETTINGS, icon: SettingsIcon, }
   ],
 
