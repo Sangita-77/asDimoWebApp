@@ -332,4 +332,28 @@ export const authService = {
     return response.data;
   },
 
+  async getAllUsersByRelation(token: string,flag: number,userId: number,options: GetUsersByFlagOptions = {}): Promise<UserListResponse> {
+    const payload = {
+      flag,
+      userId,
+      ...(options.search ? { search: options.search } : {}),
+      ...(options.sort ? { sort: options.sort } : {}),
+      ...(options.sortBy ? { sortBy: options.sortBy } : {}),
+      ...(options.sortOrder ? { sortOrder: options.sortOrder } : {}),
+    };
+    
+    const response = await axios.post(
+      `${BASE_URL}/auth/getAllUsersByRelation`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };

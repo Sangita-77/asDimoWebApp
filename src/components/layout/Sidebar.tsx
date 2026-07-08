@@ -104,11 +104,12 @@ const menuConfig = {
   ],
 
   teachersGlobal: [
-    { name: "Dashboard", path: routes.THERAPIST, icon: DashBoardIcon, },
-    { name: "Users/Parents", path: routes.THERAPIST_PARENT, icon: UserIcon, },
-    { name: "Report", path: routes.THERAPIST_REPORT, icon: ReportIcon, },
-    { name: "Appointments", path: routes.THERAPIST_APPOINTMENT, icon: AppointmentIcon, },
-    { name: "Settings", path: routes.THERAPIST_SETTINGS, icon: SettingsIcon, }
+    { name: "Dashboard", path: routes.ORGANIZATIONADMIN, icon: DashBoardIcon, },
+    { name: "Doctors/Therapist", path: routes.ORGANIZATIONADMIN_THERAPIST, icon: DoctorIcon, },
+    { name: "Users/Parents", path: routes.ORGANIZATIONADMIN_PARENT, icon: UserIcon, },
+    { name: "Report", path: routes.ORGANIZATIONADMIN_REPORT, icon: ReportIcon, },
+    { name: "Appointments", path: routes.ORGANIZATIONADMIN_APPOINTMENT, icon: AppointmentIcon, },
+    { name: "Settings", path: routes.ORGANIZATION_SETTINGS, icon: SettingsIcon, }
   ],
 
 };
