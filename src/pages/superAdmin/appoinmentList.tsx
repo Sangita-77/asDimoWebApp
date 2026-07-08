@@ -5,6 +5,7 @@ import Table from "../../components/ui/Table";
 import Loader from "../../components/ui/Loaders";
 import { Heading1 } from "../../components/ui/HeadingPara";
 import SearchWithSort from "../../components/ui/SearchWithSort";
+import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 
 interface Appointment {
   _id: string;
@@ -88,11 +89,18 @@ const AppointmentList: React.FC = () => {
 
       try {
         const token = tokenManager.getAccessToken();
+        const currentRole = getCurrentUserRole();
+        const currentUser = tokenManager.getUser();
         const query = new URLSearchParams();
 
         if (search) query.set("search", search);
         if (sortBy) query.set("sortBy", sortBy);
         if (sort) query.set("sortOrder", sort);
+
+        // For teachersGlobal, filter by their teacherId
+        if (currentRole === "teachersGlobal" && currentUser?.userId) {
+          query.set("teacherId", String(currentUser.userId));
+        }
 
         const response = await fetch(
           `${BASE_URL}/appointments?${query.toString()}`,
@@ -114,8 +122,8 @@ const AppointmentList: React.FC = () => {
           );
         }
 
-        const responseData = await response.json();
-        console.log("..responseData..",responseData);
+        let responseData = await response.json();
+        console.log("..responseData..", responseData);
 
         if (!responseData.success) {
           throw new Error(
@@ -123,7 +131,61 @@ const AppointmentList: React.FC = () => {
           );
         }
 
-        const formattedRows: AppointmentRow[] = (responseData.data || []).map(
+        // Apply hierarchical filtering based on logged-in user's flag
+        let appointmentsData = responseData.data || [];
+
+        if (currentUser) {
+          const loginUserFlag = currentUser.flag;
+          const loginUserId = currentUser.userId;
+
+          console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
+
+          if (loginUserFlag && loginUserId) {
+            appointmentsData = appointmentsData.filter((appointment: any) => {
+              let shouldInclude = false;
+
+              switch (Number(loginUserFlag)) {
+                case 6: // Zonal Admin - show appointments where zonalAdmin's userId matches
+                  shouldInclude = appointment.zonalAdmin?.userId === loginUserId;
+                  console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 7: // Admin - show appointments where admin's userId matches
+                  shouldInclude = appointment.admin?.userId === loginUserId;
+                  console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 1: // Organization Admin - show appointments where organization's userId matches
+                  shouldInclude = appointment.organization?.userId === loginUserId;
+                  console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 5: // Organization Admin - show appointments where organization's userId matches
+                  shouldInclude = appointment.teacherUser?.userId === loginUserId;
+                  console.log(`Flag 5 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 3: // Teacher - show appointments where teacher's userId matches
+                  shouldInclude = appointment.teacherUser?.userId === loginUserId;
+                  console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                default:
+                  shouldInclude = true;
+              }
+
+              return shouldInclude;
+            });
+
+            console.log("Filtered appointments count:", appointmentsData.length);
+          } else {
+            console.log("currentUser flag or userId is missing - showing all appointments");
+          }
+        } else {
+          console.log("currentUser is null - showing all appointments");
+        }
+
+        const formattedRows: AppointmentRow[] = appointmentsData.map(
           (item: Appointment) => ({
             id: item._id,
             date: item.date,

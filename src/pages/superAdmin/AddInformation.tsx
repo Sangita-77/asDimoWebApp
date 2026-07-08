@@ -257,6 +257,16 @@ const pageConfig = getPageConfig(flag);
         );
       }
 
+      if (flag === 5) {
+        formData.append("adminId", "null");
+        formData.append(
+          "organization_type",
+          "null"
+        );
+      }
+      if (flag === 4) {
+        formData.append("teacherId", "null");
+      }
       if (flag === 3) {
         if (data.organizationAdminId) {
           formData.append(
@@ -376,6 +386,27 @@ const pageConfig = getPageConfig(flag);
         },
         required: true,
       },
+      {
+            name: "organization_type",
+            label: "Organization Type",
+            fieldType: "select" as const,
+            width: "half" as const,
+            options: [
+              {
+                label: "Clinic",
+                value: "0",
+              },
+              {
+                label: "School",
+                value: "1",
+              },
+            ],
+            showWhen: {
+              field: "user_scope",
+              value: "global",
+            },
+            required: true,
+          },
     ]
 : [2].includes(flag)
   ? [

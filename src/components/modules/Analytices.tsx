@@ -6,7 +6,6 @@ import DashboardButtons from "../ui/Buttons.tsx";
 import { ArrowRightIcon } from "lucide-animated";
 import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
-
 import AnalyticesCard from "./Analytices/AnalyticesCards.tsx";
 import SubscriptionAnalytics from "./Analytices/Subscriptiongraph.tsx";
 import Appointmentgraph from "./Analytices/Appointmentgraph.tsx";
@@ -60,6 +59,8 @@ const DashboardAnalyticsIndex: React.FC = () => {
       setLoading(true);
 
       try {
+        const currentUser = tokenManager.getUser();
+
         const [zonalResponse, doctorFlag3Response, doctorFlag5Response, appointmentsResponse] =
           await Promise.all([
             authService.getUsersByFlag(token, 6),
@@ -98,7 +99,57 @@ const DashboardAnalyticsIndex: React.FC = () => {
           ).values()
         );
 
-        const appointments = (appointmentsResponse.data || []).map((item: any) => ({
+        // Filter appointments based on logged-in user's flag hierarchy
+        let appointmentsData = appointmentsResponse.data || [];
+
+        if (currentUser) {
+          const loginUserFlag = currentUser.flag;
+          const loginUserId = currentUser.userId;
+
+          // Debug log
+          console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
+
+          if (loginUserFlag && loginUserId) {
+            appointmentsData = appointmentsData.filter((appointment: any) => {
+              let shouldInclude = false;
+
+              switch (Number(loginUserFlag)) {
+                case 6: // Zonal Admin - show appointments where zonalAdmin's userId matches
+                  shouldInclude = appointment.zonalAdmin?.userId === loginUserId;
+                  console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 7: // Admin - show appointments where admin's userId matches
+                  shouldInclude = appointment.admin?.userId === loginUserId;
+                  console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 1: // Organization Admin - show appointments where organization's userId matches
+                  shouldInclude = appointment.organization?.userId === loginUserId;
+                  console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                case 3: // Teacher - show appointments where teacher's userId matches
+                  shouldInclude = appointment.teacherUser?.userId === loginUserId;
+                  console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  break;
+
+                default:
+                  shouldInclude = true;
+              }
+
+              return shouldInclude;
+            });
+
+            console.log("Filtered appointments count:", appointmentsData.length);
+          } else {
+            console.log("currentUser flag or userId is missing - showing all appointments");
+          }
+        } else {
+          console.log("currentUser is null - showing all appointments");
+        }
+
+        const appointments = appointmentsData.map((item: any) => ({
           id: item._id,
           // profileImage: item.teacherUser?.profileImg ?? undefined,
           profileImage: item.teacherUser?.profileImg

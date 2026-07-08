@@ -4,6 +4,7 @@ import DashboardButtons from "../ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
 import Loader from "../ui/Loaders";
 import { authService } from "../../services/authService";
+import { tokenManager } from "../../services/tokenManager";
 import ModalBox from "../ui/ModalBox";
 import SearchWithSort from "../ui/SearchWithSort";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,6 +23,8 @@ interface ColumnConfig {
 interface ZonalAdminListProps {
   flag: number | number[];
   columns: ColumnConfig[];
+  filteredUserId?: string; // For filtering data by current user (teachersGlobal)
+  filterByZonalAdminId?: boolean; // For filtering admins by zonalAdminId (flag 7)
 }
 
 const getRelatedCount = (item: any, key: string) =>
@@ -72,6 +75,8 @@ const sortFieldMap: Record<string, string> = {
 const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   flag,
   columns: dynamicColumns,
+  filteredUserId,
+  filterByZonalAdminId,
 }) => {
   const navigate = useNavigate();
   const flags = Array.isArray(flag) ? flag : [flag];
@@ -91,6 +96,35 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const location = useLocation();
   const currentRole = location.pathname.split("/")[1];
+  
+  // Get current user for hierarchical filtering
+  const currentUser = tokenManager.getUser();
+
+  /**
+   * Determine filter field based on logged-in user's flag
+   * Flag 6: Zonal Admin - filter all data by zonalAdminId
+   * Flag 7: Admin - filter all data by adminId
+   * Flag 1: Organization Admin - filter all data by organizationAdminId
+   * Flag 3: Teacher - filter all data by teacherId
+   */
+  const getFilterFieldByLoginFlag = (): { field: string | null; value: string | number | null } => {
+    if (!currentUser?.flag) return { field: null, value: null };
+
+    const userIdValue = currentUser.userId || currentUser.id;
+    
+    switch (currentUser.flag) {
+      case 6: // Zonal Admin
+        return { field: "roleData.zonalAdminId", value: userIdValue };
+      case 7: // Admin
+        return { field: "roleData.adminId", value: userIdValue };
+      case 1: // Organization Admin
+        return { field: "roleData.organizationAdminId", value: userIdValue };
+      case 3: // Teacher
+        return { field: "roleData.teacherId", value: userIdValue };
+      default:
+        return { field: null, value: null };
+    }
+  };
 
 
   const handleSort = (key: string) => {
@@ -221,13 +255,51 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           )
         )
       );
-      const users = responses.flatMap((response) => response.data || []);
+      let users = responses.flatMap((response) => response.data || []);
+
+      // Apply hierarchical filtering based on logged-in user's flag
+      const { field, value } = getFilterFieldByLoginFlag();
+      if (field && value) {
+        users = users.filter((item: any) => {
+          const fieldValue = field === "roleData.zonalAdminId"
+            ? item.roleData?.zonalAdminId
+            : field === "roleData.adminId"
+            ? item.roleData?.adminId
+            : field === "roleData.organizationAdminId"
+            ? item.roleData?.organizationAdminId
+            : field === "roleData.teacherId"
+            ? item.roleData?.teacherId
+            : null;
+
+          return String(fieldValue) === String(value);
+        });
+      }
+
+      // Filter by filteredUserId if provided (for teachersGlobal users)
+      if (filteredUserId) {
+        users = users.filter((item: any) => {
+          // Show items where the parent/related user matches filteredUserId
+          const relatedTeachers = item.relatedData?.teachers?.data || [];
+          const isRelatedUser = relatedTeachers.some((teacher: any) => 
+            String(teacher.userId) === String(filteredUserId) || 
+            String(teacher._id) === String(filteredUserId)
+          );
+          return isRelatedUser || String(item.userId) === String(filteredUserId);
+        });
+      }
+
+      // Filter by zonalAdminId if provided (for admin list under zonal admin)
+      if (filterByZonalAdminId && currentUser?.userId) {
+        users = users.filter((item: any) => 
+          String(item.roleData?.zonalAdminId) === String(currentUser.userId)
+        );
+      }
 
       // console.log("API Response:", responses);
       const formattedRows = users.map((item: any) => ({
         id: item._id,
         userId: item.userId,
-        name: item.name,
+        name: item.org_name ?? item.name ?? "-",
         email: item.email,
         zonal_admin_name: item.relatedData?.zonalAdmin?.name ?? "-",
         admin_name: item.relatedData?.Admin?.name ?? "-",
@@ -266,7 +338,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     }, search.trim() ? 400 : 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [search, sort, sortBy, flagDependency]);
+  }, [search, sort, sortBy, flagDependency, filteredUserId, filterByZonalAdminId]);
 
   const handleDeleteSelected = (selectedRows: any[]) => {
     const userIds = selectedRows.map((row) => row.id);

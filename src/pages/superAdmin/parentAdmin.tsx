@@ -1,7 +1,12 @@
 import GlobalTableList from "../../components/modules/GlobalTableList";
 import { Heading1 } from "../../components/ui/HeadingPara";
+import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
+import { tokenManager } from "../../services/tokenManager";
 
 const SupParent: React.FC = () => {
+  const role = getCurrentUserRole();
+  const user = tokenManager.getUser();
+  const filteredUserId = role === "teachersGlobal" ? user?.userId : undefined;
 
   return (
     <>
@@ -20,6 +25,7 @@ const SupParent: React.FC = () => {
           { key: "subscription", title: "Subscription", sortable: true },
           { key: "created", title: "Created", sortable: true },
         ]}
+        filteredUserId={filteredUserId}
       />
     </>
   );

@@ -122,7 +122,7 @@ function App() {
         {/* ================= ORGANIZATION ADMIN ================= */}
 
         <Route path={routes.ORGANIZATIONADMIN} element={
-            <AuthMiddleware allowedFlags={["OrganizationAdmin"]}>
+            <AuthMiddleware allowedFlags={["OrganizationAdmin", "teachersGlobal"]}>
               <DashboardLayOut />
             </AuthMiddleware>
           }
