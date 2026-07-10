@@ -299,11 +299,11 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       const formattedRows = users.map((item: any) => ({
         id: item._id,
         userId: item.userId,
-        name: item.org_name ?? item.name ?? "-",
+        name: item.name ?? "-",
         email: item.email,
         zonal_admin_name: item.relatedData?.zonalAdmin?.name ?? "-",
         admin_name: item.relatedData?.Admin?.name ?? "-",
-        organization_name: item.relatedData?.organizations?.name ?? "-",
+        organization_name: item.relatedData?.organizations?.name ?? item.org_name ?? "-",
         parent_name: item.name ?? "-",
         children_details : getRelatedCount(item, "parents"),
         created: new Date(item.createdAt).toLocaleDateString(),
