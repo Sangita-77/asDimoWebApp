@@ -133,7 +133,7 @@ const endDay =
             )}
             </div>
           );
-        })}
+})}
       </div>
     </div>
   );

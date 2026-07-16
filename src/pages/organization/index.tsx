@@ -14,7 +14,7 @@ const OrganizationAdminIndex: React.FC = () => {
   });
   const [appointments, setAppointments] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState<string | null>(null);
+  const [, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const loadDashboardData = async () => {
