@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Heading2, Heading1Light, ParagraphLight } from "../../components/ui/HeadingPara";
 import { tokenManager } from "../../services/tokenManager";
-import { authService } from "../../services/authService";
+// import { authService } from "../../services/authService";
 import { getRoleTypeByFlag } from "../../middleware/AuthMiddleware";
 import AppointmentCalendar from "../../components/ui/AppointmentCalender";
 
@@ -14,7 +14,7 @@ const OrganizationAdminIndex: React.FC = () => {
   });
   const [appointments, setAppointments] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState<string | null>(null);
+  const [, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const loadDashboardData = async () => {

@@ -16,7 +16,7 @@ const appointments = [
         <div className="therapistDashboard">
             <div className="paymnetStatus">
                <ParagraphLight text="Total Balance"/>
-               <Heading1Light text="₹30,000"/>
+               <Heading1Light text="?30,000"/>
                <div className="d-flex">
                   
                </div>
