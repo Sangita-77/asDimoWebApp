@@ -60,6 +60,7 @@ interface Appointment {
 
 interface AppointmentRow {
   id: string;
+  teacherId: number;
   date: string;
   time: string;
   status: string;
@@ -71,10 +72,27 @@ interface AppointmentRow {
   zoomLink: string;
 }
 
+interface AvailabilitySlot {
+  _id: string;
+  date: string;
+  time: string;
+  isBooked: boolean;
+}
+
 const AppointmentList: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [appointmentToReschedule, setAppointmentToReschedule] =
+    useState<AppointmentRow | null>(null);
+  const [rescheduleDate, setRescheduleDate] = useState("");
+  const [rescheduleTime, setRescheduleTime] = useState("");
+  const [rescheduling, setRescheduling] = useState(false);
+  const [rescheduleError, setRescheduleError] = useState<string | null>(null);
+  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+  const [statusActionError, setStatusActionError] = useState<string | null>(null);
+  const [updatingAppointmentId, setUpdatingAppointmentId] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -188,6 +206,7 @@ const AppointmentList: React.FC = () => {
         const formattedRows: AppointmentRow[] = appointmentsData.map(
           (item: Appointment) => ({
             id: item._id,
+            teacherId: item.teacherId,
             date: item.date,
             time: item.time,
             status: item.status,
@@ -214,6 +233,164 @@ const AppointmentList: React.FC = () => {
 
     fetchAppointments();
   }, [search, sortBy, sort]);
+
+  const openRescheduleDialog = async (appointment: AppointmentRow) => {
+    setAppointmentToReschedule(appointment);
+    setRescheduleDate("");
+    setRescheduleTime("");
+    setRescheduleError(null);
+    setAvailabilitySlots([]);
+    setAvailabilityLoading(true);
+
+    try {
+      const token = tokenManager.getAccessToken();
+      const response = await fetch(`${BASE_URL}/therapists/get_availability`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: JSON.stringify({ therapistId: appointment.teacherId }),
+      });
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok || !responseData?.success) {
+        throw new Error(
+          responseData?.message || "Unable to load therapist availability"
+        );
+      }
+
+      const slots = responseData.data || [];
+      setAvailabilitySlots(slots);
+      const firstAvailableSlot = slots.find((slot: AvailabilitySlot) => !slot.isBooked);
+      if (firstAvailableSlot) {
+        setRescheduleDate(firstAvailableSlot.date);
+        setRescheduleTime(firstAvailableSlot.time);
+      }
+    } catch (availabilityError) {
+      setRescheduleError(
+        availabilityError instanceof Error
+          ? availabilityError.message
+          : String(availabilityError)
+      );
+    } finally {
+      setAvailabilityLoading(false);
+    }
+  };
+
+  const availableTimes = availabilitySlots.filter(
+    (slot) => slot.date === rescheduleDate && !slot.isBooked
+  );
+
+  const dates = Array.from(new Set(availabilitySlots.map((slot) => slot.date)));
+
+  const handleDateChange = (date: string) => {
+    setRescheduleDate(date);
+    const firstAvailableTime = availabilitySlots.find(
+      (slot) => slot.date === date && !slot.isBooked
+    )?.time;
+    setRescheduleTime(firstAvailableTime || "");
+  };
+
+  const handleReschedule = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!appointmentToReschedule || !rescheduleDate || !rescheduleTime) return;
+
+    setRescheduling(true);
+    setRescheduleError(null);
+
+    try {
+      const token = tokenManager.getAccessToken();
+      const response = await fetch(
+        `${BASE_URL}/appointments/reschedule/${appointmentToReschedule.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+          body: JSON.stringify({
+            date: rescheduleDate,
+            time: rescheduleTime,
+          }),
+        }
+      );
+
+      const responseData = await response.json().catch(() => null);
+      if (!response.ok || !responseData?.success) {
+        throw new Error(
+          responseData?.message || `Unable to reschedule appointment: ${response.status}`
+        );
+      }
+
+      setAppointments((currentAppointments) =>
+        currentAppointments.map((appointment) =>
+          appointment.id === appointmentToReschedule.id
+            ? {
+                ...appointment,
+                date: responseData.data?.date || rescheduleDate,
+                time: responseData.data?.time || rescheduleTime,
+                status: responseData.data?.status || appointment.status,
+              }
+            : appointment
+        )
+      );
+      setAppointmentToReschedule(null);
+    } catch (rescheduleError) {
+      setRescheduleError(
+        rescheduleError instanceof Error
+          ? rescheduleError.message
+          : String(rescheduleError)
+      );
+    } finally {
+      setRescheduling(false);
+    }
+  };
+
+  const handleAppointmentStatus = async (
+    appointmentId: string,
+    status: "approved" | "rejected"
+  ) => {
+    setUpdatingAppointmentId(appointmentId);
+    setStatusActionError(null);
+
+    try {
+      const token = tokenManager.getAccessToken();
+      const response = await fetch(`${BASE_URL}/therapists/appointments/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: JSON.stringify({ appointmentId, status }),
+      });
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok || !responseData?.success) {
+        throw new Error(
+          responseData?.message || "Unable to update appointment status"
+        );
+      }
+
+      setAppointments((currentAppointments) =>
+        currentAppointments.map((appointment) =>
+          appointment.id === appointmentId
+            ? { ...appointment, status: responseData.data?.status || status }
+            : appointment
+        )
+      );
+    } catch (statusError) {
+      setStatusActionError(
+        statusError instanceof Error ? statusError.message : String(statusError)
+      );
+    } finally {
+      setUpdatingAppointmentId(null);
+    }
+  };
+
+  const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
+  const isAdmin = Number(tokenManager.getUser()?.flag) === 7;
 
   const columns = useMemo(
     () => [
@@ -257,8 +434,69 @@ const AppointmentList: React.FC = () => {
       {
         key: "status",
         title: "Status",
-        // showFilter: true,
-        onFilterClick: () => handleFilterClick("status"),
+      },
+      {
+        key: "reschedule",
+        title: "Action",
+        render: (_value: unknown, row: AppointmentRow) => {
+          const isUpdating = updatingAppointmentId === row.id;
+
+          if (isSuperAdmin && row.status.toLowerCase() === "rescheduled") {
+            return (
+              <>
+                <button
+                  type="button"
+                  onClick={() => handleAppointmentStatus(row.id, "approved")}
+                  disabled={isUpdating}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAppointmentStatus(row.id, "rejected")}
+                  disabled={isUpdating}
+                >
+                  Cancel
+                </button>
+              </>
+            );
+          }
+
+          if (isAdmin && row.status.toLowerCase() === "rescheduled") {
+            return (
+              <>
+                <button
+                  type="button"
+                  onClick={() => handleAppointmentStatus(row.id, "approved")}
+                  disabled={isUpdating}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAppointmentStatus(row.id, "rejected")}
+                  disabled={isUpdating}
+                >
+                  Cancel
+                </button>
+              </>
+            );
+          }
+
+          const status = row.status?.toLowerCase();
+
+          return status === "approved" ? (
+            <button type="button" onClick={() => openRescheduleDialog(row)}>
+              Reschedule
+            </button>
+          ) : status === "rejected" ? (
+            <button type="button" onClick={() => openRescheduleDialog(row)}>
+              Reschedule
+            </button>
+          ) : (
+            "-"
+          );
+        },
       },
       {
         key: "zoomLink",
@@ -273,7 +511,7 @@ const AppointmentList: React.FC = () => {
           ),
       },
     ],
-    []
+    [isSuperAdmin, updatingAppointmentId]
   );
 
   function handleFilterClick(key: string) {
@@ -332,6 +570,8 @@ const AppointmentList: React.FC = () => {
         onSortChange={(v: string) => setSort(v === "desc" ? "desc" : "asc")}
       />
 
+      {statusActionError && <div className="error-message">{statusActionError}</div>}
+
       {error ? (
         <div className="error-message">
           {error}
@@ -359,6 +599,67 @@ const AppointmentList: React.FC = () => {
           sortBy={sortBy}
           sortOrder={sort}
         />
+      )}
+
+      {appointmentToReschedule && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reschedule-title"
+          className="reschedule-dialog"
+        >
+          <form onSubmit={handleReschedule}>
+            <h2 id="reschedule-title">Reschedule Appointment</h2>
+            {rescheduleError && <div className="error-message">{rescheduleError}</div>}
+            <label>
+              Date
+              <select
+                value={rescheduleDate}
+                onChange={(event) => handleDateChange(event.target.value)}
+                disabled={availabilityLoading || dates.length === 0}
+                required
+              >
+                <option value="">Select a date</option>
+                {dates.map((date) => {
+                  const hasAvailableTime = availabilitySlots.some(
+                    (slot) => slot.date === date && !slot.isBooked
+                  );
+                  return (
+                    <option key={date} value={date} disabled={!hasAvailableTime}>
+                      {date}{!hasAvailableTime ? " (No availability)" : ""}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+            <label>
+              Time
+              <select
+                value={rescheduleTime}
+                onChange={(event) => setRescheduleTime(event.target.value)}
+                disabled={availabilityLoading || !rescheduleDate || availableTimes.length === 0}
+                required
+              >
+                <option value="">Select a time</option>
+                {availableTimes.map((slot) => (
+                  <option key={slot._id} value={slot.time}>
+                    {slot.time}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={() => setAppointmentToReschedule(null)}
+              disabled={rescheduling}
+            >
+              Cancel
+            </button>
+            <button type="submit" disabled={rescheduling || availabilityLoading || !rescheduleTime}>
+              {rescheduling ? "Rescheduling..." : "Reschedule"}
+            </button>
+          </form>
+        </div>
       )}
     </div>
   );

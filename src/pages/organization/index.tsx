@@ -24,6 +24,7 @@ const OrganizationAdminIndex: React.FC = () => {
 
         const userRole = getRoleTypeByFlag(user.flag);
         setRole(userRole);
+        console.log("User Role:", role);
 
         const token = tokenManager.getAccessToken();
         if (!token) return;
