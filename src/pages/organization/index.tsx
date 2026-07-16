@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Heading2, Heading1Light, ParagraphLight } from "../../components/ui/HeadingPara";
 import { tokenManager } from "../../services/tokenManager";
-import { authService } from "../../services/authService";
+// import { authService } from "../../services/authService";
 import { getRoleTypeByFlag } from "../../middleware/AuthMiddleware";
 import AppointmentCalendar from "../../components/ui/AppointmentCalender";
 
@@ -24,6 +24,7 @@ const OrganizationAdminIndex: React.FC = () => {
 
         const userRole = getRoleTypeByFlag(user.flag);
         setRole(userRole);
+        console.log("User Role:", role);
 
         const token = tokenManager.getAccessToken();
         if (!token) return;
