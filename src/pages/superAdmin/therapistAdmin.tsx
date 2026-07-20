@@ -12,7 +12,7 @@ const SupTherapist: React.FC = () => {
     <>
       <Heading1 text="Therapist Admin" />
       <GlobalTableList
-        flag={[5]}
+        flag={[3,5]}
         // 3
         columns={[
           { key: "name", title: "Name", sortable: true },
