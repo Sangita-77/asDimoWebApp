@@ -241,6 +241,10 @@ const pageConfig = getPageConfig(flag);
       formData.append("country", data.country);
       formData.append("flag", String(submitFlag));
 
+      if (flag === 3) {
+        formData.append("therapist_category", data.therapist_category);
+      }
+
       if (data.profileImage) {
         formData.append("profileImg", data.profileImage);
       }
@@ -355,6 +359,20 @@ const pageConfig = getPageConfig(flag);
     ]
 : [3].includes(flag)
   ? [
+      {
+        name: "therapist_category",
+        label: "Therapist Category",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "Select Therapist Category",
+        options: [
+          { label: "Psychologist", value: "Psychologist" },
+          { label: "Speech Therapist", value: "Speech Therapist" },
+          { label: "Special Educator", value: "Special Educator" },
+          { label: "Operational Therapist", value: "Operational Therapist" },
+        ],
+        required: true,
+      },
       {
         name: "user_scope",
         label: "User Type",
