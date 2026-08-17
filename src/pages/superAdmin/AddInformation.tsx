@@ -58,10 +58,14 @@ const location = useLocation();
         }
 
         if (flag === 3) {
-          const response = await authService.getUsersByFlag(token, 1);
+          const [organizationResponse, adminResponse] = await Promise.all([
+            authService.getUsersByFlag(token, 1),
+            authService.getUsersByFlag(token, 7),
+          ]);
 
           if (isMounted) {
-            setOrganizationOptions(formatUserOptions(response.data));
+            setOrganizationOptions(formatUserOptions(organizationResponse.data));
+            setAdminOptions(formatUserOptions(adminResponse.data));
           }
         }
 
@@ -237,6 +241,10 @@ const pageConfig = getPageConfig(flag);
       formData.append("country", data.country);
       formData.append("flag", String(submitFlag));
 
+      if (flag === 3) {
+        formData.append("therapist_category", data.therapist_category);
+      }
+
       if (data.profileImage) {
         formData.append("profileImg", data.profileImage);
       }
@@ -257,12 +265,8 @@ const pageConfig = getPageConfig(flag);
         );
       }
 
-      if (flag === 5) {
-        formData.append("adminId", "null");
-        formData.append(
-          "organization_type",
-          "null"
-        );
+      if (submitFlag === 5) {
+        formData.append("adminId", data.adminId);
       }
       if (flag === 4) {
         formData.append("teacherId", "null");
@@ -356,6 +360,20 @@ const pageConfig = getPageConfig(flag);
 : [3].includes(flag)
   ? [
       {
+        name: "therapist_category",
+        label: "Therapist Category",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "Select Therapist Category",
+        options: [
+          { label: "Psychologist", value: "Psychologist" },
+          { label: "Speech Therapist", value: "Speech Therapist" },
+          { label: "Special Educator", value: "Special Educator" },
+          { label: "Operational Therapist", value: "Operational Therapist" },
+        ],
+        required: true,
+      },
+      {
         name: "user_scope",
         label: "User Type",
         fieldType: "select" as const,
@@ -387,26 +405,18 @@ const pageConfig = getPageConfig(flag);
         required: true,
       },
       {
-            name: "organization_type",
-            label: "Organization Type",
-            fieldType: "select" as const,
-            width: "half" as const,
-            options: [
-              {
-                label: "Clinic",
-                value: "0",
-              },
-              {
-                label: "School",
-                value: "1",
-              },
-            ],
-            showWhen: {
-              field: "user_scope",
-              value: "global",
-            },
-            required: true,
-          },
+        name: "adminId",
+        label: "Admin Name",
+        fieldType: "select" as const,
+        width: "full" as const,
+        placeholder: "Select Admin",
+        options: adminOptions,
+        showWhen: {
+          field: "user_scope",
+          value: "global",
+        },
+        required: true,
+      },
     ]
 : [2].includes(flag)
   ? [
