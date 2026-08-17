@@ -19,7 +19,7 @@
 .TableSearchWrap{align-items: center;}
 .TableSearchWrap .search-sort-container{width: 50%;}
 .TableSearchWrap .AddUpdateButton {width: 50%; display: flex; justify-content: end; margin-top: -125px; gap: 20px;}
-.DoctorsTabs{gap: 20px; margin-bottom: -48px;}
+.DoctorsTabs{gap: 20px; }
 /* Global Table List End */
 
 /* View Details Start */

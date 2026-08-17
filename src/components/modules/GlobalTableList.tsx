@@ -87,6 +87,8 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("name");
+  // null means no tab is selected, so both therapist types are shown.
+  const [activeDoctorFlag, setActiveDoctorFlag] = useState<number | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -242,8 +244,9 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         throw new Error("No access token found");
       }
 
+      const flagsToFetch = activeDoctorFlag === null ? flags : [activeDoctorFlag];
       const responses = await Promise.all(
-        flags.map((currentFlag) =>
+        flagsToFetch.map((currentFlag) =>
           authService.getUsersByFlag(
             accessToken,
             currentFlag,
@@ -339,7 +342,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     }, search.trim() ? 400 : 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [search, sort, sortBy, flagDependency, filteredUserId, filterByZonalAdminId]);
+  }, [search, sort, sortBy, flagDependency, activeDoctorFlag, filteredUserId, filterByZonalAdminId]);
 
   const handleDeleteSelected = (selectedRows: any[]) => {
     const userIds = selectedRows.map((row) => row.id);
@@ -490,14 +493,22 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           <div className="d-flex DoctorsTabs">
             <DashboardButtons
               text="Under Organizations"
-              variant="SolidNeon"
+              variant={activeDoctorFlag === 3 ? "SolidYellow" : "SolidNeon"}
               textsize="sm"
+              onClick={() => {
+                setActiveDoctorFlag((currentFlag) => currentFlag === 3 ? null : 3);
+                setCurrentPage(1);
+              }}
             />
 
             <DashboardButtons
               text="Global"
-              variant="SolidYellow"
+              variant={activeDoctorFlag === 5 ? "SolidYellow" : "SolidNeon"}
               textsize="sm"
+              onClick={() => {
+                setActiveDoctorFlag((currentFlag) => currentFlag === 5 ? null : 5);
+                setCurrentPage(1);
+              }}
             />
           </div>
         )}
