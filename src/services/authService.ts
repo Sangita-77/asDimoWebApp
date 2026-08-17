@@ -332,6 +332,16 @@ export const authService = {
     return response.data;
   },
 
+  async getUserCounts(token: string) {
+    const response = await axios.get(`${BASE_URL}/dashboard/user-counts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
   async getAllUsersByRelation(token: string,flag: number,userId: number,options: GetUsersByFlagOptions = {}): Promise<UserListResponse> {
     const payload = {
       flag,
