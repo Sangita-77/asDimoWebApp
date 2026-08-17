@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, } from "react";
 import {DeleteIcon, ChevronLeftIcon, ChevronRightIcon, ArrowDownIcon, DownloadIcon, ChartColumnDecreasingIcon} from 'lucide-animated';
 import DashboardButtons from "./Buttons";
+import { tokenManager } from "../../services/tokenManager";
 
 interface TableColumn {
   key: string;
@@ -54,6 +55,17 @@ const Table: React.FC<TableProps> = ({
   displayLimit,
   showChooseColumns = false,
 }) => {
+  const roleFlag = Number(tokenManager.getUser()?.flag);
+  const hiddenColumnKeysByRole: Record<number, string[]> = {
+    6: ["zonalAdmin", "zonal_admin_name"],
+    7: ["admin", "admin_name"],
+    1: ["organization", "organization_name"],
+    3: ["teacher", "doctor", "therapist"],
+  };
+  const permittedColumns = useMemo(
+    () => columns.filter((column) => !hiddenColumnKeysByRole[roleFlag]?.includes(column.key)),
+    [columns, roleFlag]
+  );
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
     useEffect(() => {
     onSelectionChange?.(
@@ -180,7 +192,7 @@ const [showColumnPicker, setShowColumnPicker] = useState(false);
 const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 useEffect(() => {
   if (!showChooseColumns) {
-    setVisibleColumns(columns.map((c) => c.key));
+    setVisibleColumns(permittedColumns.map((c) => c.key));
     return;
   }
 
@@ -190,21 +202,21 @@ useEffect(() => {
     try {
       const parsed = JSON.parse(saved);
       const validColumns = Array.isArray(parsed)
-        ? parsed.filter((key) => columns.some((c) => c.key === key))
+        ? parsed.filter((key) => permittedColumns.some((c) => c.key === key))
         : [];
 
       setVisibleColumns(
         validColumns.length > 0
           ? validColumns
-          : columns.map((c) => c.key)
+          : permittedColumns.map((c) => c.key)
       );
     } catch {
-      setVisibleColumns(columns.map((c) => c.key));
+      setVisibleColumns(permittedColumns.map((c) => c.key));
     }
   } else {
-    setVisibleColumns(columns.map((c) => c.key));
+    setVisibleColumns(permittedColumns.map((c) => c.key));
   }
-}, [columns, showChooseColumns]);
+}, [permittedColumns, showChooseColumns]);
 useEffect(() => {
   if (showChooseColumns && visibleColumns.length) {
     localStorage.setItem(
@@ -216,7 +228,7 @@ useEffect(() => {
 
 
 const toggleColumn = (key: string) => {
-  const column = columns.find(c => c.key === key);
+  const column = permittedColumns.find(c => c.key === key);
 
   if (!column) return;
 
@@ -231,7 +243,7 @@ const toggleColumn = (key: string) => {
 
   const optionalSelected =
     visibleColumns.filter(k => {
-      const col = columns.find(c => c.key === k);
+      const col = permittedColumns.find(c => c.key === k);
       return col && !col.fixed;
     }).length;
 
@@ -243,7 +255,7 @@ const toggleColumn = (key: string) => {
   setVisibleColumns(prev => [...prev, key]);
 };
 
-const displayedColumns = columns.filter(
+const displayedColumns = permittedColumns.filter(
   c => c.fixed || visibleColumns.includes(c.key)
 );
 
@@ -275,7 +287,7 @@ const displayedColumns = columns.filter(
             <DashboardButtons text="Columns" variant="blueborder" textsize="sm"  icon={<ChartColumnDecreasingIcon size={18} className="icon"/>} onClick={() => setShowColumnPicker(!showColumnPicker) }/>
               {showColumnPicker && (
                   <div className="column-picker">
-                      {columns.map(col => (
+                      {permittedColumns.map(col => (
                           <label key={col.key}>
                               <input
                                   type="checkbox"

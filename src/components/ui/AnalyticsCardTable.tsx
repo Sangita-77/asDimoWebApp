@@ -1,4 +1,5 @@
 import React from "react";
+import { tokenManager } from "../../services/tokenManager";
 
 export interface ProfileRow {
   id: string | number;
@@ -27,12 +28,23 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
   headers,
   data,
 }) => {
+  const roleFlag = Number(tokenManager.getUser()?.flag);
+  const hiddenHeaderKeysByRole: Record<number, string[]> = {
+    6: ["zonalAdmin", "zonal_admin_name"],
+    7: ["admin", "admin_name"],
+    1: ["organization", "organization_name"],
+    3: ["teacher", "doctor", "therapist"],
+  };
+  const permittedHeaders = headers.filter(
+    (header) => !hiddenHeaderKeysByRole[roleFlag]?.includes(header.key)
+  );
+
   return (
     <div className="AnalyticsCardTable">
       <table className="profile-table">
         <thead>
           <tr>
-            {headers.map((header) => (
+            {permittedHeaders.map((header) => (
               <th key={header.key}>{header.title}</th>
             ))}
           </tr>
@@ -41,7 +53,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
         <tbody>
           {data.map((row) => (
             <tr key={row.id}>
-              {headers.map((header) => (
+              {permittedHeaders.map((header) => (
                 <td key={header.key}>
                   {header.key === "doctor" ? (
                     <div className="doctor-info">
