@@ -10,6 +10,7 @@ h1.PageTitle.Light{color: var(--TextcolorLight); text-transform: capitalize;}
 h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
 h4.Heading4{color: var(--TextcolorDark); font-weight: 600; font-size: 20px; line-height: 30px; padding-bottom: 5px;}
+h4.Heading4 span{font-size: 16px; color: var(--BorderColor);}
 p.PageDescription{color: var(--TextcolorDark); font-weight: 400; font-size: 18px; line-height: 30px; color: var(--TextcolorDark);}
 p.PageDescription.Light{color: var(--TextcolorLight);}
 p.PageDescription span{padding:10px; font-weight: 600; color: var(--TextcolorBlack);}

@@ -9,6 +9,7 @@ interface MiniCardProps {
   title: string;
   description: string;
   buttonLink: string;
+  total: string;
 }
 
 const MiniCard: React.FC<MiniCardProps> = ({
@@ -16,6 +17,7 @@ const MiniCard: React.FC<MiniCardProps> = ({
   title,
   description,
   buttonLink,
+  total,
 }) => {
   return (
     <div className="mini-card">
@@ -25,7 +27,7 @@ const MiniCard: React.FC<MiniCardProps> = ({
 
       <div className="mini-card-content">
         <Paragraph3 text={description}/>
-        <Heading4 text={title}/>
+        <Heading4 text={title} span={`(${total})`} />
         <a
           href={basename + buttonLink}
           className="mini-card-button d-flex"

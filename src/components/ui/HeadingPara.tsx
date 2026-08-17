@@ -13,8 +13,9 @@ export const Heading2 = ({ text }: { text: string }) => (
 export const Heading3 = ({ text }: { text: string }) => (
   <h3 className="Heading3">{text}</h3>
 );
-export const Heading4 = ({ text }: { text: string }) => (
-  <h4 className="Heading4">{text}</h4>
+export const Heading4 = ({ text, span, }: {
+  text: string; span?: string; }) => (
+  <h4 className="Heading4"> {text} {span && <span>{span}</span>} </h4>
 );
 // Headings End
 
