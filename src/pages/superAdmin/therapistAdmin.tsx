@@ -15,7 +15,7 @@ const SupTherapist: React.FC = () => {
         flag={[3,5]}
         showDoctorsTabs={true}
         columns={[
-          { key: "name", title: "Name", sortable: true },
+          { key: "name", title: "Dr. Name", sortable: true },
           { key: "admin_name", title: "Admin", sortable: true },
           { key: "organization_name", title: "Organization", sortable: true },
           { key: "parent_count", title: "User", sortable: true },
