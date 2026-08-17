@@ -39,7 +39,7 @@
 .analyticsZonalAdmin table .custom-checkbox{display: none;}
 .analyticsZonalAdmin .Heading4{width: 20%;}
 .analyticsZonalAdmin .GlobalButton{width: 80%; display: flex; justify-content: end; }
-.analyticsZonalAdmin .custom-table-wrapper{margin-top: 20px;}
+.analyticsZonalAdmin{margin-top: 40px;}
 /* analyticsZonalAdmin End */
 
 /* Appointmentstatistics Start */
@@ -48,7 +48,6 @@
 .DoctorsListAnalytics{width: 25%;}
 /* Appointmentstatistics Start */
 
-/* SubscriptionAnalyticsGraph start */
 /* SubscriptionAnalyticsGraph start */
 .SubscriptionAnalyticsGraph{margin-top: 30px;}
 /* SubscriptionAnalyticsGraph end */

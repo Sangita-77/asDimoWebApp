@@ -51,7 +51,13 @@ const AnalyticesCard: React.FC = () => {
         description="Total Number of Appointment"
         image={AppointmentDashIcon}
         buttonLink="/superadmin/appointment"
-        />     
+        />  
+        <DashboardCard
+        title="PE"
+        description="Total Pe"
+        image={AppointmentDashIcon}
+        buttonLink="/superadmin/appointment"
+        />    
     </>
 
   );
