@@ -484,6 +484,11 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       {/* <DashboardButtons text="Export" variant="blueborder" textsize="sm" icon={<img src={ExportIcon} alt="Add" className="btn-icon" onClick={() => exportSelectedRows(selectedUsers)}/>}/>  */}
       </div>
        </div>
+             
+      <div className="d-flex DoctorsTabs">
+         <DashboardButtons text="Under Organizations" variant="SolidNeon" textsize="md"/>
+         <DashboardButtons text="Global" variant="SolidYellow" textsize="md"/>
+      </div>
 
       <Table
         columns={tableColumns}

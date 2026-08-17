@@ -10,7 +10,7 @@ const SupTherapist: React.FC = () => {
 
   return (
     <>
-      <Heading1 text="Therapist Admin" />
+      <Heading1 text="Doctors / Therapists" />
       <GlobalTableList
         flag={[3,5]}
         // 3

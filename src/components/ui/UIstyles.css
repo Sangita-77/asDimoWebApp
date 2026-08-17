@@ -23,9 +23,13 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .GlobalButton button.full{width: 100%;}
 .GlobalButton button .icon{padding-right: 5px;}
 /* variants */
+.GlobalButton button.SolidNeon{background: #D7F2AC; border: none; color: var(--TextcolorDark); padding: 13px 20px 10px 20px; border-radius: 5px;}
+.GlobalButton button.SolidNeon:hover{opacity: .8;}
+.GlobalButton button.SolidYellow{background: #FFE177; border: none; color: var(--TextcolorDark); padding: 13px 20px 10px 20px; border-radius: 5px;}
+.GlobalButton button.SolidYellow:hover{opacity: .8;}
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
-.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 10px 30px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
+.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 15px 23px 7px 10px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
 .GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px;}
 .GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
