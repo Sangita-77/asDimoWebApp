@@ -15,6 +15,7 @@ interface UserCounts {
   therapist: number;
   zonalAdmin: number;
   admin: number;
+  totalAppointments: number;
 }
 
 const AnalyticesCard: React.FC = () => {
@@ -24,6 +25,7 @@ const AnalyticesCard: React.FC = () => {
     therapist: 0,
     zonalAdmin: 0,
     admin: 0,
+    totalAppointments: 0,
   });
 
   useEffect(() => {
@@ -91,7 +93,7 @@ const AnalyticesCard: React.FC = () => {
         <DashboardCard
         title="Appointment"
         description="Total Number of Appointment"
-        total="11"
+        total={String(counts.totalAppointments)}
         image={AppointmentDashIcon}
         buttonLink="/superadmin/appointment"
         />  
