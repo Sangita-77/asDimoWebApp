@@ -33,6 +33,10 @@ interface DoctorRow {
 interface AppointmentRow {
   id: string;
   profileImage?: string;
+  profileImageParent?: string;
+  user: string;
+  doctor: string;
+  admin: string;
   name: string;
   designation: string;
   date: string;
@@ -104,12 +108,14 @@ const DashboardAnalyticsIndex: React.FC = () => {
         // Filter appointments based on logged-in user's flag hierarchy
         let appointmentsData = appointmentsResponse.data || [];
 
+        // console.log("Fetched appointments count:", appointmentsData);
+
         if (currentUser) {
           const loginUserFlag = currentUser.flag;
           const loginUserId = currentUser.userId;
 
           // Debug log
-          console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
+          // console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
 
           if (loginUserFlag && loginUserId) {
             appointmentsData = appointmentsData.filter((appointment: any) => {
@@ -143,7 +149,7 @@ const DashboardAnalyticsIndex: React.FC = () => {
               return shouldInclude;
             });
 
-            console.log("Filtered appointments count:", appointmentsData.length);
+            // console.log("Filtered appointments count:", appointmentsData.length);
           } else {
             console.log("currentUser flag or userId is missing - showing all appointments");
           }
@@ -151,14 +157,23 @@ const DashboardAnalyticsIndex: React.FC = () => {
           console.log("currentUser is null - showing all appointments");
         }
 
+        // console.log("Final appointments data>>>>>>>>:", appointmentsData);
         const appointments = appointmentsData.map((item: any) => ({
           id: item._id,
           // profileImage: item.teacherUser?.profileImg ?? undefined,
           profileImage: item.teacherUser?.profileImg
                 ? `${filebasename}${item.teacherUser?.profileImg}`
                 : undefined,
+          profileImageParent: item.parentUser?.profileImg
+                ? `${filebasename}${item.parentUser.profileImg}`
+                : undefined,
+          // The API provides the booked user's details in `parentUser` and the
+          // assigned administrator's details in `admin`.
+          user: item.parentUser?.name || "N/A",
+          doctor: item.teacherUser?.name || "N/A",
+          admin: item.admin?.name || "N/A",
           name: item.teacherUser?.name || "N/A",
-          designation: item.teacherUser?.email || "N/A",
+          designation: item.teacher?.therapist_category || "N/A",
           date: item.date || "-",
           time: item.time || "-",
           status: item.status || "-",

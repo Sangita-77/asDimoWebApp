@@ -5,6 +5,10 @@ import Loader from "../../ui/Loaders";
 interface AppointmentTableItem {
   id: string;
   profileImage?: string;
+  profileImageParent?: string;
+  user: string;
+  doctor: string;
+  admin: string;
   name: string;
   designation: string;
   date: string;
@@ -19,7 +23,9 @@ interface AppointmentTableProps {
 
 const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading = false }) => {
   const appointmentHeaders = [
+    { key: "user", title: "User's Name" },
     { key: "doctor", title: "Doctor's Name" },
+    { key: "admin", title: "Admin Name" },
     { key: "date", title: "Date" },
     { key: "time", title: "Time" },
     { key: "status", title: "Status" },

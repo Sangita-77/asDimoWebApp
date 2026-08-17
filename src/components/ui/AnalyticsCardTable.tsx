@@ -3,6 +3,7 @@ import React from "react";
 export interface ProfileRow {
   id: string | number;
   profileImage?: string;
+  profileImageParent?: string;
   name?: string;
   designation?: string;
   date?: string;
@@ -44,18 +45,29 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
                 <td key={header.key}>
                   {header.key === "doctor" ? (
                     <div className="doctor-info">
-                      {row.profileImage && (
+                      {/* {row.profileImage && (
                         <img
                           src={row.profileImage}
                           alt={row.name || ""}
                           className="doctor-image"
                         />
-                      )}
+                      )} */}
 
                       <div>
                         <h5>{row.name ?? "-"}</h5>
                         <p>{row.designation ?? "-"}</p>
                       </div>
+                    </div>
+                  ) : header.key === "user" ? (
+                    <div className="doctor-info">
+                      {row.profileImageParent && (
+                        <img
+                          src={row.profileImageParent}
+                          alt={row.user || ""}
+                          className="doctor-image"
+                        />
+                      )}
+                      <h5>{row.user ?? "-"}</h5>
                     </div>
                   ) : header.key === "status" ? (
                     row.status ? (
