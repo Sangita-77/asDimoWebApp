@@ -24,7 +24,8 @@ interface ZonalAdminListProps {
   flag: number | number[];
   columns: ColumnConfig[];
   filteredUserId?: string; // For filtering data by current user (teachersGlobal)
-  filterByZonalAdminId?: boolean; // For filtering admins by zonalAdminId (flag 7)
+  filterByZonalAdminId?: boolean;
+  showDoctorsTabs?: boolean; // For filtering admins by zonalAdminId (flag 7)
 }
 
 const getRelatedCount = (item: any, key: string) =>
@@ -77,6 +78,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   columns: dynamicColumns,
   filteredUserId,
   filterByZonalAdminId,
+  showDoctorsTabs = false,
 }) => {
   const navigate = useNavigate();
   const flags = Array.isArray(flag) ? flag : [flag];
@@ -99,7 +101,6 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   
   // Get current user for hierarchical filtering
   const currentUser = tokenManager.getUser();
-
   /**
    * Determine filter field based on logged-in user's flag
    * Flag 6: Zonal Admin - filter all data by zonalAdminId
@@ -485,10 +486,21 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       </div>
        </div>
              
-      <div className="d-flex DoctorsTabs">
-         <DashboardButtons text="Under Organizations" variant="SolidNeon" textsize="md"/>
-         <DashboardButtons text="Global" variant="SolidYellow" textsize="md"/>
-      </div>
+        {showDoctorsTabs && (
+          <div className="d-flex DoctorsTabs">
+            <DashboardButtons
+              text="Under Organizations"
+              variant="SolidNeon"
+              textsize="sm"
+            />
+
+            <DashboardButtons
+              text="Global"
+              variant="SolidYellow"
+              textsize="sm"
+            />
+          </div>
+        )}
 
       <Table
         columns={tableColumns}

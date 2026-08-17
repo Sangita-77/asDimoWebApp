@@ -13,7 +13,7 @@ const SupTherapist: React.FC = () => {
       <Heading1 text="Doctors / Therapists" />
       <GlobalTableList
         flag={[3,5]}
-        // 3
+        showDoctorsTabs={true}
         columns={[
           { key: "name", title: "Name", sortable: true },
           { key: "admin_name", title: "Admin", sortable: true },
