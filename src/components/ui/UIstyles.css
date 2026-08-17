@@ -37,6 +37,7 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .GlobalButton button.blueborder:hover{background: var(--ColorBlue); color: var(--TextcolorLight);}
 .GlobalButton button.greenBorder{border: solid 2px var(--NeonGreen); border-radius: 8px; padding: 8px 0px 3px 12px; color: var(--NeonGreen); background-color: var(--TextcolorLight);}
 .GlobalButton button.greenBorder:hover{background: var(--GreenButtonHover); transition: .5s;}
+.GlobalButton button.SolidBlue{background: #39BECE; border: none; padding:12px 25px 10px; color: #fff; border-radius: 5px;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}

@@ -3,18 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Heading4 } from "../ui/HeadingPara.tsx";
 
 import DashboardButtons from "../ui/Buttons.tsx";
-import { ArrowRightIcon } from "lucide-animated";
+// import { ArrowRightIcon } from "lucide-animated";
 import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
 import AnalyticesCard from "./Analytices/AnalyticesCards.tsx";
-import SubscriptionAnalytics from "./Analytices/Subscriptiongraph.tsx";
-import Appointmentgraph from "./Analytices/Appointmentgraph.tsx";
-import SellReportGraph from "./Analytices/SellReportGraph.tsx";
-import ZonalAdminTable from "./Analytices/ZonalAdminTable.tsx";
+// import SubscriptionAnalytics from "./Analytices/Subscriptiongraph.tsx";
+// import Appointmentgraph from "./Analytices/Appointmentgraph.tsx";
+// import SellReportGraph from "./Analytices/SellReportGraph.tsx";
+// import ZonalAdminTable from "./Analytices/ZonalAdminTable.tsx";
 import AppointmentTable from "./Analytices/AppointmentTable.tsx";
-import DoctorListCard from "./Analytices/DoctorListCard.tsx";
+// import DoctorListCard from "./Analytices/DoctorListCard.tsx";
 import { filebasename } from "../../api/config";
-import Loader from "../ui/Loaders";
+// import Loader from "../ui/Loaders";
 
 
 interface ZonalAdminRow {
@@ -41,8 +41,10 @@ interface AppointmentRow {
 }
 
 const DashboardAnalyticsIndex: React.FC = () => {
-  const [zonalAdminRows, setZonalAdminRows] = useState<ZonalAdminRow[]>([]);
-  const [doctorRows, setDoctorRows] = useState<DoctorRow[]>([]);
+  // const [zonalAdminRows, setZonalAdminRows] = useState<ZonalAdminRow[]>([]);
+  // const [doctorRows, setDoctorRows] = useState<DoctorRow[]>([]);
+  const [, setZonalAdminRows] = useState<ZonalAdminRow[]>([]);
+  const [, setDoctorRows] = useState<DoctorRow[]>([]);
   const [appointmentRows, setAppointmentRows] = useState<AppointmentRow[]>([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -182,34 +184,34 @@ const DashboardAnalyticsIndex: React.FC = () => {
     <div className="AnalyticesCard">
       <AnalyticesCard/>     
     </div>
-    <div className="SubscriptionAnalyticsGraph">
+    {/* <div className="SubscriptionAnalyticsGraph">
       <SubscriptionAnalytics/>
-    </div>
-    <div className="boxShadow analyticsZonalAdmin">
+    </div> */}
+    {/* <div className="boxShadow analyticsZonalAdmin">
       <div className="d-flex">
           <Heading4 text="Zonal Admin"/>
           <DashboardButtons onClick={() => navigate("/superadmin/zonal-admin")} text="See All" variant="greenBorder" icon={<ArrowRightIcon size={22} className="btn-icon" />} iconPosition="right" textsize="md"/>
       </div>
        <ZonalAdminTable rows={zonalAdminRows} loading={loading} />
-    </div>
+    </div> */}
     <div className="analyticsZonalAdmin boxShadow">
        <div className="d-flex">
-          <Heading4 text="Appointments"/>
-          <DashboardButtons onClick={() => navigate("/superadmin/appointment")} text="See All" variant="greenBorder" icon={<ArrowRightIcon size={22} className="btn-icon" />} iconPosition="right" textsize="md"/>
+          <Heading4 text="APPOINTMENTS"/>
+          <DashboardButtons onClick={() => navigate("/superadmin/appointment")} text="View All" variant="SolidBlue" textsize="md"/>
        </div>
           <AppointmentTable appointments={appointmentRows} loading={loading} />
     </div>
-    <div className="Appointmentstatistics d-flex">
+    {/* <div className="Appointmentstatistics d-flex">
         <div className="AppointmentstatisticsGraph">
           {loading ? <Loader /> : <Appointmentgraph />}
         </div>
         <div className="DoctorsListAnalytics boxShadow">
           <DoctorListCard doctors={doctorRows} />
         </div>
-    </div>
-    <div className="SellReportGraph ">
+    </div> */}
+    {/* <div className="SellReportGraph ">
        <SellReportGraph/> 
-    </div>
+    </div> */}
     </>
   );
 };
