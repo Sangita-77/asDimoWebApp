@@ -135,6 +135,12 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
     if (userFlag === 5 && col.key === 'numberorganizations') {
       return false;
     }
+    if (userFlag === 0 && col.key === 'numberParents') {
+      return false;
+    }
+    if (userFlag === 0 && col.key === 'numberAppointments') {
+      return false;
+    }
     return true;
   });
 
