@@ -4,6 +4,7 @@ import Table from '../../ui/Table.tsx';
 import Loader from '../../ui/Loaders';
 import DashboardButtons from '../../ui/Buttons';
 import { routes } from '../../../routes/AppRoutes';
+import { tokenManager } from '../../../services/tokenManager';
 import IButton from "../../../assets/Images/iButton.svg";
 
 
@@ -23,6 +24,8 @@ interface ZonalAdminTableProps {
 
 const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false }) => {
   const navigate = useNavigate();
+  const currentUser = tokenManager.getUser();
+  const userFlag = Number(currentUser?.flag) || 0;
 
   const handleViewDetails = (userId: string | number) => {
     // Keep the id in the URL as well as navigation state so this profile can
@@ -32,7 +35,7 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
     });
   };
 
-  const columns = [
+  const allColumns = [
     {
       key: 'zonaladminname',
       title: 'Name',
@@ -48,6 +51,18 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
     {
       key: 'numberorganizations',
       title: 'Organizations',
+    },
+    {
+      key: 'numbertherapists',
+      title: 'Therapists',
+    },
+    {
+      key: 'numberParents',
+      title: 'Users',
+    },
+    {
+      key: 'numberAppointments',
+      title: 'Appointments',
     },
     {
       key: 'numbertherapists',
@@ -75,6 +90,53 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
       ),
     },
   ];
+
+  // Filter columns based on user flag
+  const columns = allColumns.filter(col => {
+    if (userFlag === 6 && col.key === 'numberadmins') {
+      return false;
+    }
+    if (userFlag === 6 && col.key === 'numberParents') {
+      return false;
+    }
+    if (userFlag === 6 && col.key === 'numberAppointments') {
+      return false;
+    }
+    if (userFlag === 7 && col.key === 'numberadmins') {
+      return false;
+    }
+    if (userFlag === 7 && col.key === 'numberParents') {
+      return false;
+    }
+    if (userFlag === 7 && col.key === 'numberAppointments') {
+      return false;
+    }
+    if (userFlag === 1 && col.key === 'numberorganizations') {
+      return false;
+    }
+    if (userFlag === 1 && col.key === 'numbertherapists') {
+      return false;
+    }
+    if (userFlag === 1 && col.key === 'numberadmins') {
+      return false;
+    }
+    if (userFlag === 7 && col.key === 'numberorganizations') {
+      return false;
+    }
+    if (userFlag === 3 && col.key === 'numbertherapists') {
+      return false;
+    }
+    if (userFlag === 3 && col.key === 'numberParents') {
+      return false;
+    }
+    if (userFlag === 3 && col.key === 'numberAppointments') {
+      return false;
+    }
+    if (userFlag === 5 && col.key === 'numberorganizations') {
+      return false;
+    }
+    return true;
+  });
 
   if (loading) {
     return <Loader />;

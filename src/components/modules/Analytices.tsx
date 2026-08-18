@@ -23,6 +23,8 @@ interface ZonalAdminRow {
   location: string;
   numberadmins: number;
   numberorganizations: number;
+  numberParents: number;
+  numberAppointments: number;
   numbertherapists: number;
   numbersubscriptions: number;
   numberpes: number;
@@ -37,8 +39,21 @@ const relatedDataKeyByLoginFlag: Record<number, string> = {
   5: "teachers",
 };
 
+const countTeacherAppointments = (
+  appointments: any[],
+  teacherUserId: string | number | undefined
+) => {
+  if (teacherUserId === undefined) return 0;
+
+  return appointments.filter(
+    (appointment: any) =>
+      String(appointment?.teacherUser?.userId) === String(teacherUserId)
+  ).length;
+};
+
 
 const countRelatedRecords = (items: any[], field: string, value: string | number | undefined) =>
+  
   value === undefined ? 0 : items.filter((item: any) => item?.[field] === value).length;
 
 const getRelatedCount = (relatedData: any, key: string) =>
@@ -150,6 +165,10 @@ const DashboardAnalyticsIndex: React.FC = () => {
           const adminId = item.adminId ?? recordUserId;
           const organizationAdminId = item.organizationAdminId ?? recordUserId;
           const teacherId = item.teacherId ?? recordUserId;
+          const numberAppointments = countTeacherAppointments(
+            appointmentsResponse.data || [],
+            teacherId
+          );
 
           return {
             zonaladminname: user.name || "-",
@@ -162,6 +181,10 @@ const DashboardAnalyticsIndex: React.FC = () => {
             numberorganizations: loggedInFlag === 0
               ? item.relatedData?.organizations?.count ?? item.relatedData?.organizations?.data?.length ?? 0
               : countRelatedRecords(relatedData.organizations?.data || [], "adminId", adminId),
+            numberParents: loggedInFlag === 0
+              ? item.relatedData?.parents?.count ?? item.relatedData?.parents?.data?.length ?? 0
+              : countRelatedRecords(relatedData.parents?.data || [], "teacherId", teacherId),
+            numberAppointments,
             numbertherapists: loggedInFlag === 0
               ? item.relatedData?.therapists?.count ?? item.relatedData?.therapists?.data?.length ?? 0
               : loggedInFlag === 6
