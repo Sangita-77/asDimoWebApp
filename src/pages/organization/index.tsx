@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Heading2, Heading1Light, ParagraphLight } from "../../components/ui/HeadingPara";
+// import { Heading2, Heading1Light, ParagraphLight } from "../../components/ui/HeadingPara";
 import { tokenManager } from "../../services/tokenManager";
 // import { authService } from "../../services/authService";
 import { getRoleTypeByFlag } from "../../middleware/AuthMiddleware";
-import AppointmentCalendar from "../../components/ui/AppointmentCalender";
+// import AppointmentCalendar from "../../components/ui/AppointmentCalender";
+import Analytices from "../../components/modules/Analytices";
 
 const OrganizationAdminIndex: React.FC = () => {
-  const [stats, setStats] = useState({
+  // const [stats, setStats] = useState({
+  const [, setStats] = useState({
     therapistCount: 0,
     parentCount: 0,
     appointmentCount: 0,
     totalBalance: 0,
   });
-  const [appointments, setAppointments] = useState<string[]>([]);
+  // const [appointments, setAppointments] = useState<string[]>([]);
+  const [, setAppointments] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<string | null>(null);
 
@@ -71,8 +74,8 @@ const OrganizationAdminIndex: React.FC = () => {
 
   return (
     <>
-      <Heading2 text="DASHBOARD" />
-      <div className="therapistDashboard">
+     <Analytices/>
+      {/* <div className="therapistDashboard">
         <div className="paymnetStatus">
           <ParagraphLight text="Total Balance" />
           <Heading1Light text={`₹${stats.totalBalance}`} />
@@ -95,7 +98,7 @@ const OrganizationAdminIndex: React.FC = () => {
       <div className="">
         <Heading2 text="Appointment" />
         <AppointmentCalendar appointments={appointments} />
-      </div>
+      </div> */}
     </>
   );
 };
