@@ -52,10 +52,10 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
       key: 'numberorganizations',
       title: 'Organizations',
     },
-    {
-      key: 'numbertherapists',
-      title: 'Therapists',
-    },
+    // {
+    //   key: 'numbertherapists',
+    //   title: 'Therapists',
+    // },
     {
       key: 'numberParents',
       title: 'Users',
@@ -139,6 +139,9 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
       return false;
     }
     if (userFlag === 0 && col.key === 'numberAppointments') {
+      return false;
+    }
+    if (userFlag === 0 && col.key === 'numbertherapists') {
       return false;
     }
     return true;
