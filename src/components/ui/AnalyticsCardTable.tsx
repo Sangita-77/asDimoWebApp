@@ -36,6 +36,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
 
   const handleViewDetails = (userId: string | number) => {
     navigate("#");
+    console.log("View details for userId:", userId);
   };
 
   const roleFlag = Number(tokenManager.getUser()?.flag);
