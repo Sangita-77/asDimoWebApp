@@ -8,6 +8,7 @@ import SubscriptionsDashIcon from "../../../assets/Images/SubscriptionsDashIcon.
 import AppointmentDashIcon from "../../../assets/Images/AppointmentDashIcon.svg";
 import { authService } from "../../../services/authService";
 import { tokenManager } from "../../../services/tokenManager";
+import { getCurrentUserRole } from "../../../middleware/AuthMiddleware";
 
 interface UserCounts {
   organizationAdmin: number;
@@ -19,6 +20,7 @@ interface UserCounts {
 }
 
 const AnalyticesCard: React.FC = () => {
+  const role = getCurrentUserRole();
   const [counts, setCounts] = useState<UserCounts>({
     organizationAdmin: 0,
     parent: 0,
@@ -27,6 +29,7 @@ const AnalyticesCard: React.FC = () => {
     admin: 0,
     totalAppointments: 0,
   });
+  
 
   useEffect(() => {
     const loadUserCounts = async () => {
@@ -48,34 +51,61 @@ const AnalyticesCard: React.FC = () => {
 
   return (
     <>
-        <DashboardCard
-        title="Zonal Admin"
-        description="Total Number of Zonal Admin"
-        total={String(counts.zonalAdmin)}
-        image={ZonalAdminImage}
-        buttonLink="/superadmin/zonal-admin"
+        {role === "SuperAdmin" && (
+          <DashboardCard
+            title="Zonal Admin"
+            description="Total Number of Zonal Admin"
+            total={String(counts.zonalAdmin)}
+            image={ZonalAdminImage}
+            buttonLink="/superadmin/zonal-admin"
+          />
+        )}
+
+        {(role === "SuperAdmin" || role === "zonalAdmin") && (
+          <DashboardCard
+            title="Admin"
+            description="Total Number of Admin"
+            total={String(counts.admin)}
+            image={ZonalAdminImage}
+            buttonLink={
+              role === "SuperAdmin"
+                ? "/superadmin/admin"
+                : "/zonaladmin/admin"
+            }
+          />
+        )}
+
+        {(role === "SuperAdmin" || role === "zonalAdmin" || role === "Admin") && (
+          <DashboardCard
+            title="Organization"
+            description="Total Number of Organization"
+            total={String(counts.organizationAdmin)}
+            image={OrganizationDashIcon}
+            buttonLink={
+              role === "SuperAdmin"
+                ? "/superadmin/organization"
+                : role === "zonalAdmin"
+                  ? "/zonaladmin/organization"
+                  : "/admin/organization"
+            }
         />
-        <DashboardCard
-        title="Admin"
-        description="Total Number of Admin"
-        total={String(counts.admin)}
-        image={ZonalAdminImage}
-        buttonLink="/superadmin/admin"
-        />
-        <DashboardCard
-        title="Organization"
-        description="Total Number of Organization"
-        total={String(counts.organizationAdmin)}
-        image={OrganizationDashIcon}
-        buttonLink="/superadmin/organization"
-        />
+        )}
+
         <DashboardCard
         title="Doctors / Therapists"
         description="Total Doctors / Therapists"
         total={String(counts.therapist)}
         image={DoctorsDashIcon}
-        buttonLink="/superadmin/therapist"
+        buttonLink={
+          role === "SuperAdmin"
+            ? "/superadmin/therapist"
+            : role === "zonalAdmin"
+              ? "/zonaladmin/therapist"
+              : "/admin/therapist"
+        }
         />
+
+
         <DashboardCard
         title="Users / Parents"
         description="Total Number of users / parents"
