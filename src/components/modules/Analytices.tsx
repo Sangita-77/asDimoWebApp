@@ -264,7 +264,7 @@ const DashboardAnalyticsIndex: React.FC = () => {
           <Heading4 text="APPOINTMENTS"/>
           <DashboardButtons onClick={() => navigate("/superadmin/appointment")} text="View All" variant="SolidBlue" textsize="md"/>
        </div>
-          <AppointmentTable appointments={appointmentRows} loading={loading} />
+          <AppointmentTable appointments={appointmentRows} loading={loading} displayLimit={6} />
     </div>
     <div className="analyticsZonalAdmin">
       <div className="d-flex">

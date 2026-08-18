@@ -19,9 +19,10 @@ interface AppointmentTableItem {
 interface AppointmentTableProps {
   appointments: AppointmentTableItem[];
   loading?: boolean;
+  displayLimit?: number;
 }
 
-const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading = false }) => {
+const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading = false, displayLimit }) => {
   const appointmentHeaders = [
     { key: "user", title: "User's Name" },
     { key: "doctor", title: "Doctor's Name" },
@@ -32,14 +33,19 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loadi
     { key: "action", title: "Action" },
   ];
 
+  // Limit appointments if displayLimit is provided
+  const displayedAppointments = displayLimit 
+    ? appointments.slice(0, displayLimit) 
+    : appointments;
+
   if (loading) {
     return <Loader />;
   }
 
   return (
     <>
-      {appointments.length > 0 ? (
-        <AnalyticsCardTable data={appointments} headers={appointmentHeaders} />
+      {displayedAppointments.length > 0 ? (
+        <AnalyticsCardTable data={displayedAppointments} headers={appointmentHeaders} />
       ) : (
         <div className="no-data">No appointments available</div>
       )}
