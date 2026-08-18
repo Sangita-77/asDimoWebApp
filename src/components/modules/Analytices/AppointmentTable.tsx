@@ -29,6 +29,7 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loadi
     { key: "date", title: "Date" },
     { key: "time", title: "Time" },
     { key: "status", title: "Status" },
+    { key: "action", title: "Action" },
   ];
 
   if (loading) {

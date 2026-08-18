@@ -39,8 +39,9 @@
 /* analyticsZonalAdmin Start */
 .analyticsZonalAdmin table .custom-checkbox{display: none;}
 .analyticsZonalAdmin .Heading4{width: 20%;}
-.analyticsZonalAdmin .GlobalButton{width: 80%; display: flex; justify-content: end; }
+.analyticsZonalAdmin .GlobalButton:not(.appointment_view){width: 80%; display: flex; justify-content: end; }
 .analyticsZonalAdmin{margin-top: 40px;}
+.analyticsZonalAdmin .GlobalButton.appointment_view button{margin: 0 auto;}
 /* analyticsZonalAdmin End */
 
 /* Appointmentstatistics Start */

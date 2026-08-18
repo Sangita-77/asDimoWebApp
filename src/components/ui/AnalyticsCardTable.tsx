@@ -1,5 +1,7 @@
 import React from "react";
 import { tokenManager } from "../../services/tokenManager";
+import DashboardButtons from "../ui/Buttons";
+import IButton from "../../assets/Images/iButton.svg";
 
 export interface ProfileRow {
   id: string | number;
@@ -81,19 +83,26 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
                       )}
                       <h5>{row.user ?? "-"}</h5>
                     </div>
-                  ) : header.key === "status" ? (
-                    row.status ? (
-                      <span
-                        className={`status-badge ${row.status.toLowerCase()}`}
-                      >
-                        {row.status}
-                      </span>
+                    ) : header.key === "status" ? (
+                      row.status ? (
+                        <span
+                          className={`status-badge ${row.status.toLowerCase()}`}
+                        >
+                          {row.status}
+                        </span>
+                      ) : (
+                        "-"
+                      )
+                    ) : header.key === "action" ? (
+                          <DashboardButtons
+                          className="appointment_view"
+                            text="View Details"
+                            icon={<img src={IButton} alt="view" className="btn-icon" />}
+                            variant="trashparent"
+                          />
                     ) : (
-                      "-"
-                    )
-                  ) : (
-                    row[header.key] ?? "-"
-                  )}
+                      row[header.key] ?? "-"
+                    )}
                 </td>
               ))}
             </tr>
