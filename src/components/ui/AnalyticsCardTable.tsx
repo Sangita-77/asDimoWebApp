@@ -2,6 +2,8 @@ import React from "react";
 import { tokenManager } from "../../services/tokenManager";
 import DashboardButtons from "../ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
+import { useNavigate } from 'react-router-dom';
+// import { routes } from '../../routes/AppRoutes';
 
 export interface ProfileRow {
   id: string | number;
@@ -30,6 +32,13 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
   headers,
   data,
 }) => {
+    const navigate = useNavigate();
+
+  const handleViewDetails = (userId: string | number) => {
+    navigate("#");
+    console.log("View details for userId:", userId);
+  };
+
   const roleFlag = Number(tokenManager.getUser()?.flag);
   const hiddenHeaderKeysByRole: Record<number, string[]> = {
     6: ["zonalAdmin", "zonal_admin_name"],
@@ -99,6 +108,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
                             text="View Details"
                             icon={<img src={IButton} alt="view" className="btn-icon" />}
                             variant="trashparent"
+                            onClick={() => handleViewDetails(row.userId)}
                           />
                     ) : (
                       row[header.key] ?? "-"
