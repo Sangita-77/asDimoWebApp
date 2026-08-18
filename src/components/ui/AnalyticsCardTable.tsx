@@ -35,9 +35,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
     const navigate = useNavigate();
 
   const handleViewDetails = (userId: string | number) => {
-    navigate(routes.SUP_THERAPIST_DETAILS, {
-      state: { userId },
-    });
+    navigate("#");
   };
 
   const roleFlag = Number(tokenManager.getUser()?.flag);
