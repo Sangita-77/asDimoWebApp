@@ -14,6 +14,7 @@ import ZonalAdminTable from "./Analytices/ZonalAdminTable.tsx";
 import AppointmentTable from "./Analytices/AppointmentTable.tsx";
 // import DoctorListCard from "./Analytices/DoctorListCard.tsx";
 import { filebasename } from "../../api/config";
+import { routes } from "../../routes/AppRoutes";
 // import Loader from "../ui/Loaders";
 
 
@@ -27,6 +28,41 @@ interface ZonalAdminRow {
   numberpes: number;
   userId: string | number;
 }
+
+const relatedDataKeyByLoginFlag: Record<number, string> = {
+  6: "admins",
+  7: "organizations",
+  1: "teachers",
+  3: "parents",
+  5: "teachers",
+};
+
+
+const countRelatedRecords = (items: any[], field: string, value: string | number | undefined) =>
+  value === undefined ? 0 : items.filter((item: any) => item?.[field] === value).length;
+
+const getRelatedCount = (relatedData: any, key: string) =>
+  relatedData?.[key]?.count ?? relatedData?.[key]?.data?.length ?? 0;
+
+const hasSameUserId = (firstId: string | number | undefined, secondId: string | number | undefined) =>
+  firstId !== undefined && secondId !== undefined && String(firstId) === String(secondId);
+
+const getDashboardRoutes = (flag: number) => {
+  switch (flag) {
+    case 6:
+      return { appointment: routes.ZONAL_APPOINTMENT, list: routes.ZONAL_ADMIN };
+    case 7:
+      return { appointment: routes.ADMIN_APPOINTMENT, list: routes.ADMIN_ORGANIZATION };
+    case 1:
+      return { appointment: routes.ORGANIZATIONADMIN_APPOINTMENT, list: routes.ORGANIZATIONADMIN_THERAPIST };
+    case 3:
+    case 5:
+      return { appointment: routes.THERAPIST_APPOINTMENT, list: routes.THERAPIST_PARENT };
+    case 0:
+    default:
+      return { appointment: routes.SUP_APPOINTMENT, list: routes.SUP_ZONALADMIN };
+  }
+};
 
 interface DoctorRow {
   id: number | string;
@@ -90,25 +126,60 @@ const DashboardAnalyticsIndex: React.FC = () => {
 
         const [zonalResponse, doctorFlag3Response, doctorFlag5Response, appointmentsResponse, userCountsResponse] =
           await Promise.all([
-            authService.getUsersByFlag(token, 6),
+            // Super admins see every zonal admin. Other roles see only the
+            // records related to their own user id.
+            Number(currentUser?.flag) === 0
+              ? authService.getUsersByFlag(token, 6)
+              : authService.getUserById(token, currentUser?.userId ?? currentUser?.id),
             authService.getUsersByFlag(token, 3),
             authService.getUsersByFlag(token, 5),
             authService.getAppoinments(token),
             authService.getUserCounts(token),
           ]);
 
-        const zonalAdmins = (zonalResponse.data || []).map((item: any) => ({
-          zonaladminname: item.name || "-",
-          location: [item.roleData?.city || item.city, item.roleData?.state || item.state]
-            .filter(Boolean)
-            .join(", ") || "-",
-          numberadmins: item.relatedData?.admins?.count ?? item.relatedData?.admins?.data?.length ?? 0,
-          numberorganizations: item.relatedData?.organizations?.count ?? item.relatedData?.organizations?.data?.length ?? 0,
-          numbertherapists: item.relatedData?.therapists?.count ?? item.relatedData?.therapists?.data?.length ?? 0,
-          numbersubscriptions: item.relatedData?.subscriptions?.count ?? item.relatedData?.subscriptions?.data?.length ?? 0,
-          numberpes: item.relatedData?.pes?.count ?? item.relatedData?.pes?.data?.length ?? 0,
-          userId: item.userId ?? item._id,
-        }));
+        const loggedInFlag = Number(currentUser?.flag) || 0;
+        const profile = zonalResponse?.data || zonalResponse;
+        const relatedData = profile?.relatedData || {};
+        const sourceRecords = loggedInFlag === 0
+          ? (zonalResponse.data || [])
+          : (relatedData[relatedDataKeyByLoginFlag[loggedInFlag]]?.data || []);
+
+        const zonalAdmins = sourceRecords.map((item: any) => {
+          const user = item.userData || item;
+          const recordUserId = user.userId ?? item.userId ?? item._id;
+          const adminId = item.adminId ?? recordUserId;
+          const organizationAdminId = item.organizationAdminId ?? recordUserId;
+          const teacherId = item.teacherId ?? recordUserId;
+
+          return {
+            zonaladminname: user.name || "-",
+            location: [item.city || user.city, item.state || user.state]
+              .filter(Boolean)
+              .join(", ") || "-",
+            numberadmins: loggedInFlag === 0
+              ? item.relatedData?.admins?.count ?? item.relatedData?.admins?.data?.length ?? 0
+              : 0,
+            numberorganizations: loggedInFlag === 0
+              ? item.relatedData?.organizations?.count ?? item.relatedData?.organizations?.data?.length ?? 0
+              : countRelatedRecords(relatedData.organizations?.data || [], "adminId", adminId),
+            numbertherapists: loggedInFlag === 0
+              ? item.relatedData?.therapists?.count ?? item.relatedData?.therapists?.data?.length ?? 0
+              : loggedInFlag === 6
+                ? countRelatedRecords(relatedData.teachers?.data || [], "adminId", adminId)
+                : countRelatedRecords(relatedData.teachers?.data || [], "organizationAdminId", organizationAdminId),
+            numbersubscriptions: loggedInFlag === 0
+              ? item.relatedData?.subscriptions?.count ?? item.relatedData?.subscriptions?.data?.length ?? 0
+              : 0,
+            numberpes: loggedInFlag === 0
+              ? item.relatedData?.pes?.count ?? item.relatedData?.pes?.data?.length ?? 0
+              : loggedInFlag === 6
+                ? countRelatedRecords(relatedData.parents?.data || [], "adminId", adminId)
+                : loggedInFlag === 7
+                  ? countRelatedRecords(relatedData.parents?.data || [], "organizationAdminId", organizationAdminId)
+                  : countRelatedRecords(relatedData.parents?.data || [], "teacherId", teacherId),
+            userId: recordUserId,
+          };
+        });
 
         const mergedDoctors = [
           ...(doctorFlag3Response.data || []),
@@ -150,23 +221,20 @@ const DashboardAnalyticsIndex: React.FC = () => {
 
               switch (Number(loginUserFlag)) {
                 case 6: // Zonal Admin - show appointments where zonalAdmin's userId matches
-                  shouldInclude = appointment.zonalAdmin?.userId === loginUserId;
-                  console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  shouldInclude = hasSameUserId(appointment.zonalAdmin?.userId, loginUserId);
                   break;
 
                 case 7: // Admin - show appointments where admin's userId matches
-                  shouldInclude = appointment.admin?.userId === loginUserId;
-                  console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  shouldInclude = hasSameUserId(appointment.admin?.userId, loginUserId);
                   break;
 
                 case 1: // Organization Admin - show appointments where organization's userId matches
-                  shouldInclude = appointment.organization?.userId === loginUserId;
-                  console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  shouldInclude = hasSameUserId(appointment.organization?.userId, loginUserId);
                   break;
 
-                case 3: // Teacher - show appointments where teacher's userId matches
-                  shouldInclude = appointment.teacherUser?.userId === loginUserId;
-                  console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                case 3:
+                case 5: // Teachers - show appointments where teacher's userId matches
+                  shouldInclude = hasSameUserId(appointment.teacherUser?.userId, loginUserId);
                   break;
 
                 default:
@@ -211,9 +279,19 @@ const DashboardAnalyticsIndex: React.FC = () => {
         setDoctorRows(uniqueDoctors);
         setAppointmentRows(appointments);
 
-        // Set user counts
-        if (userCountsResponse.success && userCountsResponse.data) {
+        // Super admins retain global counts. Other roles use only the counts
+        // from their own getUserById relatedData response.
+        if (loggedInFlag === 0 && userCountsResponse.success && userCountsResponse.data) {
           setUserCounts(userCountsResponse.data);
+        } else {
+          setUserCounts({
+            zonalAdmin: 0,
+            admin: getRelatedCount(relatedData, "admins"),
+            organizationAdmin: getRelatedCount(relatedData, "organizations"),
+            therapist: getRelatedCount(relatedData, "teachers"),
+            parent: getRelatedCount(relatedData, "parents"),
+            totalAppointments: appointmentsData.length,
+          });
         }
 
       } catch (error) {
@@ -241,14 +319,16 @@ const DashboardAnalyticsIndex: React.FC = () => {
       case 1:
         return { text: "Doctors / Therapists", count: userCounts.therapist };
       case 3:
-      case 5:
         return { text: "Users / Parents", count: userCounts.parent };
+      case 5:
+        return { text: "Doctors / Therapists", count: userCounts.therapist };
       default:
         return { text: "Zonal Admin", count: userCounts.zonalAdmin };
     }
   };
 
   const headingInfo = getHeadingByFlag();
+  const dashboardRoutes = getDashboardRoutes(Number(tokenManager.getUser()?.flag) || 0);
 
   return (
     <>
@@ -261,15 +341,15 @@ const DashboardAnalyticsIndex: React.FC = () => {
 
     <div className="analyticsZonalAdmin boxShadow">
        <div className="d-flex">
-          <Heading4 text="APPOINTMENTS"/>
-          <DashboardButtons onClick={() => navigate("/superadmin/appointment")} text="View All" variant="SolidBlue" textsize="md"/>
+          <Heading4 text="APPOINTMENTS" span={`(${appointmentRows.length})`} />
+          <DashboardButtons onClick={() => navigate(dashboardRoutes.appointment)} text="View All" variant="SolidBlue" textsize="md"/>
        </div>
           <AppointmentTable appointments={appointmentRows} loading={loading} displayLimit={6} />
     </div>
     <div className="analyticsZonalAdmin">
       <div className="d-flex">
           <Heading4 text={headingInfo.text} span={`(${headingInfo.count})`}/>
-          <DashboardButtons onClick={() => navigate("/superadmin/zonal-admin")} text="See All" variant="greenBorder" icon={<ArrowRightIcon size={22} className="btn-icon" />} iconPosition="right" textsize="md"/>
+          <DashboardButtons onClick={() => navigate(dashboardRoutes.list)} text="See All" variant="greenBorder" icon={<ArrowRightIcon size={22} className="btn-icon" />} iconPosition="right" textsize="md"/>
       </div>
        <ZonalAdminTable rows={zonalAdminRows} loading={loading} />
     </div>

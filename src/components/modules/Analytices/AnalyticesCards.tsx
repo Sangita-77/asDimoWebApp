@@ -19,6 +19,9 @@ interface UserCounts {
   totalAppointments: number;
 }
 
+const getRelatedCount = (relatedData: any, key: string) =>
+  relatedData?.[key]?.count ?? relatedData?.[key]?.data?.length ?? 0;
+
 const AnalyticesCard: React.FC = () => {
   const role = getCurrentUserRole();
   const [counts, setCounts] = useState<UserCounts>({
@@ -37,10 +40,34 @@ const AnalyticesCard: React.FC = () => {
       if (!token) return;
 
       try {
-        const response = await authService.getUserCounts(token);
-        if (response.success && response.data) {
-          setCounts(response.data);
+        const currentUser = tokenManager.getUser();
+        const loginFlag = Number(currentUser?.flag) || 0;
+
+        // Flag 0 retains the existing global dashboard totals. Every other
+        // role receives counts only from its own relatedData hierarchy.
+        if (loginFlag === 0) {
+          const response = await authService.getUserCounts(token);
+          if (response.success && response.data) {
+            setCounts(response.data);
+          }
+          return;
         }
+
+        const response = await authService.getUserById(
+          token,
+          currentUser?.userId ?? currentUser?.id
+        );
+        const user = response?.data || response;
+        const relatedData = user?.relatedData || {};
+
+        setCounts({
+          zonalAdmin: 0,
+          admin: getRelatedCount(relatedData, "admins"),
+          organizationAdmin: getRelatedCount(relatedData, "organizations"),
+          therapist: getRelatedCount(relatedData, "teachers"),
+          parent: getRelatedCount(relatedData, "parents"),
+          totalAppointments: 0,
+        });
       } catch (error) {
         console.error("Failed to fetch dashboard user counts:", error);
       }

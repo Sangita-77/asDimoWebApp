@@ -25,7 +25,9 @@ const ZonalAdminTable: React.FC<ZonalAdminTableProps> = ({ rows, loading = false
   const navigate = useNavigate();
 
   const handleViewDetails = (userId: string | number) => {
-    navigate(routes.SUP_ZONALADMIN_DETAILS, {
+    // Keep the id in the URL as well as navigation state so this profile can
+    // be opened directly or refreshed without losing the selected user.
+    navigate(`${routes.SUP_ZONALADMIN_DETAILS}?userId=${encodeURIComponent(String(userId))}`, {
       state: { userId },
     });
   };
