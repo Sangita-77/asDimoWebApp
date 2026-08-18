@@ -21,6 +21,7 @@ interface UserCounts {
 
 const AnalyticesCard: React.FC = () => {
   const role = getCurrentUserRole();
+
   const [counts, setCounts] = useState<UserCounts>({
     organizationAdmin: 0,
     parent: 0,
@@ -29,15 +30,16 @@ const AnalyticesCard: React.FC = () => {
     admin: 0,
     totalAppointments: 0,
   });
-  
 
   useEffect(() => {
     const loadUserCounts = async () => {
       const token = tokenManager.getAccessToken();
+
       if (!token) return;
 
       try {
         const response = await authService.getUserCounts(token);
+
         if (response.success && response.data) {
           setCounts(response.data);
         }
@@ -49,93 +51,113 @@ const AnalyticesCard: React.FC = () => {
     loadUserCounts();
   }, []);
 
+  const getRoleRoute = (section: string) => {
+    switch (role) {
+      case "SuperAdmin":
+        return `/superadmin/${section}`;
+
+      case "zonalAdmin":
+        return `/zonaladmin/${section}`;
+
+      case "Admin":
+        return `/admin/${section}`;
+
+      case "OrganizationAdmin":
+        return `/organizationadmin/${section}`;
+
+      default:
+        return "#";
+    }
+  };
+
   return (
     <>
-        {role === "SuperAdmin" && (
-          <DashboardCard
-            title="Zonal Admin"
-            description="Total Number of Zonal Admin"
-            total={String(counts.zonalAdmin)}
-            image={ZonalAdminImage}
-            buttonLink="/superadmin/zonal-admin"
-          />
-        )}
-
-        {(role === "SuperAdmin" || role === "zonalAdmin") && (
-          <DashboardCard
-            title="Admin"
-            description="Total Number of Admin"
-            total={String(counts.admin)}
-            image={ZonalAdminImage}
-            buttonLink={
-              role === "SuperAdmin"
-                ? "/superadmin/admin"
-                : "/zonaladmin/admin"
-            }
-          />
-        )}
-
-        {(role === "SuperAdmin" || role === "zonalAdmin" || role === "Admin") && (
-          <DashboardCard
-            title="Organization"
-            description="Total Number of Organization"
-            total={String(counts.organizationAdmin)}
-            image={OrganizationDashIcon}
-            buttonLink={
-              role === "SuperAdmin"
-                ? "/superadmin/organization"
-                : role === "zonalAdmin"
-                  ? "/zonaladmin/organization"
-                  : "/admin/organization"
-            }
-        />
-        )}
-
+      {/* Zonal Admin */}
+      {role === "SuperAdmin" && (
         <DashboardCard
-        title="Doctors / Therapists"
-        description="Total Doctors / Therapists"
-        total={String(counts.therapist)}
-        image={DoctorsDashIcon}
-        buttonLink={
-          role === "SuperAdmin"
-            ? "/superadmin/therapist"
-            : role === "zonalAdmin"
-              ? "/zonaladmin/therapist"
-              : "/admin/therapist"
-        }
+          title="Zonal Admin"
+          description="Total Number of Zonal Admin"
+          total={String(counts.zonalAdmin)}
+          image={ZonalAdminImage}
+          buttonLink={getRoleRoute("zonal-admin")}
         />
+      )}
 
-
+      {/* Admin */}
+      {(role === "SuperAdmin" || role === "zonalAdmin") && (
         <DashboardCard
+          title="Admin"
+          description="Total Number of Admin"
+          total={String(counts.admin)}
+          image={ZonalAdminImage}
+          buttonLink={getRoleRoute("admin")}
+        />
+      )}
+
+      {/* Organization */}
+      {(role === "SuperAdmin" ||
+        role === "zonalAdmin" ||
+        role === "Admin") && (
+        <DashboardCard
+          title="Organization"
+          description="Total Number of Organization"
+          total={String(counts.organizationAdmin)}
+          image={OrganizationDashIcon}
+          buttonLink={getRoleRoute("organization")}
+        />
+      )}
+
+      {/* Doctors / Therapists */}
+      {(role === "SuperAdmin" ||
+        role === "zonalAdmin" ||
+        role === "Admin" ||
+        role === "OrganizationAdmin" ||
+        role === "teachersGlobal") && (
+        <DashboardCard
+          title="Doctors / Therapists"
+          description="Total Doctors / Therapists"
+          total={String(counts.therapist)}
+          image={DoctorsDashIcon}
+          buttonLink={getRoleRoute("therapist")}
+        />
+      )}
+
+      {/* Parents */}
+      <DashboardCard
         title="Users / Parents"
         description="Total Number of users / parents"
         total={String(counts.parent)}
         image={ParentsDashIcon}
-        buttonLink="/superadmin/parent"
-        />
-        <DashboardCard
+        buttonLink={getRoleRoute("parent")}
+      />
+
+      {/* Subscriptions */}
+      <DashboardCard
         title="Subscriptions"
         description="Total Number of Subscriptions"
         total="11"
         image={SubscriptionsDashIcon}
-        buttonLink="/superadmin/report"
-        />
-        <DashboardCard
+        buttonLink={getRoleRoute("report")}
+      />
+
+      {/* Appointment */}
+      <DashboardCard
         title="Appointment"
         description="Total Number of Appointment"
         total={String(counts.totalAppointments)}
         image={AppointmentDashIcon}
-        buttonLink="/superadmin/appointment"
-        />  
-        <DashboardCard
+        buttonLink={getRoleRoute("appointment")}
+      />
+
+      {/* PE */}
+      <DashboardCard
         title="PE"
-        description="Total Pe"
+        description="Total PE"
         total="11"
         image={AppointmentDashIcon}
-        buttonLink="/superadmin/appointment"
-        />    
+        buttonLink={getRoleRoute("appointment")}
+      />
     </>
-
   );
 };
 
