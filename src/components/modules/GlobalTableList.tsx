@@ -219,6 +219,11 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       key: "location",
       title: "Location",
     },
+    parent_name: {
+      key: "parent_name",
+      title: "User",
+      fixed: true,
+    },
     subscription: {
       key: "subscription",
       title: "Subscription",

@@ -10,12 +10,12 @@ const SupTherapist: React.FC = () => {
 
   return (
     <>
-      <Heading1 text="Doctors / Therapists" />
+      <Heading1 text="Doctors / Therapists LIST" />
       <GlobalTableList
         flag={[3,5]}
         showDoctorsTabs={true}
         columns={[
-          { key: "name", title: "Dr. Name", sortable: true },
+          { key: "name", title: "Dr. Name", sortable: true},
           { key: "admin_name", title: "Admin", sortable: true },
           { key: "organization_name", title: "Organization", sortable: true },
           { key: "parent_count", title: "User", sortable: true },

@@ -37,6 +37,8 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
   const [id, setId] = useState("");
+  // const [assignmemberList, setASMemberList] = useState<any[]>([]);
+  const [aslistTitle, setASListTitle] = useState("Assigned to Zonal Admin");
 
   const handleImageChange = async (file: File) => {
     try {
@@ -215,6 +217,7 @@ const [showResetModal, setShowResetModal] = useState(false);
 
           case 7:
             setListTitle("Organization List");
+            setASListTitle("Assigned to Zonal Admin");
             setMemberList(
               (user.relatedData?.organizations?.data || []).map(
                 (organization: any) => ({
@@ -230,6 +233,7 @@ const [showResetModal, setShowResetModal] = useState(false);
 
             case 3:
               setListTitle("Patient List");
+              setASListTitle("Assigned to Organization");
               setMemberList(
                 (user.relatedData?.parents?.data || []).map(
                   (parent: any) => ({
@@ -242,6 +246,7 @@ const [showResetModal, setShowResetModal] = useState(false);
 
           default:
             setListTitle("Organization List");
+            setASListTitle("Assigned to Admin");
             setMemberList(
               (user.relatedData?.organizations?.data ||
                 user.relatedData?.admins?.data ||
@@ -323,6 +328,18 @@ const [showResetModal, setShowResetModal] = useState(false);
           <ProfileField label="Email" value={email} editable={false} /> 
           <ProfileField label="Phone" value={phone} onSave={(value) => updateField("phone", value) } />
           <ProfileField label="Zone" value={zone} editable={true} onClick={() => setShowResetModal(true)} />
+          {userFlag !== 6 && (
+            <ProfileField
+              label={aslistTitle}
+              value="Dropdwon Value"
+              isDropdown
+              // options={assignmemberList.map((assignmember: any) => ({
+              //   label: assignmember.name,
+              //   value: assignmember.userId,
+              // }))}
+              onSave={(value) => console.log(value)}
+            />
+          )}
         </div>
 
         <div className="boxShadow">

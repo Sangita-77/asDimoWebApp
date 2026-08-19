@@ -5,7 +5,7 @@
 .loader:after { animation-duration: 4s; }
 @keyframes l24 { 100% {transform: rotate(1turn)} }
 /* HeadingPara Start */
-h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 35px; line-height: 45px; text-transform: uppercase;}
+h1.PageTitle{color: var(--TextcolorDark); font-weight: 600; font-size: 30px; line-height: 45px; text-transform: uppercase;}
 h1.PageTitle.Light{color: var(--TextcolorLight); text-transform: capitalize;}
 h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line-height: 34px;}
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
@@ -120,9 +120,13 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .field-info label{width: 100%; display: block; font-weight: 600; font-size: 18px; color: var(--TextcolorDark);}
 .field-info{width: 100%;}
 .field-info input{border: none;}
-.field-info p{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); cursor: pointer; width: 100%;}
+.field-info p, .field-info select{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); cursor: pointer; width: 100%;}
 .field-info input{font-size: 18px; font-weight: 400; color: var(--TextcolorDark); font-family: "SourceSans", sans-serif; background: transparent; width: 100%;}
-.field-info input:focus-visible{outline: 0px;}
+.field-info input:focus-visible, .field-info select:focus-visible{outline: 0px;}
+.field-info select{border: none; font-family: "SourceSans"; padding: 0; margin-left: -3px; margin-top: -1px; }
+.field-info select option { padding: 8px 12px; font-size: 16px; background: var(--PrimaryColor); color: #fff; } 
+/* Optional hover/selected styling */
+.field-info select option:checked { background-color: var(--DarkGreen); }
 /* Profile End*/
 
 
@@ -191,7 +195,7 @@ button{cursor: pointer; transition: all 0.25s ease;}
 
 /* Search Start */
 .search-sort-container { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; position: relative; margin-top: 20px;} 
-.search-input { width: 525px; height: 45px; padding: 0 15px 0 44px; border: 1px solid var(--GreyBorders); border-radius: 5px; background: var(--TextcolorLight); font-size: 14px; transition: all 0.2s ease; outline: none; }
+.search-input { width: 475px; height: 60px; padding: 0 15px 0 44px; border: 1px solid var(--GreyBorders); border-radius: 5px; background: var(--TextcolorLight); font-size: 14px; transition: all 0.2s ease; outline: none; }
 .search-input:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
 .search-icon { position: absolute; left: 14px; top: 57%; transform: translateY(-50%); color: var(--TextcolorDark); pointer-events: none; } 
 .sort-select { height: 45px; min-width: 180px; padding: 0 40px 0 14px; border: 1px solid var(--GreyBorders); border-radius: 5px; font-size: 14px; cursor: pointer; outline: none; transition: all 0.2s ease; }

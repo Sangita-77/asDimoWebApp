@@ -16,7 +16,7 @@ const SupParent: React.FC = () => {
         // flag={2}
         flag={[2, 4]}
         columns={[
-          { key: "parent_name", title: "Users", sortable: true,},
+          { key: "parent_name", title: "Users", sortable: true, fixed: true},
           { key: "children_details", title: "Children Details", sortable: true },
           { key: "admin_name", title: "Admin", sortable: true },
           { key: "organization_name", title: "Organization", sortable: true },

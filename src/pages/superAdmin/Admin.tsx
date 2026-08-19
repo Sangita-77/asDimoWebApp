@@ -9,7 +9,7 @@ const SupAdmin: React.FC = () => {
 
   return (
     <>
-      <Heading1 text="Admin" />
+      <Heading1 text="Admin List" />
       {/* <AdminList /> */}
       <ZonalAdminList
         flag={7}

@@ -270,7 +270,7 @@ const displayedColumns = permittedColumns.filter(
               {onBulkDelete && (
               <button
                 className="bulk-delete-btn"
-                onClick={handleBulkDelete}
+                onClick={handleBulkDelete}  
                 title={`Delete ${selectedRows.length} selected items`}
               >
                 <DeleteIcon size={20} />
