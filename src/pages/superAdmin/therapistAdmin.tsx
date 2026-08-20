@@ -13,7 +13,9 @@ const SupTherapist: React.FC = () => {
       <Heading1 text="Doctors / Therapists LIST" />
       <GlobalTableList
         flag={[3,5]}
-        showDoctorsTabs={true}
+        {...(role !== "OrganizationAdmin"
+        ? { showDoctorsTabs: true }
+        : {})}
         columns={[
           { key: "name", title: "Dr. Name", sortable: true},
           { key: "admin_name", title: "Admin", sortable: true },

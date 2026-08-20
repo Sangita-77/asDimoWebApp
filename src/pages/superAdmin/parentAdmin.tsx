@@ -10,8 +10,7 @@ const SupParent: React.FC = () => {
 
   return (
     <>
-      <Heading1 text="Parent Admin" />
-      {/* <ZonalAdminList /> */}
+      <Heading1 text="Parent List" />
       <GlobalTableList
         // flag={2}
         flag={[2, 4]}
