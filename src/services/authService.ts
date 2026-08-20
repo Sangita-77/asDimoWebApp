@@ -366,4 +366,27 @@ export const authService = {
     return response.data;
   },
 
+  updateUserRelation: async (
+    token: string,
+    payload: {
+      flag: number;
+      userId: number | string;
+      updatedUserId: number | string;
+    }
+  ) => {
+    const response = await axios.put(
+      `${BASE_URL}/auth/updateUserRelation`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };
+
+

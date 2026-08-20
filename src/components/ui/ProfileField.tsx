@@ -9,6 +9,7 @@ import SaveIcon from "../../assets/Images/SaveIcon.svg";
 interface DropdownOption {
   label: string;
   value: string;
+  disabled?: boolean;
 }
 
 
@@ -122,6 +123,8 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
                 <option
                   key={option.value}
                   value={option.value}
+                  disabled={option.disabled}
+                  className={option.disabled ? "disabled-option" : ""}
                 >
                   {option.label}
                 </option>

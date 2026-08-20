@@ -586,7 +586,10 @@ h1.PageTitle{font-size: 30px; line-height: 40px;}
 
 }
 
-
+.disabled-option {
+  color: #000 !important;
+  background-color: #FFE177 !important;
+}
 
 
 
