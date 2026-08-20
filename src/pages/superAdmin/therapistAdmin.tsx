@@ -18,7 +18,15 @@ const SupTherapist: React.FC = () => {
         : {})}
         columns={[
           { key: "name", title: "Dr. Name", sortable: true},
-          { key: "admin_name", title: "Admin", sortable: true },
+          ...(role !== "OrganizationAdmin"
+            ? [
+                {
+                  key: "admin_name",
+                  title: "Admin",
+                  sortable: true,
+                },
+              ]
+            : []),
           { key: "organization_name", title: "Organization", sortable: true },
           { key: "parent_count", title: "User", sortable: true },
           { key: "subscription", title: "Subscription", sortable: true },
