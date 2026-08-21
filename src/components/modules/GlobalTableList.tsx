@@ -304,22 +304,95 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         );
       }
 
-      // console.log("API Response:", responses);
-      const formattedRows = users.map((item: any) => ({
+    console.log("API Response:", users);
+
+    const formattedRows = users.map((item: any) => {
+      const parentId = Number(item.roleData?.parentId);
+      const teacherId = Number(item.relatedData?.teacher?.teacherId);
+
+      // Therapist name
+      const therapistName =
+        item.relatedData?.teacher?.userData?.name ?? "-";
+
+      // Find appointments belonging to this parent + therapist
+      const matchedAppointments =
+        item.relatedData?.appointments?.data?.filter(
+          (appointment: any) =>
+            Number(appointment.parentId) === parentId &&
+            Number(appointment.teacherId) === teacherId
+        ) ?? [];
+
+      // Get latest appointment
+      const latestAppointment = matchedAppointments.reduce(
+        (latest: any, appointment: any) => {
+          if (!latest) return appointment;
+
+          const latestDate = new Date(
+            latest.date.split("-").reverse().join("-")
+          );
+
+          const currentDate = new Date(
+            appointment.date.split("-").reverse().join("-")
+          );
+
+          return currentDate > latestDate ? appointment : latest;
+        },
+        null
+      );
+
+      return {
         id: item._id,
         userId: item.userId,
+
         name: item.name ?? "-",
         email: item.email,
-        zonal_admin_name: item.relatedData?.zonalAdmin?.name ?? "-",
-        admin_name: item.relatedData?.Admin?.name ?? "-",
-        organization_name: item.relatedData?.organizations?.name ?? item.org_name ?? "-",
-        parent_name: item.name ?? "-",
-        children_details : getRelatedCount(item, "parents"),
-        created: new Date(item.createdAt).toLocaleDateString(),
-        parent_count: getRelatedCount(item, "parents"),
-        therapists: getRelatedCount(item, "teachers"),
-        admin: getRelatedCount(item, "admins"),
-        organizations: getRelatedCount(item, "organizations"),
+
+        zonal_admin_name:
+          item.relatedData?.zonalAdmin?.name ?? "Global",
+
+        admin_name:
+          item.relatedData?.Admin?.name ?? "Global",
+
+        organization_name:
+          item.relatedData?.organizations?.name ??
+          item.org_name ??
+          "Global",
+
+        parent_name:
+          item.name ?? "-",
+
+        children_details:
+          item.relatedData?.children?.data
+            ?.filter(
+              (child: any) =>
+                Number(child.parentId) === parentId
+            )
+            ?.map((child: any) => child.childName)
+            ?.filter(Boolean)
+            ?.join(", ") || "No Child",
+
+        // Therapist name
+        therapist_name: therapistName,
+
+        // Latest appointment date
+        last_appointment:
+          latestAppointment?.date ?? "No Appointment",
+
+        created:
+          new Date(item.createdAt).toLocaleDateString(),
+
+        parent_count:
+          getRelatedCount(item, "parents"),
+
+        therapists:
+          getRelatedCount(item, "teachers"),
+
+        admin:
+          getRelatedCount(item, "admins"),
+
+        organizations:
+          getRelatedCount(item, "organizations"),
+
         location:
           [
             item.roleData?.city ?? item.city,
@@ -327,10 +400,15 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
           ]
             .filter(Boolean)
             .join(", ") || "-",
+
         subscription: "-",
-        pe: getRelatedCount(item, "teachers"),
+
+        pe:
+          getRelatedCount(item, "teachers"),
+
         originalData: item,
-      }));
+      };
+    });
 
       setRows(sortRows(formattedRows, sortBy, sort));
     } catch (error) {

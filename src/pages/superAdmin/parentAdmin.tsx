@@ -17,12 +17,19 @@ const SupParent: React.FC = () => {
         columns={[
           { key: "parent_name", title: "Users", sortable: true, fixed: true},
           { key: "children_details", title: "Children Details", sortable: true },
-          { key: "admin_name", title: "Admin", sortable: true },
+          ...(role !== "OrganizationAdmin"
+            ? [
+            { key: "admin_name", title: "Admin", sortable: true },
+          ]
+            : []),
           { key: "organization_name", title: "Organization", sortable: true },
+          { key: "therapist_name", title: "Therapist", sortable: true },
+          { key: "last_appointment", title: "Last Appointment", sortable: true },
           { key: "location", title: "Location" },
         //   { key: "email", title: "Email", sortable: true },
           { key: "subscription", title: "Subscription", sortable: true },
           { key: "created", title: "Created", sortable: true },
+          { key: "pe", title: "PE", sortable: true },
         ]}
         filteredUserId={filteredUserId}
       />
