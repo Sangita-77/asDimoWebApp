@@ -8,6 +8,8 @@ const SupParent: React.FC = () => {
   const user = tokenManager.getUser();
   const filteredUserId = role === "teachersGlobal" ? user?.userId : undefined;
 
+  // console.log("....................", role);
+
   return (
     <>
       <Heading1 text="Parent List" />
@@ -17,13 +19,19 @@ const SupParent: React.FC = () => {
         columns={[
           { key: "parent_name", title: "Users", sortable: true, fixed: true},
           { key: "children_details", title: "Children Details", sortable: true },
-          ...(role !== "OrganizationAdmin"
+          ...(role !== "OrganizationAdmin" && role !== "TeachersOrg"
             ? [
             { key: "admin_name", title: "Admin", sortable: true },
           ]
             : []),
-          { key: "organization_name", title: "Organization", sortable: true },
-          { key: "therapist_name", title: "Therapist", sortable: true },
+
+          ...(role !== "TeachersOrg"
+          ? [
+            { key: "organization_name", title: "Organization", sortable: true },
+            { key: "therapist_name", title: "Therapist", sortable: true },
+
+          ]
+          : []),
           { key: "last_appointment", title: "Last Appointment", sortable: true },
           { key: "location", title: "Location" },
         //   { key: "email", title: "Email", sortable: true },
