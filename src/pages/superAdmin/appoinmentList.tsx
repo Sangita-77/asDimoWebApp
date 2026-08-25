@@ -6,6 +6,8 @@ import Loader from "../../components/ui/Loaders";
 import { Heading1 } from "../../components/ui/HeadingPara";
 import SearchWithSort from "../../components/ui/SearchWithSort";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
+import DashboardButtons from "../../components/ui/Buttons";
+import IButton from "../../assets/Images/iButton.svg";
 
 interface Appointment {
   _id: string;
@@ -99,6 +101,8 @@ const AppointmentList: React.FC = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState<string>("date");
+  const currentRole = getCurrentUserRole();
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -107,7 +111,6 @@ const AppointmentList: React.FC = () => {
 
       try {
         const token = tokenManager.getAccessToken();
-        const currentRole = getCurrentUserRole();
         const currentUser = tokenManager.getUser();
         const query = new URLSearchParams();
 
@@ -141,7 +144,7 @@ const AppointmentList: React.FC = () => {
         }
 
         let responseData = await response.json();
-        console.log("..responseData..", responseData);
+        // console.log("..responseData..", responseData);
 
         if (!responseData.success) {
           throw new Error(
@@ -156,7 +159,7 @@ const AppointmentList: React.FC = () => {
           const loginUserFlag = currentUser.flag;
           const loginUserId = currentUser.userId;
 
-          console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
+          // console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
 
           if (loginUserFlag && loginUserId) {
             appointmentsData = appointmentsData.filter((appointment: any) => {
@@ -165,27 +168,27 @@ const AppointmentList: React.FC = () => {
               switch (Number(loginUserFlag)) {
                 case 6: // Zonal Admin - show appointments where zonalAdmin's userId matches
                   shouldInclude = appointment.zonalAdmin?.userId === loginUserId;
-                  console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  // console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 7: // Admin - show appointments where admin's userId matches
                   shouldInclude = appointment.admin?.userId === loginUserId;
-                  console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  // console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 1: // Organization Admin - show appointments where organization's userId matches
                   shouldInclude = appointment.organization?.userId === loginUserId;
-                  console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  // console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 5: // Organization Admin - show appointments where organization's userId matches
                   shouldInclude = appointment.teacherUser?.userId === loginUserId;
-                  console.log(`Flag 5 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  // console.log(`Flag 5 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 3: // Teacher - show appointments where teacher's userId matches
                   shouldInclude = appointment.teacherUser?.userId === loginUserId;
-                  console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
+                  // console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 default:
@@ -195,7 +198,7 @@ const AppointmentList: React.FC = () => {
               return shouldInclude;
             });
 
-            console.log("Filtered appointments count:", appointmentsData.length);
+            // console.log("Filtered appointments count:", appointmentsData.length);
           } else {
             console.log("currentUser flag or userId is missing - showing all appointments");
           }
@@ -392,6 +395,8 @@ const AppointmentList: React.FC = () => {
   const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
   const isAdmin = Number(tokenManager.getUser()?.flag) === 7;
 
+  // console.log("...........currentRole",currentRole);
+
   const columns = useMemo(
     () => [
       {
@@ -399,6 +404,7 @@ const AppointmentList: React.FC = () => {
         title: "Name",
         // showFilter: true,
         onFilterClick: () => handleFilterClick("parentUser"),
+        fixed: true,
       },
       {
         key: "teacher",
@@ -406,31 +412,45 @@ const AppointmentList: React.FC = () => {
         // showFilter: true,
         onFilterClick: () => handleFilterClick("teacherUser"),
       },
+      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin" && currentRole !== "Admin"
+      ? [
       {
         key: "zonalAdmin",
         title: "Zonal Admin",
         // showFilter: true,
         onFilterClick: () => handleFilterClick("zonalAdmin"),
       },
+        ]
+      : []),
+      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin"
+      ? [
       {
         key: "admin",
         title: "Admin",
         // showFilter: true,
         onFilterClick: () => handleFilterClick("admin"),
       },
+      ]
+      : []),
+      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin"
+      ? [
       {
         key: "organization",
         title: "Organization",
         // showFilter: true,
         onFilterClick: () => handleFilterClick("organization"),
+        
       },
+      ]
+      : []),
       {
         key: "date",
         title: "Date",
         // showFilter: true,
         onFilterClick: () => handleFilterClick("date"),
+        fixed: true,
       },
-      { key: "time", title: "Time" },
+      { key: "time", title: "Time" ,fixed: true, },
       {
         key: "status",
         title: "Status",
@@ -438,86 +458,104 @@ const AppointmentList: React.FC = () => {
       {
         key: "reschedule",
         title: "Action",
-        render: (_value: unknown, row: AppointmentRow) => {
-          const isUpdating = updatingAppointmentId === row.id;
+        ////// important /////////////////
+        // render: (_value: unknown, row: AppointmentRow) => {
+        //   const isUpdating = updatingAppointmentId === row.id;
 
-          if (isSuperAdmin && row.status.toLowerCase() === "rescheduled") {
-            return (
-              <>
-                <button
-                  type="button"
-                  onClick={() => handleAppointmentStatus(row.id, "approved")}
-                  disabled={isUpdating}
-                >
-                  Approve
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleAppointmentStatus(row.id, "rejected")}
-                  disabled={isUpdating}
-                >
-                  Cancel
-                </button>
-              </>
-            );
-          }
+        //   if (isSuperAdmin && row.status.toLowerCase() === "rescheduled") {
+        //     return (
+        //       <>
+        //         <button
+        //           type="button"
+        //           onClick={() => handleAppointmentStatus(row.id, "approved")}
+        //           disabled={isUpdating}
+        //         >
+        //           Approve
+        //         </button>
+        //         <button
+        //           type="button"
+        //           onClick={() => handleAppointmentStatus(row.id, "rejected")}
+        //           disabled={isUpdating}
+        //         >
+        //           Cancel
+        //         </button>
+        //       </>
+        //     );
+        //   }
 
-          if (isAdmin && row.status.toLowerCase() === "rescheduled") {
-            return (
-              <>
-                <button
-                  type="button"
-                  onClick={() => handleAppointmentStatus(row.id, "approved")}
-                  disabled={isUpdating}
-                >
-                  Approve
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleAppointmentStatus(row.id, "rejected")}
-                  disabled={isUpdating}
-                >
-                  Cancel
-                </button>
-              </>
-            );
-          }
+        //   if (isAdmin && row.status.toLowerCase() === "rescheduled") {
+        //     return (
+        //       <>
+        //         <button
+        //           type="button"
+        //           onClick={() => handleAppointmentStatus(row.id, "approved")}
+        //           disabled={isUpdating}
+        //         >
+        //           Approve
+        //         </button>
+        //         <button
+        //           type="button"
+        //           onClick={() => handleAppointmentStatus(row.id, "rejected")}
+        //           disabled={isUpdating}
+        //         >
+        //           Cancel
+        //         </button>
+        //       </>
+        //     );
+        //   }
 
-          const status = row.status?.toLowerCase();
+        //   const status = row.status?.toLowerCase();
 
-          return status === "approved" ? (
-            <button type="button" onClick={() => openRescheduleDialog(row)}>
-              Reschedule
-            </button>
-          ) : status === "rejected" ? (
-            <button type="button" onClick={() => openRescheduleDialog(row)}>
-              Reschedule
-            </button>
-          ) : (
-            "-"
-          );
-        },
+        //   return status === "approved" ? (
+        //     <button type="button" onClick={() => openRescheduleDialog(row)}>
+        //       Reschedule
+        //     </button>
+        //   ) : status === "rejected" ? (
+        //     <button type="button" onClick={() => openRescheduleDialog(row)}>
+        //       Reschedule
+        //     </button>
+        //   ) : (
+        //     "-"
+        //   );
+        // },
+        //////////////// important ////////////////////
+        render: (_value: any, row: any) => (
+          <DashboardButtons
+            text="View Details"
+            icon={<img src={IButton} alt="view" className="btn-icon" />}
+            variant="trashparent"
+            // onClick={() => handleViewDetails(row)}
+          />
+        ),
+        fixed: true,
       },
-      {
-        key: "zoomLink",
-        title: "Zoom Link",
-        render: (value: string) =>
-          value ? (
-            <a href={value} target="_blank" rel="noreferrer">
-              Join
-            </a>
-          ) : (
-            "N/A"
-          ),
-      },
+      // {
+      //   key: "zoomLink",
+      //   title: "Zoom Link",
+      //   render: (value: string) =>
+      //     value ? (
+      //       <a href={value} target="_blank" rel="noreferrer">
+      //         Join
+      //       </a>
+      //     ) : (
+      //       "N/A"
+      //     ),
+      // },
     ],
     [isSuperAdmin, updatingAppointmentId]
   );
 
   function handleFilterClick(key: string) {
     setCurrentPage(1);
+    // if (sortBy === key) {
+    //   setSort((s) => (s === "asc" ? "desc" : "asc"));
+    // } else {
+    //   setSortBy(key);
+    //   setSort("asc");
+    // }
+
     if (sortBy === key) {
-      setSort((s) => (s === "asc" ? "desc" : "asc"));
+      setSort((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(key);
       setSort("asc");
@@ -580,6 +618,11 @@ const AppointmentList: React.FC = () => {
         <Table
           columns={columns}
           rows={appointments}
+          selectable={true}
+          // onBulkDelete={true}
+          sortBy={sortBy}
+          sortOrder={sort}
+          // onSort={handleFilterClick}
           pagination={true}
           currentPage={currentPage}
           totalPages={
@@ -596,8 +639,7 @@ const AppointmentList: React.FC = () => {
             setRowsPerPage(value);
             setCurrentPage(1);
           }}
-          sortBy={sortBy}
-          sortOrder={sort}
+          showChooseColumns={true}
         />
       )}
 
