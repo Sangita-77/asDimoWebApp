@@ -11,11 +11,18 @@ h2.Heading2{color: var(--TextcolorDark); font-weight: 600; font-size: 24px; line
 h3.Heading3{color: var(--TextcolorDark); font-weight: 600; font-size: 48px; line-height: 58px;}
 h4.Heading4{color: var(--TextcolorDark); font-weight: 600; font-size: 20px; line-height: 30px; padding-bottom: 5px;}
 h4.Heading4 span{font-size: 16px; color: var(--BorderColor);}
+h5.Heading5{font-size: 24px; color: var(--TextcolorBlack);}
+h5.MiniHeading5{font-size: 15px; color: var(--TextcolorBlack);}
 p.PageDescription{color: var(--TextcolorDark); font-weight: 400; font-size: 18px; line-height: 30px; color: var(--TextcolorDark);}
 p.PageDescription.Light{color: var(--TextcolorLight);}
 p.PageDescription span{padding:10px; font-weight: 600; color: var(--TextcolorBlack);}
 p.PageDescription3{color: var(--BorderColor); font-weight: 400; font-size: 14px; line-height: 24px;}
+ul.UnorderList li:not(:last-child){ border-bottom: 1px solid var(--BorderColor)}
+ul.UnorderList li{padding: 7px 0;}
+ul.UnorderList li .list-icon{margin-right: 8px;}
+p.TinyPara{font-size: 14px; color: var(--TextcolorBlack);}
 /* HeadingPara End */
+
 
 
 /* Button Start */
@@ -43,6 +50,8 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .GlobalButton button.greenBorder{border: solid 2px var(--NeonGreen); border-radius: 8px; padding: 8px 0px 3px 12px; color: var(--NeonGreen); background-color: var(--TextcolorLight);}
 .GlobalButton button.greenBorder:hover{background: var(--GreenButtonHover); transition: .5s;}
 .GlobalButton button.SolidBlue{background: #39BECE; border: none; padding:12px 25px 10px; color: #fff; border-radius: 5px;}
+.GlobalButton button.red{background: var(--ColorDenger); border: none; padding:12px 10px 10px; color: #fff; border-radius: 5px;}
+.GlobalButton button.red div{margin-right: 5px;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}

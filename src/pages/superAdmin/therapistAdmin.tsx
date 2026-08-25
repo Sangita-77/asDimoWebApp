@@ -7,25 +7,18 @@ const SupTherapist: React.FC = () => {
   const role = getCurrentUserRole();
   const user = tokenManager.getUser();
   const filteredUserId = role === "teachersGlobal" ? user?.userId : undefined;
+  const isOrganizationAdmin = role === "OrganizationAdmin";
 
   return (
     <>
       <Heading1 text="Doctors / Therapists LIST" />
       <GlobalTableList
         flag={[3,5]}
-        {...(role !== "OrganizationAdmin"
-        ? { showDoctorsTabs: true }
-        : {})}
+        {...(!isOrganizationAdmin && { showDoctorsTabs: true })}
         columns={[
           { key: "name", title: "Dr. Name", sortable: true},
-          ...(role !== "OrganizationAdmin"
-            ? [
-                {
-                  key: "admin_name",
-                  title: "Admin",
-                  sortable: true,
-                },
-              ]
+        ...(!isOrganizationAdmin
+            ?[ { key: "admin_name", title: "Admin", sortable: true, },]
             : []),
           { key: "organization_name", title: "Organization", sortable: true },
           { key: "parent_count", title: "User", sortable: true },

@@ -16,7 +16,7 @@ const SupOrganization: React.FC = () => {
           { key: "therapists", title: "Therapists", sortable: true },
           { key: "subscription", title: "Subscription", sortable: true },
           { key: "pe", title: "PE", sortable: true },
-          { key: "location", title: "Location" },
+          { key: "location", title: "Location" }, 
         ]}
       />
     </>

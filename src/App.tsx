@@ -22,6 +22,7 @@ import SupAdmin from "./pages/superAdmin/Admin";
 import SupAppointment from "./pages/superAdmin/appoinmentList";
 import Report from "./pages/superAdmin/Report";
 import SupTherapistDetails from "./pages/superAdmin/TherapistDetails";
+import SupUserDetails  from "./pages/superAdmin/UserDetails";
 import AddInformation from "./pages/superAdmin/AddInformation";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 
@@ -65,6 +66,7 @@ function App() {
           <Route path="organization-details" element={<SupORGadminDetails />} />
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
+          <Route path="user-details" element={<SupUserDetails />} />
           <Route path="parent" element={<SupParent />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="add-information" element={<AddInformation />} />

@@ -53,3 +53,727 @@
 /* SubscriptionAnalyticsGraph start */
 .SubscriptionAnalyticsGraph{margin-top: 30px;}
 /* SubscriptionAnalyticsGraph end */
+
+/* User Details Css Start */
+.UserDeatils .User_Status span{height: 13px; width: 13px; background: var(--NeonGreen); display: grid; border-radius: 50%;}
+.UserDeatils .User_Status{display: flex; align-items: center; gap: 10px;}
+.UserDeatils .Actiom_btn, .UserDeatils .User_Status{ width: 50%; }
+.UserDeatils .Actiom_btn{justify-content: end; display: flex;}
+.UserDeatilswrap .profile-page { padding: 10px 0px 10px; background: #f8f9fb; }
+.UserDeatilswrap .Userfield .btnicon{height: 20px; width: 20px;}
+.UserDeatilswrap .Userfield{ display: flex; gap: 8px; padding: 8px 0; border-bottom: 1px solid #ddd; color: var(--TextcolorDark); font-size: 17px; }
+.profile-title-row .profile-input{font-size: 24px; color: var(--TextcolorBlack);}
+.UserDeatilswrap  .profile-info p { border-bottom: 1px solid #ddd; padding: 5px 0;}
+.UserDeatilswrap  .profile-info p:last-child { border-bottom: 0; }
+.UserDeatilswrap .dashboard-grid {display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr) 245px; gap: 18px; padding: 5px 10px; } 
+.UserDeatilswrap .organization-icon { width: 68px; height: 68px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--GreenActiveColor); }
+.UserDeatilswrap .child-name { display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
+.school-badge { margin-left: auto; align-self: flex-start; padding: 4px 12px; border-radius: 20px; background: var(--GreenActiveColor); color: var(--DarkGreen); font-size: 11px; }
+.UserDeatilswrap .avatar { width: 90px; height: 90px; flex: 0 0 90px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, #ddd, #b9d3b3); color: #fff; font-size: 24px; font-weight: 700; border: 5px solid #eef0d5; }
+.UserDeatilswrap .profile-main, .organization { display: flex; gap: 18px; align-items: flex-start; }
+.UserDeatilswrap .divider { height: 1px; margin: 12px 0 9px; background: #ddd; }
+.UserDeatilswrap .child-info { display: flex; align-items: center; padding: 8px; border-radius: 13px; background: var(--LightGreen); }
+.UserDeatilswrap .child-avatar { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--DarkGreen); }
+.UserDeatilswrap .child-grade { display: flex; flex-direction: column; gap: 4px;  padding-left: 15px; border-left: 1px solid #ddd; }
+.UserDeatilswrap .subscription-content { display: flex; align-items: center; margin-top: 22px; gap: 14px; }
+.UserDeatilswrap .game-icon img{width: 50px;}
+/* User Details Css End */
+
+
+
+
+/* ---------------- PROFILE ---------------- */
+
+
+.save-btn {
+  padding: 5px 14px;
+  border-radius: 4px;
+  background: #7fc51c;
+  color: #fff;
+  font-weight: 600;
+}
+
+
+/* ---------------- LAST BUY ---------------- */
+
+.last-buy-card {
+  grid-column: 3;
+  grid-row: 1 / span 3;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.at-btn {
+  padding: 4px 15px;
+
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: white;
+  color: #777;
+}
+
+.last-buy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.buy-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 67px;
+  padding: 8px 10px;
+
+  border-radius: 12px;
+  background: #f0f3f9;
+}
+
+.product-icon {
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+  background: white;
+  border-radius: 8px;
+}
+
+.buy-item strong {
+  display: block;
+  font-size: 12px;
+}
+
+.buy-item small {
+  display: block;
+  margin-top: 3px;
+  color: #777;
+  font-size: 10px;
+}
+
+/* ---------------- SUBSCRIPTION ---------------- */
+
+/* .subscription-card {
+  min-height: 215px;
+} */
+
+/* .subscription-content {
+  display: flex;
+  align-items: center;
+  margin-top: 22px;
+  gap: 14px;
+} */
+
+.subscription-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #dcf8f4;
+  font-size: 28px;
+}
+
+.subscription-main {
+  flex: 1;
+}
+
+
+/* .subscription-main p,
+.subscription-side p {
+  margin: 7px 0;
+  color: #777;
+  font-size: 13px;
+} */
+
+.subscription-side {
+  text-align: right;
+}
+
+/* ---------------- APPOINTMENT ---------------- */
+
+/* .appointment-card {
+  min-height: 215px;
+} */
+
+/* .points-badge {
+  padding: 7px 15px;
+
+  border: 2px solid #ddd;
+  border-radius: 20px;
+
+  color: #777;
+  font-size: 12px;
+} */
+
+.appointment-person {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 20px;
+}
+
+.doctor-avatar {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #f0d9d2;
+
+  color: #333;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* .appointment-person p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 13px;
+} */
+
+/* .appointment-time {
+  margin: 18px 0 12px;
+  text-align: right;
+  color: #777;
+  font-size: 12px;
+} */
+
+/* .appointment-time strong {
+  margin-left: 5px;
+  color: #555;
+} */
+
+/* .progress {
+  height: 11px;
+  overflow: hidden;
+
+  border-radius: 20px;
+  background: #e8ebf1;
+}
+
+.progress > div {
+  height: 100%;
+  border-radius: inherit;
+  background: #45bba0;
+} */
+
+/* ---------------- GAMES ---------------- */
+
+.games-card {
+  min-height: 130px;
+}
+
+.games-list {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* .game-icon {
+  width: 62px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+  background: #edf5fa;
+
+  color: #2196c9;
+  font-weight: 700;
+} */
+
+/* ---------------- PSYCHOLOGICAL ---------------- */
+
+.psychological-card {
+  min-height: 130px;
+}
+
+.evaluation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+  color: #666;
+  font-size: 14px;
+}
+
+.evaluation-progress {
+  flex: 1;
+  margin-left: 4px;
+}
+
+.evaluation-progress > div {
+  background: #48b89d;
+}
+
+/* ---------------- ASSIGNED ADMIN ---------------- */
+
+.assigned-card {
+  grid-column: 1 / 3;
+  width: 520px;
+  min-height: 130px;
+}
+
+.assigned-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assigned-header button {
+  border: 0;
+  border-radius: 2px;
+
+  padding: 5px 13px;
+
+  background: #7fc51c;
+  color: white;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.assigned-card label {
+  display: block;
+  margin-top: 17px;
+  margin-bottom: 5px;
+
+  color: #555;
+  font-size: 14px;
+}
+
+.assigned-card select {
+  width: 100%;
+  padding: 8px 0;
+
+  border: 0;
+  border-bottom: 1px solid #bbb;
+  outline: none;
+
+  background: transparent;
+  color: #444;
+  font-size: 15px;
+}
+
+/* ---------------- SKILLS ---------------- */
+
+.skills-section {
+  grid-column: 1 / -1;
+  padding: 18px 10px 10px;
+}
+
+.skills-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+
+.target-icon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+  background: #eef2f5;
+}
+
+.skills-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  gap: 35px;
+}
+
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 34px 125px minmax(100px, 1fr) 55px 150px;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+  color: white;
+  font-weight: bold;
+}
+
+.skill-0 {
+  background: #2196e3;
+}
+
+.skill-1 {
+  background: #f45e86;
+}
+
+.skill-2 {
+  background: #67c84f;
+}
+
+.skill-3 {
+  background: #ff9d16;
+}
+
+.skill-4 {
+  background: #aa8be7;
+}
+
+.skill-name {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.skill-progress {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #dedede;
+}
+
+.skill-progress div {
+  height: 100%;
+  border-radius: inherit;
+  background: #129bd8;
+}
+
+.skill-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+}
+
+.skill-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #777;
+  font-size: 12px;
+}
+
+.skill-status strong {
+  color: #67bf53;
+  font-size: 18px;
+}
+
+.skill-status.steady strong {
+  color: #eab83f;
+}
+
+.status-face {
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #66c858;
+
+  color: white;
+  font-size: 16px;
+}
+
+.steady .status-face {
+  background: #f3c247;
+}
+
+/* ---------------- CHART ---------------- */
+
+.timing-report {
+  padding-top: 5px;
+}
+
+.report-btn {
+  display: block;
+  margin: 0  18px 20px;
+
+  padding: 8px 22px;
+
+  border: 0;
+  border-radius: 4px;
+
+  background: #08a4dc;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart {
+  display: flex;
+  height: 180px;
+}
+
+.chart-y {
+  width: 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding-bottom: 23px;
+
+  color: #aaa;
+  font-size: 8px;
+  text-align: right;
+}
+
+.chart-area {
+  position: relative;
+  flex: 1;
+  height: 160px;
+  border-bottom: 1px solid #ddd;
+}
+
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #e4e4e4;
+}
+
+.line-100 {
+  top: 0;
+}
+
+.line-50 {
+  top: 50%;
+}
+
+.line-25 {
+  top: 75%;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 8px;
+}
+
+.bar-wrapper {
+  height: 100%;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.bar {
+  width: 17px;
+  min-height: 5px;
+  background: #0ca0db;
+  border-radius: 2px 2px 0 0;
+}
+
+.bar-wrapper span {
+  margin-top: 9px;
+  font-size: 8px;
+  color: #999;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 1000px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .last-buy-card {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .last-buy-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .assigned-card {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .skills-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-page {
+    padding: 12px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .last-buy-card {
+    grid-column: auto;
+  }
+
+  .last-buy-list {
+    grid-template-columns: 1fr;
+  }
+
+  .assigned-card {
+    grid-column: auto;
+  }
+
+  .skill-row {
+    grid-template-columns: 34px 1fr 55px;
+  }
+
+  .skill-progress {
+    display: none;
+  }
+
+  .skill-status {
+    grid-column: 2 / -1;
+  }
+
+  .skills-section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-main {
+    flex-direction: column;
+  }
+
+  .subscription-content {
+    align-items: flex-start;
+  }
+
+  .subscription-side {
+    display: none;
+  }
+
+  .school-badge {
+    margin-left: 10px;
+  }
+}
+
+/* ............ */
+/* Profile fields */
+
+/* Inputs */
+
+
+/* .profile-name-input {
+  max-width: 220px;
+  font-size: 18px;
+  font-weight: 600;
+} */
+
+/* .address-field {
+  align-items: flex-start;
+} */
+
+/* .address-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+} */
+
+
+/* .profile-card {
+  min-height: 218px;
+} */
+
+
+/* 
+
+.profile-info {
+  flex: 1;
+} */
+
+/* .profile-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+} */
+/* .profile-info span {
+  margin-left: 6px;
+} */
+
+/* ---------------- CHILD ---------------- */
+
+/* .child-card {
+  min-height: 218px;
+} */
+
+/* .organization {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+} */
+
+
+/* 
+.organization p {
+  margin: 3px 0 0;
+  color: #777;
+} */
+
+
+/* .child-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+} */
+
+
+
+
+
+
+
