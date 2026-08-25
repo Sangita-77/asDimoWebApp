@@ -75,6 +75,18 @@ interface UserData {
       profileImg?: string | null;
       organization_type?: string | null;
       organization_name?: string | null;
+      userData?: {
+        _id?: string;
+        userId?: number;
+        name?: string;
+        email?: string;
+        phone?: string;
+        profileImg?: string | null;
+        city?: string;
+        state?: string;
+        pincode?: string;
+        address?: string;
+      };
     };
     teacher?: {
       _id?: string;
@@ -359,7 +371,7 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
   const profileImgUrl = getImageUrl(userData?.profileImg);
   const teacherImgUrl = getImageUrl(teacherUserData?.profileImg);
 
-  console.log("userData..................................",userData);
+  // console.log("userData..................................",userData);
 
   return (
     <div className="UserDeatilswrap">
@@ -445,7 +457,7 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
                 <img src={ORGProf} alt="Organization Profile" />
               </div>
               <div>
-                <Heading5 text={organization?.name || "Organization Name"} />
+                <Heading5 text={organization?.userData?.name || "Organization Name"} />
                 <Paragraph
                   text={
                     teacherUserData?.name ||
