@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./ModulesStyles.css";
 import { Heading4, Heading5, Paragraph, UnorderedList, MiniHeading5, TinyPara } from "../ui/HeadingPara";
 import Button from "../ui/Buttons";
-import { DeleteIcon } from "lucide-animated";
+import { DeleteIcon, ArrowDownIcon, ArrowUpIcon } from "lucide-animated";
 import PhoneIcon from "../../assets/Images/PhoneIcon.svg";
 import EmailIcon from "../../assets/Images/MailIcon.svg";
 import LocationIcon from "../../assets/Images/MapIconHandle.svg";
@@ -17,7 +17,19 @@ import { authService } from "../../services/authService";
 import { tokenManager } from "../../services/tokenManager";
 import { filebasename } from "../../api/config";
 import Loader from "../ui/Loaders";
+import SkillIcon from "../../assets/Images/SkillIcon.svg";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import ImproveIcon from "../../assets/Images/ImproveIcon.svg";
+import SteadyIcon from "../../assets/Images/SteadyIcon.svg";
+import SMSIcon from "../../assets/Images/SMSIcon.svg";
+import InteractionIcon from "../../assets/Images/InteractionIcon.svg";
+import BehaviorIcon from "../../assets/Images/BehaviorIcon.svg";
+import CognitiveIcon from "../../assets/Images/CognitiveIcon.svg";
+import MotorSkillsIcon from "../../assets/Images/MotorSkillsIcon.svg";
+import TimingReport from "../ui/graphBar";
+
+
+
 
 interface Props {
   userId?: number | string;
@@ -75,6 +87,18 @@ interface UserData {
       profileImg?: string | null;
       organization_type?: string | null;
       organization_name?: string | null;
+      userData?: {
+        _id?: string;
+        userId?: number;
+        name?: string;
+        email?: string;
+        phone?: string;
+        profileImg?: string | null;
+        city?: string;
+        state?: string;
+        pincode?: string;
+        address?: string;
+      };
     };
     teacher?: {
       _id?: string;
@@ -125,6 +149,17 @@ interface UserData {
   };
 }
 
+const timingData = [
+  { day: "Mon", value: 52 },
+  { day: "Tue", value: 74 },
+  { day: "Wed", value: 31 },
+  { day: "Thu", value: 20 },
+  { day: "Fri", value: 25 },
+  { day: "Sat", value: 73 },
+  { day: "Sun", value: 28 },
+];
+
+
 const games = [
   { name: "Puzzle", icon: AttentionIcon },
   { name: "Memory", icon: CommunicationIcon },
@@ -133,46 +168,11 @@ const games = [
 ];
 
 const skills = [
-  {
-    icon: "●",
-    name: "Communication",
-    time: "56 min",
-    progress: 42,
-    status: "Improving",
-    direction: "↑",
-  },
-  {
-    icon: "♥",
-    name: "Social Interaction",
-    time: "32 min",
-    progress: 24,
-    status: "Steady",
-    direction: "↓",
-  },
-  {
-    icon: "♧",
-    name: "Behavior",
-    time: "01 hr",
-    progress: 51,
-    status: "Improving",
-    direction: "↑",
-  },
-  {
-    icon: "✎",
-    name: "Cognitive",
-    time: "1.5 hr",
-    progress: 65,
-    status: "Improving",
-    direction: "↑",
-  },
-  {
-    icon: "✋",
-    name: "Motor Skills",
-    time: "25 min",
-    progress: 20,
-    status: "Steady",
-    direction: "↓",
-  },
+  { name: "Communication", icon: SMSIcon, progress: 80, time: "2h 30m", status: "Improving", direction: "+12%", },
+  { name: "Social Interaction", icon: InteractionIcon, progress: 65, time: "1h 45m", status: "Steady", direction: "-10%", },
+  { name: "Behavior ", icon: BehaviorIcon, progress: 65, time: "1h 45m", status: "Improving", direction: "+10%", },
+  { name: "Cognitive", icon: CognitiveIcon, progress: 65, time: "1h 45m", status: "Improving", direction: "+30%", },
+  { name: "Motor Skills", icon: MotorSkillsIcon, progress: 65, time: "1h 45m", status: "Steady", direction: "-5%", },
 ];
 
 const chartData = [55, 75, 32, 20, 25, 74, 28];
@@ -359,7 +359,7 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
   const profileImgUrl = getImageUrl(userData?.profileImg);
   const teacherImgUrl = getImageUrl(teacherUserData?.profileImg);
 
-  console.log("userData..................................",userData);
+  // console.log("userData..................................",userData);
 
   return (
     <div className="UserDeatilswrap">
@@ -445,7 +445,7 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
                 <img src={ORGProf} alt="Organization Profile" />
               </div>
               <div>
-                <Heading5 text={organization?.name || "Organization Name"} />
+                <Heading5 text={organization?.userData?.name || "Organization Name"} />
                 <Paragraph
                   text={
                     teacherUserData?.name ||
@@ -650,86 +650,50 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
           )}
 
           {/* Skills */}
-          <section className="skills-section">
-            <div className="skills-header">
-              <div className="target-icon">🎯</div>
-              <Heading5 text="Skills Practiced" />
-            </div>
+                  <section className="skills-section">
+          <div className="skills-header">
+            <div className="target-icon"><img src={SkillIcon} /></div>
+            <Heading5 text="Skills Practiced"/>
+          </div>
 
-            <div className="skills-content">
-              <div className="skills-list">
-                {skills.map((skill, index) => (
-                  <div className="skill-row" key={index}>
-                    <div className={`skill-icon skill-${index}`}>
-                      {skill.icon}
-                    </div>
+          <div className="skills-content">
 
-                    <strong className="skill-name">{skill.name}</strong>
-
-                    <div className="skill-progress">
-                      <div style={{ width: `${skill.progress}%` }} />
-                    </div>
-
-                    <span className="skill-time">{skill.time}</span>
-
-                    <div
-                      className={`skill-status ${
-                        skill.status === "Steady" ? "steady" : ""
-                      }`}
-                    >
-                      <span className="status-face">
-                        {skill.status === "Improving" ? "☺" : "☹"}
-                      </span>
-
-                      <span>{skill.status}</span>
-                      <strong>{skill.direction}</strong>
-                    </div>
+            <div className="skills-list">
+              {skills.map((skill, index) => (
+                <div className="skill-row" key={index}>
+                  <div className="skill-icon">
+                    <img src={skill.icon} alt={skill.name} width={35} height={35} />
                   </div>
-                ))}
-              </div>
+
+                  <strong>{skill.name}</strong>
+
+                  <div className="skill-progress">
+                    <div style={{ width: `${skill.progress}%` }} />
+                  </div>
+
+                  <span>{skill.time}</span>
+
+                  <div className={`skill-status ${skill.status === "Steady" ? "steady" : ""}`}>
+                    <span className="status-face">
+                      <img
+                        src={skill.status === "Improving" ? ImproveIcon : SteadyIcon}
+                        alt={skill.status}
+                      />
+                    </span>
+
+                    <div className="status">{skill.status}</div>
+                      {skill.status === "Improving" ? (
+                         <ArrowUpIcon className="ArrowUpIcon"/> ) : ( <ArrowDownIcon className="ArrowDownIcon"/>
+                      )}
+      
+                  </div>
+                </div>
+              ))}
+            </div>
 
               {/* Timing Report */}
               <div className="timing-report">
-                <button className="report-btn">Timing report</button>
-
-                <div className="chart">
-                  <div className="chart-y">
-                    <span>100%</span>
-                    <span>50%</span>
-                    <span>25%</span>
-                    <span>0%</span>
-                  </div>
-
-                  <div className="chart-area">
-                    <div className="grid-line line-100" />
-                    <div className="grid-line line-50" />
-                    <div className="grid-line line-25" />
-
-                    <div className="bars">
-                      {chartData.map((height, index) => (
-                        <div className="bar-wrapper" key={index}>
-                          <div
-                            className="bar"
-                            style={{ height: `${height}%` }}
-                          />
-                          <span>
-                            {
-                              [
-                                "Mon",
-                                "Tue",
-                                "Wed",
-                                "Thu",
-                                "Fri",
-                                "Sat",
-                                "Sun",
-                              ][index]
-                            }
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                 <TimingReport data={timingData} />
               </div>
             </div>
           </section>
