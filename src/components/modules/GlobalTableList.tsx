@@ -194,6 +194,24 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         });
       }
 
+    } else if(flag === 2 || flag === 4){
+      if(currentRole == "zonaladmin"){
+        navigate(routes.ZONAL_USER_DETAILS, {
+          state: { userId , flag },
+        });
+      }else if(currentRole == "admin"){
+        navigate(routes.ADMIN_USER_DETAILS, {
+          state: { userId , flag },
+        });
+      }else if(currentRole == "organizationadmin"){
+        navigate(routes.ORGANIZATIONADMIN_USER_DETAILS, {
+          state: { userId , flag },
+        });
+      }else{
+        navigate(routes.SUP_USER_DETAILS, {
+          state: { userId , flag },
+        });
+      }
     }
   };
 
@@ -348,13 +366,13 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         email: item.email,
 
         zonal_admin_name:
-          item.relatedData?.zonalAdmin?.name ?? "Global",
+          item.relatedData?.zonalAdmin?.userDataname ?? "Global",
 
         admin_name:
-          item.relatedData?.Admin?.name ?? "Global",
+          item.relatedData?.Admin?.userData?.name ?? "Global",
 
         organization_name:
-          item.relatedData?.organizations?.name ??
+          item.relatedData?.organizations?.userData?.name ??
           item.org_name ??
           "Global",
 
