@@ -99,6 +99,10 @@
 .UserDeatilswrap .status{width: 65px; font-size: 15px; color: var(--TextcolorBlack);}
 .UserDeatilswrap .skill-status { display: flex; align-items: center; gap: 8px; color: var(--TextcolorGrey); font-size: 12px; }
 .UserDeatilswrap .chart { display: flex; height: 180px; gap: 20px;}
+.UserDeatilswrap .appointment-person { display: flex; align-items: center; gap: 13px; margin-top: 20px; }
+.UserDeatilswrap .doctor-avatar { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--GreenActiveColor); color: var(--TextcolorBlack); font-size: 18px; font-weight: 700; }
+.UserDeatilswrap .subscription-icon { width: 62px; height: 62px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--LightGreen); font-size: 28px;}
+
 /* User Details Css End */
 
 /* ---------------- ASSIGNED ADMIN ---------------- */
