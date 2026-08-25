@@ -1,4 +1,5 @@
 import React from "react";
+import "../ui/UIstyles.css";
 
 type TimingData = {
   day: string;

@@ -311,6 +311,93 @@ button{cursor: pointer; transition: all 0.25s ease;}
 /* Toolbar */
 /* Form Add End */
 
+/* GraphBar Start */
+.timing-title {
+  background: #08a4df;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  padding: 8px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+
+.chart {
+  position: relative;
+  height: 145px;
+  padding-left: 32px;
+}
+
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px solid #d8d8d8;
+}
+
+.grid-line span {
+  position: absolute;
+  left: 5px;
+  top: -8px;
+  transform: translateX(-100%);
+  font-size: 7px;
+  color: var(--TextcolorDark);
+}
+
+.line-100 {
+  top: 0;
+}
+
+.line-75 {
+  top: 25%;
+}
+
+.line-50 {
+  top: 50%;
+}
+
+.line-25 {
+  top: 75%;
+}
+
+.bars {
+  position: absolute;
+  left: 32px;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.bar-column {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.bar {
+  width: 18px;
+  max-height: 100%;
+  background: #08a4df;
+  border-radius: 4px 4px 2px 2px;
+}
+
+.day {
+  margin-top: 17px;
+  font-size: 7px;
+  color: #fff;
+}
+
+/* GraphBar End */
+
+
 
 /* Appointment Calender Start */
 .appointment-calendar{
