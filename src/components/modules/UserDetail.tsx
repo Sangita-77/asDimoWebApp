@@ -175,8 +175,6 @@ const skills = [
   { name: "Motor Skills", icon: MotorSkillsIcon, progress: 65, time: "1h 45m", status: "Steady", direction: "-5%", },
 ];
 
-const chartData = [55, 75, 32, 20, 25, 74, 28];
-
 const formatDate = (dateStr?: string | null) => {
   if (!dateStr) return "N/A";
   try {
