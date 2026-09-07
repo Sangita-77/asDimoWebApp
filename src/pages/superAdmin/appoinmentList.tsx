@@ -524,7 +524,7 @@ const AppointmentList: React.FC = () => {
             text="View Details"
             icon={<img src={IButton} alt="view" className="btn-icon" />}
             variant="trashparent"
-            // onClick={() => handleViewDetails(row)}
+            //onClick={() => handleViewDetails(row)}
           />
         ),
         fixed: true,

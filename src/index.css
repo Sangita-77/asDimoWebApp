@@ -38,6 +38,8 @@
      --RescheduleStstus: #16467B;
      --UpcomingStatus: #ED9624;
      --LightGreen: #F1F4F9;
+     --LightPurple: #E8D2FF;
+     --Purple: #6C27B3;
  } 
 
 body{ font-family: "SourceSans", sans-serif; }

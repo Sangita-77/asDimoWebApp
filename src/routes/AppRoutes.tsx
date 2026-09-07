@@ -17,6 +17,7 @@ SUP_APPOINTMENT: "/superadmin/appointment",
 SUP_ADMIN_DETAILS: "/superadmin/admin-details",
 SUP_THERAPIST_DETAILS: "/superadmin/therapist-details",
 SUP_USER_DETAILS: "/superadmin/user-details",
+SUP_APPOINTMENT_DETAILS: "/superadmin/appointment-details",
 SUP_REPORT: "/superadmin/report",
 SUP_ADDINFORMATION: "/superadmin/add-information",
 // Super Admin Routes End.............

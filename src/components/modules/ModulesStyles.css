@@ -69,7 +69,7 @@
 .UserDeatilswrap .organization-icon { width: 68px; height: 68px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--GreenActiveColor); }
 .UserDeatilswrap .child-name { display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
 .school-badge { margin-left: auto; align-self: flex-start; padding: 4px 12px; border-radius: 20px; background: var(--GreenActiveColor); color: var(--DarkGreen); font-size: 11px; }
-.UserDeatilswrap .avatar { width: 90px; height: 90px; flex: 0 0 90px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, #ddd, #b9d3b3); color: #fff; font-size: 24px; font-weight: 700; border: 5px solid #eef0d5; }
+.profile-main  .avatar { width: 90px; height: 90px; flex: 0 0 90px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, #ddd, #b9d3b3); color: #fff; font-size: 24px; font-weight: 700; border: 5px solid #eef0d5; }
 .UserDeatilswrap .profile-main, .organization { display: flex; gap: 18px; align-items: flex-start; }
 .UserDeatilswrap .divider { height: 1px; margin: 12px 0 9px; background: #ddd; }
 .UserDeatilswrap .child-info { display: flex; align-items: center; padding: 8px; border-radius: 13px; background: var(--LightGreen); }
