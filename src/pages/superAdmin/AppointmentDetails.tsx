@@ -48,6 +48,11 @@ interface AvailableSlot {
 const valueOrFallback = (value?: string | number | null) =>
   value === undefined || value === null || value === "" ? "N/A" : String(value);
 
+const dateValue = (date: string) => {
+  const [day, month, year] = date.split("-").map(Number);
+  return new Date(year, month - 1, day).getTime();
+};
+
 const AppointmentDetails: React.FC = () => {
   const { appointmentId } = useParams<{ appointmentId: string }>();
   const navigate = useNavigate();
@@ -124,14 +129,23 @@ const AppointmentDetails: React.FC = () => {
     fetchAppointment();
   }, [appointmentId]);
 
-  const availableDates = Array.from(new Set(availableSlots.map((slot) => slot.date)));
-  const availableTimes = availableSlots
+  const today = new Date();
+  const todayValue = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  ).getTime();
+  const rescheduleSlots = availableSlots.filter(
+    (slot) => dateValue(slot.date) > todayValue
+  );
+  const availableDates = Array.from(new Set(rescheduleSlots.map((slot) => slot.date)));
+  const availableTimes = rescheduleSlots
     .filter((slot) => slot.date === selectedDate)
     .map((slot) => slot.time);
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
-    setSelectedTime(availableSlots.find((slot) => slot.date === date)?.time || "");
+    setSelectedTime(rescheduleSlots.find((slot) => slot.date === date)?.time || "");
   };
 
   const closeModal = () => {
