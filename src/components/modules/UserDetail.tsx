@@ -281,7 +281,7 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
 
   // Handle Delete User
   const handleDeleteUser = async () => {
-    const idToDelete = userData?.userId || effectiveUserId || userData?._id;
+    const idToDelete = userData?._id || effectiveUserId || userData?.userId;
     if (!idToDelete) return;
 
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
@@ -291,6 +291,8 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
       setDeleting(true);
       const token = tokenManager.getAccessToken() || localStorage.getItem("token");
       if (!token) throw new Error("No token found");
+
+      // console.log("...............idToDelete",idToDelete);
 
       await authService.deleteUsers(token, [String(idToDelete)]);
       alert("User deleted successfully");
