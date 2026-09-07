@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../api/config";
 import { tokenManager } from "../../services/tokenManager";
 import Table from "../../components/ui/Table";
@@ -82,6 +83,7 @@ interface AvailabilitySlot {
 }
 
 const AppointmentList: React.FC = () => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,10 +93,10 @@ const AppointmentList: React.FC = () => {
   const [rescheduleTime, setRescheduleTime] = useState("");
   const [rescheduling, setRescheduling] = useState(false);
   const [rescheduleError, setRescheduleError] = useState<string | null>(null);
-  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
-  const [availabilityLoading, setAvailabilityLoading] = useState(false);
-  const [statusActionError, setStatusActionError] = useState<string | null>(null);
-  const [updatingAppointmentId, setUpdatingAppointmentId] = useState<string | null>(null);
+  const [availabilitySlots] = useState<AvailabilitySlot[]>([]);
+  const [availabilityLoading] = useState(false);
+  const [statusActionError] = useState<string | null>(null);
+  const [updatingAppointmentId] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -237,50 +239,6 @@ const AppointmentList: React.FC = () => {
     fetchAppointments();
   }, [search, sortBy, sort]);
 
-  const openRescheduleDialog = async (appointment: AppointmentRow) => {
-    setAppointmentToReschedule(appointment);
-    setRescheduleDate("");
-    setRescheduleTime("");
-    setRescheduleError(null);
-    setAvailabilitySlots([]);
-    setAvailabilityLoading(true);
-
-    try {
-      const token = tokenManager.getAccessToken();
-      const response = await fetch(`${BASE_URL}/therapists/get_availability`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-        body: JSON.stringify({ therapistId: appointment.teacherId }),
-      });
-      const responseData = await response.json().catch(() => null);
-
-      if (!response.ok || !responseData?.success) {
-        throw new Error(
-          responseData?.message || "Unable to load therapist availability"
-        );
-      }
-
-      const slots = responseData.data || [];
-      setAvailabilitySlots(slots);
-      const firstAvailableSlot = slots.find((slot: AvailabilitySlot) => !slot.isBooked);
-      if (firstAvailableSlot) {
-        setRescheduleDate(firstAvailableSlot.date);
-        setRescheduleTime(firstAvailableSlot.time);
-      }
-    } catch (availabilityError) {
-      setRescheduleError(
-        availabilityError instanceof Error
-          ? availabilityError.message
-          : String(availabilityError)
-      );
-    } finally {
-      setAvailabilityLoading(false);
-    }
-  };
-
   const availableTimes = availabilitySlots.filter(
     (slot) => slot.date === rescheduleDate && !slot.isBooked
   );
@@ -351,49 +309,7 @@ const AppointmentList: React.FC = () => {
     }
   };
 
-  const handleAppointmentStatus = async (
-    appointmentId: string,
-    status: "approved" | "rejected"
-  ) => {
-    setUpdatingAppointmentId(appointmentId);
-    setStatusActionError(null);
-
-    try {
-      const token = tokenManager.getAccessToken();
-      const response = await fetch(`${BASE_URL}/therapists/appointments/status`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-        body: JSON.stringify({ appointmentId, status }),
-      });
-      const responseData = await response.json().catch(() => null);
-
-      if (!response.ok || !responseData?.success) {
-        throw new Error(
-          responseData?.message || "Unable to update appointment status"
-        );
-      }
-
-      setAppointments((currentAppointments) =>
-        currentAppointments.map((appointment) =>
-          appointment.id === appointmentId
-            ? { ...appointment, status: responseData.data?.status || status }
-            : appointment
-        )
-      );
-    } catch (statusError) {
-      setStatusActionError(
-        statusError instanceof Error ? statusError.message : String(statusError)
-      );
-    } finally {
-      setUpdatingAppointmentId(null);
-    }
-  };
-
   const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
-  const isAdmin = Number(tokenManager.getUser()?.flag) === 7;
 
   // console.log("...........currentRole",currentRole);
 
@@ -524,7 +440,7 @@ const AppointmentList: React.FC = () => {
             text="View Details"
             icon={<img src={IButton} alt="view" className="btn-icon" />}
             variant="trashparent"
-            //onClick={() => handleViewDetails(row)}
+            onClick={() => navigate(`../appointment-details/${row.id}`)}
           />
         ),
         fixed: true,
@@ -542,7 +458,7 @@ const AppointmentList: React.FC = () => {
       //     ),
       // },
     ],
-    [isSuperAdmin, updatingAppointmentId]
+    [isSuperAdmin, updatingAppointmentId, navigate]
   );
 
   function handleFilterClick(key: string) {

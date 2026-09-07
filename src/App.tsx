@@ -68,9 +68,10 @@ function App() {
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="user-details" element={<SupUserDetails />} />
-          <Route path="appointment-details" element={<SupAppointmentDetails />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="parent" element={<SupParent />} />
           <Route path="appointment" element={<SupAppointment />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="add-information" element={<AddInformation />} />
           <Route path="report" element={<Report />} />
           <Route path="settings" element={<SuperAdminSettings />} />
@@ -97,6 +98,7 @@ function App() {
           <Route path="parent" element={<SupParent />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
@@ -118,6 +120,7 @@ function App() {
           <Route path="parent" element={<SupParent />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
@@ -137,6 +140,7 @@ function App() {
           <Route path="parent" element={<SupParent />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
