@@ -232,7 +232,7 @@ const AppointmentDetails: React.FC = () => {
   const teacher = appointment.teacherUser || {};
   const imageUrl = parent.profileImg ? `${filebasename}${parent.profileImg}` : undefined;
   const patientName = valueOrFallback(parent.name);
-  const childAge = valueOrFallback(child.childAge);
+  const childAge = valueOrFallback(child.childAge); 
   const patientInfo = [
     { label: "Parent Name", value: patientName },
     // { label: "Parent ID", value: appointment.parentId },
