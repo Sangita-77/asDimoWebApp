@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Calendar from "../../components/ui/CalenderAppointment";
 import TimeSlots from "../../components/ui/TimeSlots";
 import { Heading2 } from "../../components/ui/HeadingPara";
-import DashboardButtons from "../../components/ui/Buttons";
 
 const AppointmentDetails: React.FC = () => {
+
+  const [selectedDate, setSelectedDate] =
+  useState<Date | null>(new Date());
+
+  
   return (
     <div className="AppointmentDetails">
 
@@ -16,11 +20,7 @@ const AppointmentDetails: React.FC = () => {
         />
       </div>
 
-      <TimeSlots/>
-        <div className="d-flex SaveButton">
-            <DashboardButtons text="Save" variant="neon"/>
-            <DashboardButtons text="Change Time" variant="OrangeSolid"/>
-        </div>
+      <TimeSlots selectedDate={selectedDate}/>
     </div>
   );
 };

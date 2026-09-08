@@ -1,4 +1,5 @@
 .calenderBody{background: var(--lightBackground); padding: 30px 10px 5px; border-radius: 5px;}
+.TimeSlotsActions{margin-top: 30px; gap: 20px; justify-self: end;}
 .calendar {
   padding: 16px;
   background: #ffffff;
