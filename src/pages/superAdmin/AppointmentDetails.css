@@ -312,7 +312,7 @@
   gap: 14px;
 }
 
-.form-group {
+/* .form-group {
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -323,9 +323,9 @@
   font-size: 12px;
   color: #48485a;
   font-weight: 700;
-}
+} */
 
-.form-group input,
+/* .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
@@ -356,7 +356,7 @@
 .form-group textarea:focus {
   border-color: #45a9e8;
   box-shadow: 0 0 0 2px rgba(69, 169, 232, 0.1);
-}
+} */
 
 /* =========================================================
    SELECT

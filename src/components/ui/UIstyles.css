@@ -27,6 +27,7 @@ p.TinyPara{font-size: 14px; color: var(--TextcolorBlack);}
 
 /* Button Start */
 button{cursor: pointer; transition: all 0.25s ease;}
+.GlobalButton button:hover{ transform: translateY(-3px);box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);}
 /* ButtonSize */
 .GlobalButton button.full{width: 100%;}
 .GlobalButton button .icon{padding-right: 5px;}
@@ -37,7 +38,8 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .GlobalButton button.SolidYellow:hover{opacity: .8;}
 .GlobalButton button.trashparent{background: transparent; border: none; margin-bottom: 10px; color: var(--TextcolorDark);}
 .GlobalButton button.solid{color: var(--TextcolorLight); background: var(--SecondayColor); border: none; border-radius: 8px; padding: 10px 20px; justify-content: center;}
-.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 15px 23px 7px 10px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
+.GlobalButton button.neon{background: var(--NeonGreen); border: none; color: var(--TextcolorLight); padding: 15px 25px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
+.GlobalButton button.OrangeSolid{background: var(--CancleStstus); border: none; color: var(--TextcolorLight); padding: 15px 25px; font-weight: 600 !important; text-transform: uppercase; border-radius: 5px;}
 .GlobalButton button.solid:hover{background: var(--PrimaryColor); transition: .5s; }
 .GlobalButton button.greyborder{background: transparent; border: solid 2px var(--GreyBorders); margin-bottom: 10px; color: var(--TextcolorDark); padding: 12px 15px 10px 3px; border-radius: 50px;}
 .GlobalButton button.greyborder:hover{background: var(--GreenButtonHover); transition: .5s; border-color: var(--GreenButtonHover);}
@@ -112,12 +114,25 @@ button{cursor: pointer; transition: all 0.25s ease;}
 
 /* Tab CSS Start */
 .DashboardsTabs{margin-top: 30px;}
+/* Left Side Start */
 .DashboardsTabs.LeftSide{display: flex; border-top: solid 1px var(--GreyBorders);}
 .DashboardsTabs.LeftSide .tabs-header{width: 20%; padding: 50px 20px; border-right: solid 1px var(--GreyBorders);}
 .DashboardsTabs.LeftSide .tabs-content{width: 80%; padding: 30px;}
 .DashboardsTabs.LeftSide .tab-btn.LeftSide{width: 100%; margin: 10px 0px; padding: 15px; border: none; text-align: left; font-size: 15px; background: transparent;}
 .DashboardsTabs.LeftSide .tab-btn.active.LeftSide{background: var(--GreenActiveColor); border-radius: 5px; position: relative;}
 .DashboardsTabs.LeftSide .TabButton{border-bottom: solid 1px var(--PrimaryColor);}
+
+/* Horizontal Start */
+.DashboardsTabs.Horizontal{display: block; border-top: none;}
+.DashboardsTabs.Horizontal .tabs-header{width: 100%; padding: 0px; border-right: solid 1px var(--GreyBorders); display: flex; gap: 20px;}
+.DashboardsTabs.Horizontal .tabs-content{width: 100%; padding: 35px 0 0;}
+.DashboardsTabs.Horizontal .tab-btn.Horizontal{width: 100%; margin: 10px 0px; padding: 8px 28px 8px 8px; text-align: left; font-size: 15px; background: transparent; border: none;}
+.DashboardsTabs.Horizontal .tab-btn.active.Horizontal{background: var(--YellowButton); position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);}
+.DashboardsTabs.Horizontal .tab-btn.active.Horizontal .AppointmentTab svg{background: var(--UpcomingStatus);}
+.DashboardsTabs.Horizontal .tab-btn.Horizontal .AppointmentTab svg{ padding: 10px; background: var(--ColorSky); fill: var(--TextcolorLight); border-radius: 5px;}
+.DashboardsTabs.Horizontal .TabButton{border-bottom: 0;}
+.DashboardsTabs.Horizontal .AppointmentTab{justify-content: center; display: flex; align-items: center; gap: 10px;}
+.DashboardsTabs.Horizontal .tab-btn.Horizontal{box-shadow: 5px 5px 10px rgb(0 0 0 / 12%); border-radius: 10px;}
 /* Tab CSS End */
 
 /* Profile Start*/
