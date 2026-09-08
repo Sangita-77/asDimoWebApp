@@ -2,6 +2,7 @@
 export const routes = {
 
 LOGIN: "/",
+PAYMENT: "/payment",
 
 // Super Admin Routes Start.............
 SUPERADMIN: "/superadmin",

@@ -27,6 +27,8 @@ interface AppointmentDetailsData {
   date: string;
   time: string;
   status: string;
+  paymentId?: string | number;
+  razorpayPaymentId?: string;
   zoomLink?: string;
   teacher?: { therapist_category?: string };
   teacherUser?: UserDetails;
@@ -35,6 +37,26 @@ interface AppointmentDetailsData {
   organization?: UserDetails;
   zonalAdmin?: UserDetails;
   admin?: UserDetails;
+}
+
+interface PaymentDetailsData {
+  user?: UserDetails;
+  orderId?: string;
+  receipt?: string;
+  amount?: number;
+  currency?: string;
+  status?: string;
+  provider?: string;
+  metadata?: {
+    webhookEvent?: {
+      payload?: {
+        payment?: { entity?: { method?: string } };
+      };
+    };
+  };
+  createdAt?: string;
+  paymentId?: number;
+  razorpayPaymentId?: string;
 }
 
 interface AvailableSlot {
@@ -68,6 +90,9 @@ const AppointmentDetails: React.FC = () => {
   const [cancellationReason, setCancellationReason] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetailsData | null>(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAppointment = async () => {
@@ -95,6 +120,28 @@ const AppointmentDetails: React.FC = () => {
         const appointmentData = responseData.data as AppointmentDetailsData;
         setAppointment(appointmentData);
 
+        const paymentId = appointmentData.paymentId ?? appointmentData.razorpayPaymentId;
+        if (paymentId !== undefined && paymentId !== null && paymentId !== "") {
+          setPaymentLoading(true);
+          const paymentResponse = await fetch(
+            `${BASE_URL}/payments/${encodeURIComponent(String(paymentId))}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: token ? `Bearer ${token}` : "",
+              },
+            }
+          );
+          const paymentResponseData = await paymentResponse.json().catch(() => null);
+
+          if (!paymentResponse.ok || !paymentResponseData?.success) {
+            throw new Error(paymentResponseData?.message || "Unable to load payment details");
+          }
+
+          setPaymentDetails(paymentResponseData.data as PaymentDetailsData);
+        }
+
         if (appointmentData.teacherUser?.userId) {
           setSlotsLoading(true);
           const slotsResponse = await fetch(
@@ -119,9 +166,14 @@ const AppointmentDetails: React.FC = () => {
           setAvailableSlots(slots);
         }
       } catch (fetchError) {
-        setError(fetchError instanceof Error ? fetchError.message : String(fetchError));
+        if (fetchError instanceof Error && fetchError.message === "Unable to load payment details") {
+          setPaymentError(fetchError.message);
+        } else {
+          setError(fetchError instanceof Error ? fetchError.message : String(fetchError));
+        }
       } finally {
         setSlotsLoading(false);
+        setPaymentLoading(false);
         setLoading(false);
       }
     };
@@ -272,6 +324,10 @@ const AppointmentDetails: React.FC = () => {
     { label: "Admin Name", value: appointment.admin?.name },
     { label: "Zonal Admin Name", value: appointment.zonalAdmin?.name },
   ];
+  const paymentMethod = paymentDetails?.metadata?.webhookEvent?.payload?.payment?.entity?.method;
+  const paymentDate = paymentDetails?.createdAt
+    ? new Date(paymentDetails.createdAt).toLocaleString()
+    : undefined;
 
   return (
     <>
@@ -305,7 +361,7 @@ const AppointmentDetails: React.FC = () => {
         <div className="card-title grey-title"><span className="title-icon"><CreditCard size={20} /></span><span>Payment Details</span></div>
         <div className="payment-body"><div className="payment-row"><span>Appointment ID</span><strong>{appointment._id}</strong></div><div className="payment-row"><span>Appointment Status</span><span className="paid-badge">{appointment.status}</span></div><div className="payment-row"><span>Zoom Link</span><strong>{valueOrFallback(appointment.zoomLink)}</strong></div></div>
       </section> */}
-       <section className="details-card payment-card">
+      <section className="details-card payment-card">
 
         <div className="card-title grey-title">
           <span className="title-icon">
@@ -316,46 +372,21 @@ const AppointmentDetails: React.FC = () => {
         </div>
 
         <div className="payment-body">
-
-          <div className="payment-row">
-            <span>Appointment Fee</span>
-            <strong>₹ 2,000.00</strong>
-          </div>
-
-          <div className="payment-row">
-            <span>Tax (18%)</span>
-            <strong>₹ 360.00</strong>
-          </div>
-
-          <div className="payment-row">
-            <span>Discount</span>
-            <strong>- ₹ 200.00</strong>
-          </div>
-
-          <div className="payment-row total-row">
-            <span>Total Amount</span>
-            <strong>₹ 2160.00</strong>
-          </div>
-
-          <div className="payment-row">
-            <span>Payment Status</span>
-            <span className="paid-badge">Paid</span>
-          </div>
-
-          <div className="payment-row">
-            <span>Payment Method</span>
-            <strong>UPI</strong>
-          </div>
-
-          <div className="payment-row">
-            <span>Transaction ID</span>
-            <strong>TXN987654321</strong>
-          </div>
-
-          <div className="payment-row">
-            <span>Payment Date</span>
-            <strong>10 April 2026-09:32 AM</strong>
-          </div>
+          {paymentLoading && <div className="payment-row"><span>Payment</span><strong>Loading...</strong></div>}
+          {paymentError && <div className="payment-row"><span>Payment</span><strong>{paymentError}</strong></div>}
+          {!paymentLoading && !paymentError && paymentDetails && <>
+            <div className="payment-row"><span>Customer</span><strong>{valueOrFallback(paymentDetails.user?.name)}</strong></div>
+            <div className="payment-row"><span>Email</span><strong>{valueOrFallback(paymentDetails.user?.email)}</strong></div>
+            <div className="payment-row"><span>Amount</span><strong>{valueOrFallback(paymentDetails.currency)} {valueOrFallback(paymentDetails.amount)}</strong></div>
+            <div className="payment-row"><span>Payment Status</span><span className="paid-badge">{valueOrFallback(paymentDetails.status)}</span></div>
+            <div className="payment-row"><span>Payment Provider</span><strong>{valueOrFallback(paymentDetails.provider)}</strong></div>
+            <div className="payment-row"><span>Payment Method</span><strong>{valueOrFallback(paymentMethod)}</strong></div>
+            <div className="payment-row"><span>Order ID</span><strong>{valueOrFallback(paymentDetails.orderId)}</strong></div>
+            <div className="payment-row"><span>Receipt</span><strong>{valueOrFallback(paymentDetails.receipt)}</strong></div>
+            <div className="payment-row"><span>Transaction ID</span><strong>{valueOrFallback(paymentDetails.razorpayPaymentId)}</strong></div>
+            <div className="payment-row"><span>Payment Date</span><strong>{valueOrFallback(paymentDate)}</strong></div>
+          </>}
+          {!paymentLoading && !paymentError && !paymentDetails && <div className="payment-row"><span>Payment</span><strong>No payment details available</strong></div>}
 
         </div>
       </section>

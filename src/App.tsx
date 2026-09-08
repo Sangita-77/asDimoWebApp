@@ -26,6 +26,7 @@ import SupAppointmentDetails from "./pages/superAdmin/AppointmentDetails";
 import SupUserDetails  from "./pages/superAdmin/UserDetails";
 import AddInformation from "./pages/superAdmin/AddInformation";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
+import PaymentPage from "./pages/superAdmin/PaymentPage";
 
 
 
@@ -49,6 +50,12 @@ function App() {
       <Routes>
         {/* Login */}
         <Route path={routes.LOGIN} element={<AuthMain />} />
+
+        {/* ================= GLOBAL PAYMENT ================= */}
+        <Route
+          path={routes.PAYMENT}
+          element={<PaymentPage />}
+        />
 
         {/* ================= SUPER ADMIN ================= */}
 
