@@ -166,6 +166,7 @@ function App() {
           <Route path="parent" element={<SupParent />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
+          <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
           <Route path="add-information" element={<AddInformation />} />
           <Route path="settings" element={<SuperAdminSettings />} />
         </Route>

@@ -2,9 +2,9 @@ import React, { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, CalendarDays, } from "lucide-react"; 
 import "./Calendar.css";
 
-interface CalendarProps { value?: Date; onChange?: (date: Date) => void; minDate?: Date; maxDate?: Date; }
+interface CalendarProps { value?: Date; onChange?: (date: Date) => void; minDate?: Date; maxDate?: Date; availableDates?: string[]; }
 
-const Calendar: React.FC<CalendarProps> = ({ value, onChange, minDate, maxDate, }) => {
+const Calendar: React.FC<CalendarProps> = ({ value, onChange, minDate, maxDate, availableDates = [], }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>( value || null );
 
   const [currentMonth, setCurrentMonth] = useState( value || new Date() ); 
@@ -82,11 +82,17 @@ const Calendar: React.FC<CalendarProps> = ({ value, onChange, minDate, maxDate, 
   };
 
   const isDisabled = (date: Date) => {
-    if (minDate && date < minDate) return true;
-    if (maxDate && date > maxDate) return true;
+    const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    const minimumDate = minDate ? new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate()).getTime() : undefined;
+    const maximumDate = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate()).getTime() : undefined;
+
+    if (minimumDate !== undefined && dateOnly < minimumDate) return true;
+    if (maximumDate !== undefined && dateOnly > maximumDate) return true;
 
     return false;
   };
+
+  const dateKey = (date: Date) => `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
 
   const handleDateClick = (date: Date) => {
     if (isDisabled(date)) return;
@@ -140,6 +146,7 @@ const Calendar: React.FC<CalendarProps> = ({ value, onChange, minDate, maxDate, 
             const selected = isSameDay(selectedDate, date);
             const today = isToday(date);
             const disabled = isDisabled(date);
+            const hasAvailability = availableDates.includes(dateKey(date));
 
             return (
               <button
@@ -152,6 +159,7 @@ const Calendar: React.FC<CalendarProps> = ({ value, onChange, minDate, maxDate, 
                   selected ? "selected" : "",
                   today ? "today" : "",
                   disabled ? "disabled" : "",
+                  hasAvailability ? "has-availability" : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
