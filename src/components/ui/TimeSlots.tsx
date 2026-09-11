@@ -9,151 +9,68 @@ import {
   Stethoscope,
 } from "lucide-react";
 
-type AppointmentType = "video" | "home" | "clinic";
+type AppointmentType = "online" | "home" | "center";
+const FIXED_TIME_SLOTS = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:30", "15:30", "16:30", "17:30", "19:00", "20:00"];
 
-interface TimeSlotData {
-  video: string[];
-  home: string[];
-  clinic: string[];
-}
+export interface AvailabilitySlot { _id?: string; date: string; time: string; medium?: AppointmentType; isBooked: boolean; }
 
 interface TimeSlotsProps {
   selectedDate: Date | null;
+  slots: AvailabilitySlot[];
+  onSave: (slot: AvailabilitySlot) => Promise<void>;
 }
 
 const TimeSlots: React.FC<TimeSlotsProps> = ({
   selectedDate,
+  slots,
+  onSave,
 }) => {
-  const timeSlots = [
-    "09:00 AM",
-    "09:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM",
-    "12:30 PM",
-    "02:00 PM",
-    "02:30 PM",
-    "03:00 PM",
-    "03:30 PM",
-    "04:00 PM",
-    "04:30 PM",
-    "05:00 PM",
-  ];
-
-  const [savedSlots, setSavedSlots] = useState<
-    Record<string, TimeSlotData>
-  >({});
-
-
-  const [currentSlots, setCurrentSlots] =
-    useState<TimeSlotData>({
-      video: [],
-      home: [],
-      clinic: [],
-    });
-
+  const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const dateKey = selectedDate ? `${String(selectedDate.getDate()).padStart(2, "0")}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${selectedDate.getFullYear()}` : "";
 
-  const emptySlots: TimeSlotData = {
-    video: [],
-    home: [],
-    clinic: [],
-  };
+  useEffect(() => { setSelectedSlot(null); setIsEditing(false); }, [selectedDate]);
 
-  const getDateKey = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  };
-
-  useEffect(() => {
-    if (!selectedDate) {
-      setCurrentSlots(emptySlots);
+  const saveSelectedSlot = async () => {
+    if (!selectedSlot) return;
+    setSaving(true);
+    try {
+      await onSave(selectedSlot);
       setIsEditing(false);
-      return;
+    } finally {
+      setSaving(false);
     }
-
-    const dateKey = getDateKey(selectedDate);
-
-    if (savedSlots[dateKey]) {
-      setCurrentSlots(savedSlots[dateKey]);
-    } else {
-      setCurrentSlots(emptySlots);
-    }
-
-    setIsEditing(false);
-  }, [selectedDate, savedSlots]);
-
-  const toggleTimeSlot = (
-    type: AppointmentType,
-    time: string
-  ) => {
-    if (!isEditing) return;
-
-    setCurrentSlots((prev) => {
-      const selected = prev[type].includes(time);
-
-      return {
-        ...prev,
-        [type]: selected
-          ? prev[type].filter((slot) => slot !== time)
-          : [...prev[type], time],
-      };
-    });
-  };
-
-
-  const handleSave = () => {
-    if (!selectedDate) return;
-    const dateKey = getDateKey(selectedDate);
-    setSavedSlots((prev) => ({
-      ...prev,
-      [dateKey]: currentSlots,
-    }));
-    setIsEditing(false);
-  };
-
-
-  const handleCancel = () => {
-    if (!selectedDate) return;
-    const dateKey = getDateKey(selectedDate);
-    setCurrentSlots(
-      savedSlots[dateKey] || emptySlots
-    );
-
-    setIsEditing(false);
   };
 
   const renderTimeSlots = (
     type: AppointmentType
-  ) => (
-    <>
+  ) => {
+    const dateSlots = slots.filter((slot) => slot.date === dateKey);
+
+    return <>
       <div className="TimeSlotsHeading">
         <Heading2 text="Available Time Slots" />
       </div>
 
       <div className="TimeSlots">
-        {timeSlots.map((time) => {
-          const isSelected =
-            currentSlots[type].includes(time);
+        {FIXED_TIME_SLOTS.map((time) => {
+          const slot = dateSlots.find((availableSlot) => availableSlot.time === time);
+          const isPresent = Boolean(slot);
+          const isBooked = Boolean(slot?.isBooked);
+          const slotForSelection = slot || { _id: `${dateKey}-${type}-${time}`, date: dateKey, time, medium: type, isBooked: false };
+          const mediumLabel = slot?.medium ? slot.medium.charAt(0).toUpperCase() + slot.medium.slice(1) : "Available";
 
           return (
             <button
               key={time}
               type="button"
-              disabled={!isEditing}
-              className={`TimeSlotButton ${
-                isSelected ? "selected" : ""
-              }`}
-              onClick={() =>
-                toggleTimeSlot(type, time)
-              }
+              disabled={!isEditing || isPresent}
+              title={isPresent ? `Medium: ${mediumLabel}` : undefined}
+              className={`TimeSlotButton ${selectedSlot?._id === slotForSelection._id ? "selected" : ""} ${isPresent ? "api-available" : ""} ${isBooked ? "booked" : ""}`}
+              onClick={() => setSelectedSlot(slotForSelection)}
             >
-              {time}
+              {time}{isBooked ? " (Booked)" : ""}
             </button>
           );
         })}
@@ -163,24 +80,24 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({
             <DashboardButtons text="Change Time" variant="OrangeSolid" onClick={() => setIsEditing(true)}/>
           ) : (
             <>
-            <DashboardButtons text="Save" variant="neon" onClick={handleSave}/>
-            <DashboardButtons text="Cancel" variant="OrangeSolid" onClick={handleCancel}/>
+            <DashboardButtons text={saving ? "Saving..." : "Save"} variant="neon" onClick={saveSelectedSlot} disabled={!selectedSlot || saving}/>
+            <DashboardButtons text="Cancel" variant="OrangeSolid" onClick={() => { setSelectedSlot(null); setIsEditing(false); }}/>
             </>
           )}
         </div>
-    </>
-  );
+    </>;
+  };
 
   const tabs = [
     {
-      id: "video",
+      id: "online",
       label: (
         <span className="AppointmentTab">
           <Video size={45} />
           <span>Video Appointments</span>
         </span>
       ),
-      content: renderTimeSlots("video"),
+      content: renderTimeSlots("online"),
     },
     {
       id: "home",
@@ -193,14 +110,14 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({
       content: renderTimeSlots("home"),
     },
     {
-      id: "clinic",
+      id: "center",
       label: (
         <span className="AppointmentTab">
           <Stethoscope size={45} />
           <span>Clinic Appointments</span>
         </span>
       ),
-      content: renderTimeSlots("clinic"),
+      content: renderTimeSlots("center"),
     },
   ];
 

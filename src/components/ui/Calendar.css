@@ -78,6 +78,12 @@
   border: 1px solid #d1d5db;
 }
 
+.calendar-day.has-availability {
+  background: #e9fbf2;
+  color: #16845a;
+  font-weight: 700;
+}
+
 .calendar-day.selected {
   background: #111827;
   color: #ffffff;
@@ -130,4 +136,28 @@
   background: #222;
   border-color: #222;
   color: #fff;
+}
+
+.TimeSlotButton.selected {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+.TimeSlotButton.api-available,
+.TimeSlotButton.api-available:disabled,
+.TimeSlotButton.api-available:hover {
+  background: #B28CFF;
+  border-color: #B28CFF;
+  color: #F8F8F8;
+  cursor: not-allowed;
+}
+
+.TimeSlotButton.booked,
+.TimeSlotButton.booked:disabled {
+  background: #f8e5e5;
+  border-color: #e4aaaa;
+  color: #a33b3b;
+  cursor: not-allowed;
+  text-decoration: line-through;
 }
