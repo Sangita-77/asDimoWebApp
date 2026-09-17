@@ -243,6 +243,27 @@ const pageConfig = getPageConfig(flag);
 
       if (flag === 3) {
         formData.append("therapist_category", data.therapist_category);
+
+        const selectedLanguages = Array.isArray(data.languages)
+          ? data.languages
+          : typeof data.languages === "string"
+            ? data.languages
+                .split(",")
+                .map((language: string) => language.trim())
+                .filter(Boolean)
+            : [];
+
+        selectedLanguages.forEach((language: string) => {
+          formData.append("languages", language);
+        });
+
+        if (data.yearsOfExperience !== undefined && data.yearsOfExperience !== null && data.yearsOfExperience !== "") {
+          formData.append("yearsOfExperience", String(data.yearsOfExperience));
+        }
+
+        if (data.user_scope === "global" && data.cliniqueName) {
+          formData.append("cliniqueName", data.cliniqueName);
+        }
       }
 
       if (data.profileImage) {
@@ -367,10 +388,38 @@ const pageConfig = getPageConfig(flag);
         placeholder: "Select Therapist Category",
         options: [
           { label: "Psychologist", value: "Psychologist" },
-          { label: "Speech Therapist", value: "Speech Therapist" },
-          { label: "Special Educator", value: "Special Educator" },
-          { label: "Operational Therapist", value: "Operational Therapist" },
+          { label: "Speech Therapist", value: "speech therapist" },
+          { label: "Special Educator", value: "special educator" },
+          { label: "Operational Therapist", value: "operational therapist" },
         ],
+        required: true,
+      },
+      {
+        name: "languages",
+        label: "Languages",
+        fieldType: "select" as const,
+        width: "half" as const,
+        multiple: true,
+        placeholder: "Select Languages",
+        options: [
+          { label: "English", value: "English" },
+          { label: "Hindi", value: "Hindi" },
+          { label: "Marathi", value: "Marathi" },
+          { label: "Gujarati", value: "Gujarati" },
+          { label: "Tamil", value: "Tamil" },
+          { label: "Telugu", value: "Telugu" },
+          { label: "Bengali", value: "Bengali" },
+          { label: "Kannada", value: "Kannada" },
+          { label: "Malayalam", value: "Malayalam" },
+        ],
+        required: true,
+      },
+      {
+        name: "yearsOfExperience",
+        label: "Years of Experience",
+        type: "number",
+        placeholder: "Enter Years of Experience",
+        width: "half" as const,
         required: true,
       },
       {
@@ -389,6 +438,16 @@ const pageConfig = getPageConfig(flag);
             value: "non_global",
           },
         ],
+        required: true,
+      },
+      {
+        name: "cliniqueName",
+        label: "Clinic Name",
+        placeholder: "Enter Clinic Name",
+        showWhen: {
+          field: "user_scope",
+          value: "global",
+        },
         required: true,
       },
       {

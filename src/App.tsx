@@ -103,6 +103,7 @@ function App() {
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="parent" element={<SupParent />} />
+          <Route path="user-details" element={<SupUserDetails />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
@@ -125,6 +126,7 @@ function App() {
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="parent" element={<SupParent />} />
+          <Route path="user-details" element={<SupUserDetails />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
@@ -145,6 +147,7 @@ function App() {
           <Route path="therapist" element={<SupTherapist />} />
           <Route path="therapist-details" element={<SupTherapistDetails />} />
           <Route path="parent" element={<SupParent />} />
+          <Route path="user-details" element={<SupUserDetails />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />
@@ -164,6 +167,7 @@ function App() {
         >
           <Route index element={<TherapistIndex />} />
           <Route path="parent" element={<SupParent />} />
+          <Route path="user-details" element={<SupUserDetails />} />
           <Route path="report" element={<Report />} />
           <Route path="appointment" element={<SupAppointment />} />
           <Route path="appointment-details/:appointmentId" element={<SupAppointmentDetails />} />

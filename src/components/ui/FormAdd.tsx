@@ -25,6 +25,7 @@ export type Field = {
   width?: "half" | "full" | "quarter";
   fieldType?: "input" | "select";
   required?: boolean;
+  multiple?: boolean;
   options?: {
     label: string;
     value: string;
@@ -80,7 +81,18 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const handleSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    updateFormData(e.target.name, e.target.value);
+    const { name, options: selectOptions, multiple } = e.target;
+
+    if (multiple) {
+      const selectedValues = Array.from(selectOptions)
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+
+      updateFormData(name, selectedValues);
+      return;
+    }
+
+    updateFormData(name, e.target.value);
   };
 
   const handleImageChange = (
@@ -145,13 +157,18 @@ const handleSubmit = async (e: React.FormEvent) => {
               {field.fieldType === "select" ? (
                 <select
                   name={field.name}
-                  value={formData[field.name] || ""}
+                  multiple={field.multiple}
+                  value={field.multiple
+                    ? (Array.isArray(formData[field.name]) ? formData[field.name] : [])
+                    : (formData[field.name] ?? "")}
                   onChange={handleSelectChange}
-                  required={field.required}
+                  required={field.required && !field.multiple}
                 >
-                <option value="" disabled>
-                  {field.placeholder || `Select ${field.label}`}
-                </option>
+                {!field.multiple && (
+                  <option value="" disabled>
+                    {field.placeholder || `Select ${field.label}`}
+                  </option>
+                )}
                   {field.options?.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -199,11 +216,14 @@ const handleSubmit = async (e: React.FormEvent) => {
       {field.fieldType === "select" ? (
           <select
             name={field.name}
-            value={formData[field.name] || ""}
+            multiple={field.multiple}
+            value={field.multiple
+              ? (Array.isArray(formData[field.name]) ? formData[field.name] : [])
+              : (formData[field.name] ?? "")}
             onChange={handleSelectChange}
-            required={field.required}
+            required={field.required && !field.multiple}
           >
-          <option value="">Select {field.label}</option>
+          {!field.multiple && <option value="">Select {field.label}</option>}
 
           {field.options?.map((option) => (
             <option key={option.value} value={option.value}>
@@ -218,6 +238,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           placeholder={field.placeholder}
           value={formData[field.name] ?? field.value ?? ""}
           onChange={handleChange}
+          required={field.required}
           readOnly={field.readOnly}
         />
       )}
