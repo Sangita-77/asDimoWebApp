@@ -243,7 +243,8 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .profile-table th:not(:first-child),.profile-table td:not(:first-child) { text-align: center; }
 .profile-table tbody tr{ background: var(--TableHeader); margin-bottom: 10px; border-bottom: solid 10px var(--TextcolorLight); border-radius: 20px;}
 .doctor-info { display: flex; align-items: center; gap: 12px; } 
-.doctor-image { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: solid 1px var(--BorderColor);} 
+.doctor-image { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: solid 1px var(--BorderColor); flex-shrink: 0; } 
+.doctor-image-initial { width: 40px; height: 40px; border-radius: 50%; background: var(--SecondayColor); color: var(--TextcolorLight); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; text-transform: uppercase; border: solid 1px var(--BorderColor); flex-shrink: 0; }
 .doctor-info h5 { margin: 0; font-size: 14px; font-weight: 600; color: var(--TextcolorDark); }
 .doctor-info p { margin: 2px 0 0; font-size: 14px; color: var(--TextcolorDark); } 
 .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 5px; font-size: 13px; font-weight: 600; text-transform: capitalize; width: 100px; }

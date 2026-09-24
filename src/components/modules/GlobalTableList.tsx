@@ -123,6 +123,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       case 1: // Organization Admin
         return { field: "roleData.organizationAdminId", value: userIdValue };
       case 3: // Teacher
+      case 5: // Teacher (Global)
         return { field: "roleData.teacherId", value: userIdValue };
       default:
         return { field: null, value: null };
@@ -288,30 +289,66 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       const { field, value } = getFilterFieldByLoginFlag();
       if (field && value) {
         users = users.filter((item: any) => {
-          const fieldValue = field === "roleData.zonalAdminId"
-            ? item.roleData?.zonalAdminId
-            : field === "roleData.adminId"
-            ? item.roleData?.adminId
-            : field === "roleData.organizationAdminId"
-            ? item.roleData?.organizationAdminId
-            : field === "roleData.teacherId"
-            ? item.roleData?.teacherId
-            : null;
-
-          return String(fieldValue) === String(value);
+          if (field === "roleData.zonalAdminId") {
+            return String(item.roleData?.zonalAdminId) === String(value);
+          }
+          if (field === "roleData.adminId") {
+            return String(item.roleData?.adminId) === String(value);
+          }
+          if (field === "roleData.organizationAdminId") {
+            return String(item.roleData?.organizationAdminId) === String(value);
+          }
+          if (field === "roleData.teacherId") {
+            const itemTeacherId =
+              item.relatedData?.teacher?.teacherId ??
+              item.relatedData?.teacher?.userId ??
+              item.relatedData?.teacher?.userData?.userId ??
+              item.roleData?.teacherId ??
+              item.roleData?.therapistId;
+            return (
+              String(itemTeacherId) === String(value) ||
+              String(item.userId) === String(value)
+            );
+          }
+          return true;
         });
       }
 
       // Filter by filteredUserId if provided (for teachersGlobal users)
       if (filteredUserId) {
         users = users.filter((item: any) => {
-          // Show items where the parent/related user matches filteredUserId
+          // Check if item itself is the user (e.g. in therapist list)
+          if (
+            String(item.userId) === String(filteredUserId) ||
+            String(item._id) === String(filteredUserId)
+          ) {
+            return true;
+          }
+
+          // Check if relatedData teacher or roleData teacher/therapist matches filteredUserId
+          const relatedTeacher = item.relatedData?.teacher;
+          if (
+            String(relatedTeacher?.teacherId) === String(filteredUserId) ||
+            String(relatedTeacher?.userId) === String(filteredUserId) ||
+            String(relatedTeacher?.userData?.userId) === String(filteredUserId) ||
+            String(item.roleData?.teacherId) === String(filteredUserId) ||
+            String(item.roleData?.therapistId) === String(filteredUserId)
+          ) {
+            return true;
+          }
+
+          // Check if relatedData.teachers array contains the user
           const relatedTeachers = item.relatedData?.teachers?.data || [];
-          const isRelatedUser = relatedTeachers.some((teacher: any) => 
-            String(teacher.userId) === String(filteredUserId) || 
-            String(teacher._id) === String(filteredUserId)
-          );
-          return isRelatedUser || String(item.userId) === String(filteredUserId);
+          if (Array.isArray(relatedTeachers)) {
+            const isRelated = relatedTeachers.some((teacher: any) =>
+              String(teacher.userId) === String(filteredUserId) ||
+              String(teacher.teacherId) === String(filteredUserId) ||
+              String(teacher._id) === String(filteredUserId)
+            );
+            if (isRelated) return true;
+          }
+
+          return false;
         });
       }
 
@@ -325,12 +362,14 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     console.log("API Response:", users);
 
     const formattedRows = users.map((item: any) => {
-      const parentId = Number(item.roleData?.parentId);
-      const teacherId = Number(item.relatedData?.teacher?.teacherId);
+      const parentId = Number(item.roleData?.parentId ?? item.userId);
+      const teacherId = Number(item.relatedData?.teacher?.teacherId ?? item.roleData?.teacherId);
 
       // Therapist name
       const therapistName =
-        item.relatedData?.teacher?.userData?.name ?? "-";
+        item.relatedData?.teacher?.userData?.name ??
+        item.relatedData?.teacher?.name ??
+        "-";
 
       // Find appointments belonging to this parent + therapist
       const matchedAppointments =
@@ -366,13 +405,18 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         email: item.email,
 
         zonal_admin_name:
-          item.relatedData?.zonalAdmin?.userDataname ?? "Global",
+          item.relatedData?.zonalAdmin?.userData?.name ??
+          item.relatedData?.zonalAdmin?.userDataname ??
+          "Global",
 
         admin_name:
-          item.relatedData?.Admin?.userData?.name ?? "Global",
+          item.relatedData?.Admin?.userData?.name ??
+          item.relatedData?.admin?.userData?.name ??
+          "Global",
 
         organization_name:
           item.relatedData?.organizations?.userData?.name ??
+          item.relatedData?.organization?.userData?.name ??
           item.org_name ??
           "Global",
 

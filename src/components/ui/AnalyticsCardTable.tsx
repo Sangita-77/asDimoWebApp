@@ -28,6 +28,27 @@ interface ProfileTableProps {
   data: ProfileRow[];
 }
 
+const TableAvatar: React.FC<{ src?: string; name?: string }> = ({ src, name }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const initial =
+    name && name !== "N/A" && name !== "-"
+      ? name.trim().charAt(0).toUpperCase()
+      : "U";
+
+  if (src && !imgError) {
+    return (
+      <img
+        src={src}
+        alt={name || ""}
+        className="doctor-image"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return <div className="doctor-image-initial">{initial}</div>;
+};
+
 const ProfileTable: React.FC<ProfileTableProps> = ({
   headers,
   data,
@@ -83,13 +104,10 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
                     </div>
                   ) : header.key === "user" ? (
                     <div className="doctor-info">
-                      {row.profileImageParent && (
-                        <img
-                          src={row.profileImageParent}
-                          alt={row.user || ""}
-                          className="doctor-image"
-                        />
-                      )}
+                      <TableAvatar
+                        src={row.profileImageParent}
+                        name={row.user}
+                      />
                       <h5>{row.user ?? "-"}</h5>
                     </div>
                     ) : header.key === "status" ? (

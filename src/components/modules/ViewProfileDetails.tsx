@@ -36,6 +36,10 @@ const ViewProfileDetails: React.FC<Props> = ({ userId }) => {
   const [pincode, setPincode] = useState("");
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
+  const [therapistCategory, setTherapistCategory] = useState("");
+  const [yearsOfExperience, setYearsOfExperience] = useState("");
+  const [languages, setLanguages] = useState("");
+  const [clinicName, setClinicName] = useState("");
   const [id, setId] = useState("");
   const [assignmemberList, setASMemberList] = useState<any[]>([]);
   const [aslistTitle, setASListTitle] = useState("Assigned to Zonal Admin");
@@ -313,9 +317,28 @@ const [showResetModal, setShowResetModal] = useState(false);
         setPincode(user.pincode || "");
         setAddress(user.address || "");
         setCountry(user.country || "");
-        // setId(user.id || user._id || "");
-        setId(user.userId || user.id || user._id || "");
-        // setLastLogin(user.lastLogin || "");
+
+        const teacherDetails = user.roleData || {};
+
+        setTherapistCategory(teacherDetails.therapist_category || "");
+
+        setYearsOfExperience(
+          teacherDetails.yearsOfExperience !== undefined &&
+          teacherDetails.yearsOfExperience !== null
+            ? String(teacherDetails.yearsOfExperience)
+            : ""
+        );
+
+        setLanguages(
+          Array.isArray(teacherDetails.languages)
+            ? teacherDetails.languages.join(", ")
+            : teacherDetails.languages || ""
+        );
+
+        setClinicName(teacherDetails.cliniqueName || "");
+
+        // setId(user.userId || user.id || user._id || "");
+        setId(user._id || "");
 
         await fetchAssignedMembers(
           user.flag,
@@ -401,7 +424,7 @@ const [showResetModal, setShowResetModal] = useState(false);
 
     const updateField = async (
       field: string,
-      value: string
+      value: string | string[]
     ) => {
       try {
         const token = tokenManager.getAccessToken();
@@ -409,7 +432,19 @@ const [showResetModal, setShowResetModal] = useState(false);
         if (!token || !userId) return;
 
         const formData = new FormData();
-        formData.append(field, value);
+
+        if (field === "languages") {
+          const languageList = Array.isArray(value)
+            ? value
+            : String(value)
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean);
+
+          languageList.forEach((language) => formData.append(field, language));
+        } else {
+          formData.append(field, String(value));
+        }
 
         await authService.updateProfile(
           token,
@@ -419,25 +454,37 @@ const [showResetModal, setShowResetModal] = useState(false);
 
         switch (field) {
           case "name":
-            setName(value);
+            setName(String(value));
             break;
           case "phone":
-            setPhone(value);
+            setPhone(String(value));
             break;
           case "city":
-            setCity(value);
+            setCity(String(value));
             break;
           case "state":
-            setState(value);
+            setState(String(value));
             break;
           case "address":
-            setAddress(value);
+            setAddress(String(value));
             break;
           case "country":
-            setCountry(value);
+            setCountry(String(value));
             break;
           case "pincode":
-            setPincode(value);
+            setPincode(String(value));
+            break;
+          case "yearsOfExperience":
+            setYearsOfExperience(String(value));
+            break;
+          case "languages":
+            setLanguages(Array.isArray(value) ? value.join(", ") : String(value));
+            break;
+          case "cliniqueName":
+            setClinicName(String(value));
+            break;
+          case "therapist_category":
+            setTherapistCategory(String(value));
             break;
         }
 
@@ -452,6 +499,25 @@ const [showResetModal, setShowResetModal] = useState(false);
       return <Loader fullScreen />;
     }
 
+    const therapistCategoryOptions = [
+      { label: "Psychologist", value: "Psychologist" },
+      { label: "Speech Therapist", value: "speech therapist" },
+      { label: "Special Educator", value: "special educator" },
+      { label: "Operational Therapist", value: "operational therapist" },
+    ];
+
+    const languageOptions = [
+      { label: "English", value: "English" },
+      { label: "Hindi", value: "Hindi" },
+      { label: "Marathi", value: "Marathi" },
+      { label: "Gujarati", value: "Gujarati" },
+      { label: "Tamil", value: "Tamil" },
+      { label: "Telugu", value: "Telugu" },
+      { label: "Bengali", value: "Bengali" },
+      { label: "Kannada", value: "Kannada" },
+      { label: "Malayalam", value: "Malayalam" },
+    ];
+
 
   return (
     <div className="d-flex ViewProfileDetails">
@@ -461,6 +527,55 @@ const [showResetModal, setShowResetModal] = useState(false);
           <ProfileField label="Profile" value={name} onSave={(value) => updateField("name", value) } />
           <ProfileField label="Email" value={email} editable={false} /> 
           <ProfileField label="Phone" value={phone} onSave={(value) => updateField("phone", value) } />
+
+          {(userFlag === 3 || userFlag === 5) && (
+            <>
+              <ProfileField
+                label="Therapist Category"
+                value={therapistCategory}
+                isDropdown
+                options={therapistCategoryOptions}
+                onSave={(value) =>
+                  updateField("therapist_category", value)
+                }
+                // editable={false}
+              />
+
+              <ProfileField
+                label="Years of Experience"
+                value={yearsOfExperience}
+                onSave={(value) =>
+                  updateField("yearsOfExperience", value)
+                }
+                // editable={false}
+              />
+
+              <ProfileField
+                label="Languages"
+                value={languages}
+                isDropdown
+                multiple
+                options={languageOptions}
+                onSave={(value) =>
+                  updateField("languages", value)
+                }
+                // editable={false}
+              />
+
+              {/* Clinic Name should ONLY show for Flag 5 */}
+              {userFlag === 5 && (
+                <ProfileField
+                  label="Clinic Name"
+                  value={clinicName}
+                  onSave={(value) =>
+                    updateField("cliniqueName", value)
+                  }
+                  // editable={false}
+                />
+              )}
+            </>
+          )}
+
           <ProfileField label="Zone" value={zone} editable={true} onClick={() => setShowResetModal(true)} />
           {/* {userFlag !== 6 && (
             <ProfileField

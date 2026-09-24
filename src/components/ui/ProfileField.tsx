@@ -24,6 +24,7 @@ interface ProfileFieldProps {
   onClick?: () => void;
   isDropdown?: boolean;
   options?: DropdownOption[];
+  multiple?: boolean;
 }
 
 export const ProfileImageField: React.FC<{
@@ -87,6 +88,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
   onResetPassword,
   onClick,
   isDropdown = false,
+  multiple = false,
   options = [],
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -113,11 +115,50 @@ const ProfileField: React.FC<ProfileFieldProps> = ({
 
         {isEditing && !isPassword ? (
           isDropdown ? (
+            // <select
+            //   value={fieldValue}
+            //   onChange={(e) => setFieldValue(e.target.value)}
+            // >
+            //   <option value="">Select {label}</option>
+
+            //   {options.map((option) => (
+            //     <option
+            //       key={option.value}
+            //       value={option.value}
+            //       disabled={option.disabled}
+            //       className={option.disabled ? "disabled-option" : ""}
+            //     >
+            //       {option.label}
+            //     </option>
+            //   ))}
+            // </select>
+
             <select
-              value={fieldValue}
-              onChange={(e) => setFieldValue(e.target.value)}
+              multiple={multiple}
+              value={
+                multiple
+                  ? fieldValue
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(Boolean)
+                  : fieldValue
+              }
+              onChange={(e) => {
+                if (multiple) {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+
+                  setFieldValue(selectedValues.join(", "));
+                } else {
+                  setFieldValue(e.target.value);
+                }
+              }}
             >
-              <option value="">Select {label}</option>
+              {!multiple && (
+                <option value="">Select {label}</option>
+              )}
 
               {options.map((option) => (
                 <option
