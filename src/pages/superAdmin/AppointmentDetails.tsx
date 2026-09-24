@@ -389,10 +389,6 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
           <span className="info-label">{label}</span>
           <strong className="info-value">{valueOrFallback(value)}</strong>
       </div>;
-<<<<<<< HEAD
-=======
-
->>>>>>> 97990170f571c8fa504c3388e829eb3776fa90de
   return (
     <>
       <div className="appointment-header">
