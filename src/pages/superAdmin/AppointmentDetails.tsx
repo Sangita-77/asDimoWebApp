@@ -389,7 +389,6 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
           <span className="info-label">{label}</span>
           <strong className="info-value">{valueOrFallback(value)}</strong>
       </div>;
-
   return (
     <>
       <div className="appointment-header">
