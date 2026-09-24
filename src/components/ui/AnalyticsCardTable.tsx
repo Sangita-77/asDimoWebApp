@@ -55,9 +55,9 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
 }) => {
     const navigate = useNavigate();
 
-  const handleViewDetails = (userId: string | number) => {
-    navigate("#");
-    console.log("View details for userId:", userId);
+  const handleViewDetails = (id?: string | number) => {
+    if (!id) return;
+    navigate(`appointment-details/${id}`);
   };
 
   const roleFlag = Number(tokenManager.getUser()?.flag);
@@ -126,7 +126,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
                             text="View Details"
                             icon={<img src={IButton} alt="view" className="btn-icon" />}
                             variant="trashparent"
-                            onClick={() => handleViewDetails(row.userId)}
+                            onClick={() => handleViewDetails(row.id || row._id || row.userId)}
                           />
                     ) : (
                       row[header.key] ?? "-"
