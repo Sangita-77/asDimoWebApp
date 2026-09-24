@@ -79,6 +79,21 @@ const getDashboardRoutes = (flag: number) => {
   }
 };
 
+const getUserProfileImage = (user: any): string | undefined => {
+  if (!user) return undefined;
+  const image =
+    user.profileImg ||
+    user.googleProfile?.picture ||
+    user.facebookProfile?.picture ||
+    null;
+
+  if (!image) return undefined;
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image;
+  }
+  return `${filebasename}${image.startsWith("/") ? "" : "/"}${image}`;
+};
+
 interface DoctorRow {
   id: number | string;
   profileImage?: string;
@@ -215,10 +230,7 @@ const DashboardAnalyticsIndex: React.FC = () => {
               item._id,
               {
                 id: item.userId ?? item._id,
-                // profileImage: `${filebasename}${item.profileImg}` ?? undefined,
-                profileImage: item.profileImg
-                ? `${filebasename}${item.profileImg}`
-                : undefined,
+                profileImage: getUserProfileImage(item),
                 name: item.name || "N/A",
                 designation: item.relatedData?.organizations?.name || "Global",
               },
@@ -278,13 +290,8 @@ const DashboardAnalyticsIndex: React.FC = () => {
         // console.log("Final appointments data>>>>>>>>:", appointmentsData);
         const appointments = appointmentsData.map((item: any) => ({
           id: item._id,
-          // profileImage: item.teacherUser?.profileImg ?? undefined,
-          profileImage: item.teacherUser?.profileImg
-                ? `${filebasename}${item.teacherUser?.profileImg}`
-                : undefined,
-          profileImageParent: item.parentUser?.profileImg
-                ? `${filebasename}${item.parentUser.profileImg}`
-                : undefined,
+          profileImage: getUserProfileImage(item.teacherUser),
+          profileImageParent: getUserProfileImage(item.parentUser),
           // The API provides the booked user's details in `parentUser` and the
           // assigned administrator's details in `admin`.
           user: item.parentUser?.name || "N/A",
