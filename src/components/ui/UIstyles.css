@@ -24,7 +24,7 @@ p.TinyPara{font-size: 14px; color: var(--TextcolorBlack);}
 /* HeadingPara End */
 
 /* Button Start */
-button{cursor: pointer; transition: all 0.25s ease;}
+button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;}
 .GlobalButton button:hover{ transform: translateY(-3px);box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);}
 /* ButtonSize */
 .GlobalButton button.full{width: 100%;}
@@ -54,6 +54,7 @@ button{cursor: pointer; transition: all 0.25s ease;}
 .GlobalButton button.SolidBlue{background: #39BECE; border: none; padding:12px 25px 10px; color: #fff; border-radius: 5px;}
 .GlobalButton button.red{background: var(--ColorDenger); border: none; padding:12px 10px 10px; color: #fff; border-radius: 5px;}
 .GlobalButton button div{margin-right: 5px;}
+.AppointmentsList  .GlobalButton button{width: 110px; padding: 7px 0; text-align: center; display: flex; justify-content: center; align-items: center;}
 /* TextSize */
 .GlobalButton button.md{font-weight: 600; font-size: 16px; line-height: 26px;}
 .GlobalButton button.sm{font-weight: 400; font-size: 14px;}

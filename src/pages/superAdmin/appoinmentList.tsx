@@ -10,6 +10,7 @@ import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import DashboardButtons from "../../components/ui/Buttons";
 import IButton from "../../assets/Images/iButton.svg";
 
+
 interface Appointment {
   _id: string;
   parentId: number;
@@ -370,6 +371,21 @@ const AppointmentList: React.FC = () => {
       {
         key: "status",
         title: "Status",
+        render: (value: string) => (
+          <DashboardButtons
+            className="status_button"
+            text={value}
+            variant={
+              value?.toLowerCase() === "rescheduled"
+                ? "SolidBlue"
+                : value?.toLowerCase() === "cancelled"
+                ? "SolidYellow"
+                : value?.toLowerCase() === "rejected"
+                ? "red"
+                : "SolidNeon"
+            }
+          />
+        ),
       },
       {
         key: "reschedule",
@@ -514,7 +530,7 @@ const AppointmentList: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="AppointmentsList">
       <Heading1 text="Appointments" />
 
       <SearchWithSort
