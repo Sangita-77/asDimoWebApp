@@ -127,10 +127,10 @@ const handleAssignedUserSave = async (
     if (userFlag !== 7 && userFlag !== 1) {
       return;
     }
-
+    // console.log("........id",userId);
     const payload = {
       flag: userFlag,
-      userId: Number(id),
+      userId: Number(userId),
       updatedUserId: Number(selectedUserId),
     };
 
