@@ -281,18 +281,50 @@ const [showResetModal, setShowResetModal] = useState(false);
         // console.log("Fetched user data:", user);
 
 
-        if(user.flag == 7){
-          // console.log("Fetched user data:", user.relatedData?.zonalAdmin?.name);
-          setSelectedAdminName(user.relatedData?.zonalAdmin?.name || "");
-          setSelectedAdminId(user.relatedData?.zonalAdmin?.userId || "");
-        }else if(user.flag == 3){
-          setSelectedAdminName(user.relatedData?.organizations?.name || "");
-          setSelectedAdminId(user.relatedData?.organizations?.userId || "");
-        }else{
-          // console.log("Fetched user data:", user.relatedData?.Admin?.name);
-          setSelectedAdminName(user.relatedData?.Admin?.name || "");
-          setSelectedAdminId(user.relatedData?.Admin?.userId || "");
-
+        if (user.flag == 7) {
+          // Admin -> Assigned to Zonal Admin
+          setSelectedAdminName(
+            user.relatedData?.zonalAdmin?.userData?.name ||
+            user.relatedData?.zonalAdmin?.userDataname ||
+            user.relatedData?.zonalAdmin?.name ||
+            ""
+          );
+          setSelectedAdminId(
+            user.relatedData?.zonalAdmin?.userData?.userId ||
+            user.relatedData?.zonalAdmin?.userId ||
+            user.roleData?.zonalAdminId ||
+            ""
+          );
+        } else if (user.flag == 3) {
+          setSelectedAdminName(
+            user.relatedData?.organizations?.userData?.name ||
+            user.relatedData?.organization?.userData?.name ||
+            user.relatedData?.organizations?.name ||
+            user.relatedData?.organization?.name ||
+            ""
+          );
+          setSelectedAdminId(
+            user.relatedData?.organizations?.userData?.userId ||
+            user.relatedData?.organization?.userData?.userId ||
+            user.relatedData?.organizations?.userId ||
+            user.relatedData?.organization?.userId ||
+            ""
+          );
+        } else {
+          setSelectedAdminName(
+            user.relatedData?.Admin?.userData?.name ||
+            user.relatedData?.admin?.userData?.name ||
+            user.relatedData?.Admin?.name ||
+            user.relatedData?.admin?.name ||
+            ""
+          );
+          setSelectedAdminId(
+            user.relatedData?.Admin?.userData?.userId ||
+            user.relatedData?.admin?.userData?.userId ||
+            user.relatedData?.Admin?.userId ||
+            user.relatedData?.admin?.userId ||
+            ""
+          );
         }
 
         if (!user) return;
@@ -342,7 +374,9 @@ const [showResetModal, setShowResetModal] = useState(false);
 
         await fetchAssignedMembers(
           user.flag,
-          user.roleData?.zonalAdminId
+          user.roleData?.zonalAdminId ||
+          user.relatedData?.zonalAdmin?.userData?.userId ||
+          user.relatedData?.zonalAdmin?.userId
         );
 
         // console.log(user);
