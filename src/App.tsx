@@ -19,7 +19,7 @@ import SupORGadminDetails from "./pages/superAdmin/organizationAdminDetails";
 import SupTherapist from "./pages/superAdmin/therapistAdmin";
 import SupParent from "./pages/superAdmin/parentAdmin";
 import SupAdmin from "./pages/superAdmin/Admin";
-import SupAppointment from "./pages/superAdmin/appoinmentList";
+import SupAppointment from "./pages/superAdmin/Appointments";
 import Report from "./pages/superAdmin/Report";
 import SupTherapistDetails from "./pages/superAdmin/TherapistDetails";
 import SupAppointmentDetails from "./pages/superAdmin/AppointmentDetails";
