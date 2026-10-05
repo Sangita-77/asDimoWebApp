@@ -10,6 +10,9 @@ import DashboardButtons from "../ui/Buttons";
 
 import IButton from "../../assets/Images/iButton.svg";
 
+// interface AppointmentListProps {
+//   type: "all" | "completed" | "canceled" | "reschedule" | "online" | "home" | "clinic";
+// }
 
 interface Appointment {
   _id: string;
@@ -82,7 +85,7 @@ interface AvailabilitySlot {
   time: string;
   isBooked: boolean;
 }
-
+// const AppointmentList: React.FC<AppointmentListProps> = ({ type }) => {
 const AppointmentList: React.FC = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
