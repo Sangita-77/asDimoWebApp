@@ -1,18 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../api/config";
+import { BASE_URL, filebasename } from "../../api/config";
 import { tokenManager } from "../../services/tokenManager";
 import Table from "../ui/Table";
 import Loader from "../ui/Loaders";
 import SearchWithSort from "../ui/SearchWithSort";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import DashboardButtons from "../ui/Buttons";
+import { Heading2 } from "../ui/HeadingPara";
+import "../ui/UIstyles.css";
 
 import IButton from "../../assets/Images/iButton.svg";
+import type { AvailabilitySlot } from "../ui/TimeSlots";
 
-// interface AppointmentListProps {
-//   type: "all" | "completed" | "canceled" | "reschedule" | "online" | "home" | "clinic";
-// }
+export interface AppointmentListProps {
+  type?: "all" | "completed" | "canceled" | "reschedule" | "online" | "home" | "clinic" | "center" | "video" | string;
+  isTeachersOrg?: boolean;
+}
 
 interface Appointment {
   _id: string;
@@ -22,7 +26,7 @@ interface Appointment {
   date: string;
   time: string;
   status: string;
-  zoomLink: string;
+  zoomLink: string | null;
   createdAt: string;
   updatedAt: string;
 
@@ -31,6 +35,7 @@ interface Appointment {
     teacherId: number;
     userId: number;
     name?: string;
+    therapist_category?: string;
   };
 
   parent?: {
@@ -43,26 +48,66 @@ interface Appointment {
   organization?: {
     _id: string;
     name: string;
+    userId?: number;
   };
 
   zonalAdmin?: {
     _id: string;
     name: string;
+    userId?: number;
   };
 
   admin?: {
     _id: string;
     name: string;
+    userId?: number;
   };
-    parentUser?: {
-        _id: string;
-        name: string;
+  parentUser?: {
+    _id?: string;
+    name?: string;
+    email?: string;
+    userId?: number;
+    profileImg?: string | null;
+    googleProfile?: {
+      name?: string | null;
+      picture?: string | null;
+      email?: string | null;
     };
+    facebookProfile?: {
+      name?: string | null;
+      picture?: string | null;
+      email?: string | null;
+    };
+  };
 
-    teacherUser?: {
-        _id: string;
-        name: string;
+  teacherUser?: {
+    _id?: string;
+    name?: string;
+    email?: string;
+    userId?: number;
+    profileImg?: string | null;
+    googleProfile?: {
+      name?: string | null;
+      picture?: string | null;
+      email?: string | null;
     };
+    facebookProfile?: {
+      name?: string | null;
+      picture?: string | null;
+      email?: string | null;
+    };
+  };
+
+  availability?: {
+    _id?: string;
+    userId?: number;
+    date?: string;
+    time?: string;
+    isBooked?: boolean;
+    medium?: string;
+    zoomLink?: string | null;
+    zoomMeetingId?: string | null;
+  };
 }
 
 interface AppointmentRow {
@@ -72,22 +117,252 @@ interface AppointmentRow {
   time: string;
   status: string;
   parent: string;
+  parentImage?: string | null;
   teacher: string;
   organization: string;
   zonalAdmin: string;
   admin: string;
   zoomLink: string;
+  medium?: string;
 }
 
-interface AvailabilitySlot {
-  _id: string;
-  date: string;
-  time: string;
-  isBooked: boolean;
+const TableAvatar: React.FC<{ src?: string; name?: string }> = ({ src, name }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const initial =
+    name && name !== "N/A" && name !== "-"
+      ? name.trim().charAt(0).toUpperCase()
+      : "U";
+
+  if (src && !imgError) {
+    return (
+      <img
+        src={src}
+        alt={name || ""}
+        className="doctor-image"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return <div className="doctor-image-initial">{initial}</div>;
+};
+
+const getParentProfileImage = (user: any): string | undefined => {
+  if (!user) return undefined;
+  const image =
+    user.googleProfile?.picture ||
+    user.profileImg ||
+    user.facebookProfile?.picture ||
+    null;
+
+  if (!image) return undefined;
+  if (typeof image === "string" && (image.startsWith("http://") || image.startsWith("https://"))) {
+    return image;
+  }
+  return `${filebasename}${image.startsWith("/") ? "" : "/"}${image}`;
+};
+
+const parseDateValue = (dateStr: string, timeStr?: string) => {
+  if (!dateStr) return 0;
+  const parts = dateStr.split("-");
+  if (parts.length === 3) {
+    if (parts[0].length === 2 && parts[2].length === 4) {
+      // DD-MM-YYYY -> YYYY-MM-DD
+      const isoStr = `${parts[2]}-${parts[1]}-${parts[0]}${timeStr ? `T${timeStr}` : ""}`;
+      const time = new Date(isoStr).getTime();
+      if (!isNaN(time)) return time;
+    } else if (parts[0].length === 4) {
+      // YYYY-MM-DD
+      const isoStr = `${dateStr}${timeStr ? `T${timeStr}` : ""}`;
+      const time = new Date(isoStr).getTime();
+      if (!isNaN(time)) return time;
+    }
+  }
+  const parsed = new Date(dateStr).getTime();
+  return isNaN(parsed) ? 0 : parsed;
+};
+
+interface TeachersOrgTableSectionProps {
+  title: string;
+  data: AppointmentRow[];
+  currentRole: string;
+  navigate: (path: string) => void;
 }
-// const AppointmentList: React.FC<AppointmentListProps> = ({ type }) => {
-const AppointmentList: React.FC = () => {
+
+const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
+  title,
+  data,
+  currentRole,
+  navigate,
+}) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({
+    key: "date",
+    order: "desc",
+  });
+
+  const handleFilterClick = (key: string) => {
+    setCurrentPage(1);
+    setSortConfig((prev) => ({
+      key,
+      order: prev.key === key && prev.order === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const sortedData = useMemo(() => {
+    const list = [...data];
+    const { key, order } = sortConfig;
+
+    list.sort((a, b) => {
+      if (key === "date") {
+        const timeA = parseDateValue(a.date, a.time);
+        const timeB = parseDateValue(b.date, b.time);
+        if (timeA !== timeB) {
+          return order === "asc" ? timeA - timeB : timeB - timeA;
+        }
+      }
+      const va: string = String((a as any)[key] ?? "").toLowerCase().trim();
+      const vb: string = String((b as any)[key] ?? "").toLowerCase().trim();
+      const comparison = va.localeCompare(vb, undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+      return order === "asc" ? comparison : -comparison;
+    });
+    return list;
+  }, [data, sortConfig]);
+
+  const columns = useMemo(
+    () => [
+      {
+        key: "parent",
+        title: "Name",
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("parent"),
+        render: (value: string, row: AppointmentRow) => (
+          <div className="doctor-info">
+            <TableAvatar src={row.parentImage || undefined} name={value || row.parent} />
+            <h5>{value || row.parent || "-"}</h5>
+          </div>
+        ),
+        fixed: true,
+      },
+      {
+        key: "teacher",
+        title: "Dr Name",
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("teacher"),
+      },
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin" && currentRole !== "Admin"
+        ? [
+            {
+              key: "zonalAdmin",
+              title: "Zonal Admin",
+              showFilter: true,
+              onFilterClick: () => handleFilterClick("zonalAdmin"),
+            },
+          ]
+        : []),
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin"
+        ? [
+            {
+              key: "admin",
+              title: "Admin",
+              showFilter: true,
+              onFilterClick: () => handleFilterClick("admin"),
+            },
+          ]
+        : []),
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin"
+        ? [
+            {
+              key: "organization",
+              title: "Organization",
+              showFilter: true,
+              onFilterClick: () => handleFilterClick("organization"),
+            },
+          ]
+        : []),
+      {
+        key: "date",
+        title: "Date",
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("date"),
+        fixed: true,
+      },
+      { key: "time", title: "Time", fixed: true },
+      {
+        key: "status",
+        title: "Status",
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("status"),
+        render: (value: string) => (
+          <DashboardButtons
+            className="status_button"
+            text={value}
+            variant={
+              value?.toLowerCase() === "rescheduled"
+                ? "SolidBlue"
+                : value?.toLowerCase() === "cancelled"
+                ? "SolidYellow"
+                : value?.toLowerCase() === "rejected"
+                ? "red"
+                : "SolidNeon"
+            }
+          />
+        ),
+      },
+      {
+        key: "reschedule",
+        title: "Action",
+        render: (_value: any, row: any) => (
+          <DashboardButtons
+            text="View Details"
+            icon={<img src={IButton} alt="view" className="btn-icon" />}
+            variant="trashparent"
+            onClick={() => navigate(`../appointment-details/${row.id}`)}
+          />
+        ),
+        fixed: true,
+      },
+    ],
+    [currentRole, sortConfig, navigate]
+  );
+
+  const totalPages = Math.max(Math.ceil(sortedData.length / rowsPerPage), 1);
+
+  return (
+    <div className="TeacherTableSection" style={{ marginBottom: "35px" }}>
+      <div style={{ marginBottom: "15px", marginTop: "10px" }}>
+        <Heading2 text={title} />
+      </div>
+      <Table
+        columns={columns}
+        rows={sortedData}
+        selectable={true}
+        sortBy={sortConfig.key}
+        sortOrder={sortConfig.order}
+        pagination={true}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[4, 8, 12, 20]}
+        onPageChange={setCurrentPage}
+        onRowsPerPageChange={(value) => {
+          setRowsPerPage(value);
+          setCurrentPage(1);
+        }}
+        showChooseColumns={true}
+      />
+    </div>
+  );
+};
+
+const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeachersOrg: isTeachersOrgProp }) => {
   const navigate = useNavigate();
+  const currentRole = getCurrentUserRole();
+  const isTeachersOrg = isTeachersOrgProp ?? (currentRole === "TeachersOrg" || currentRole === "teachersGlobal");
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,9 +380,10 @@ const AppointmentList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"asc" | "desc">("asc");
-  const [sortBy, setSortBy] = useState<string>("date");
-  const currentRole = getCurrentUserRole();
+  const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({
+    key: "date",
+    order: "desc",
+  });
   const currentUser = tokenManager.getUser();
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -119,17 +395,14 @@ const AppointmentList: React.FC = () => {
         // const currentUser = tokenManager.getUser();
         const query = new URLSearchParams();
 
-        if (search) query.set("search", search);
-        if (sortBy) query.set("sortBy", sortBy);
-        if (sort) query.set("sortOrder", sort);
-
-        // For teachersGlobal, filter by their teacherId
-        if (currentRole === "teachersGlobal" && currentUser?.userId) {
+        // For teachersGlobal or TeachersOrg, filter by their teacherId
+        if ((currentRole === "teachersGlobal" || currentRole === "TeachersOrg") && currentUser?.userId) {
           query.set("teacherId", String(currentUser.userId));
         }
 
+        const queryString = query.toString() ? `?${query.toString()}` : "";
         const response = await fetch(
-          `${BASE_URL}/appointments?${query.toString()}`,
+          `${BASE_URL}/appointments${queryString}`,
           {
             method: "GET",
             headers: {
@@ -164,36 +437,29 @@ const AppointmentList: React.FC = () => {
           const loginUserFlag = currentUser.flag;
           const loginUserId = currentUser.userId;
 
-          // console.log("Filtering appointments - Flag:", loginUserFlag, "UserId:", loginUserId);
-
-          if (loginUserFlag && loginUserId) {
+          if (loginUserFlag !== undefined && loginUserFlag !== null && loginUserId && Number(loginUserFlag) !== 0) {
             appointmentsData = appointmentsData.filter((appointment: any) => {
               let shouldInclude = false;
 
               switch (Number(loginUserFlag)) {
                 case 6: // Zonal Admin - show appointments where zonalAdmin's userId matches
                   shouldInclude = appointment.zonalAdmin?.userId === loginUserId;
-                  // console.log(`Flag 6 check - zonalAdmin.userId: ${appointment.zonalAdmin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 7: // Admin - show appointments where admin's userId matches
                   shouldInclude = appointment.admin?.userId === loginUserId;
-                  // console.log(`Flag 7 check - admin.userId: ${appointment.admin?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 1: // Organization Admin - show appointments where organization's userId matches
                   shouldInclude = appointment.organization?.userId === loginUserId;
-                  // console.log(`Flag 1 check - organization.userId: ${appointment.organization?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
-                case 5: // Organization Admin - show appointments where organization's userId matches
+                case 5: // Organization Teacher - show appointments where teacher's userId matches
                   shouldInclude = appointment.teacherUser?.userId === loginUserId;
-                  // console.log(`Flag 5 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 case 3: // Teacher - show appointments where teacher's userId matches
                   shouldInclude = appointment.teacherUser?.userId === loginUserId;
-                  // console.log(`Flag 3 check - teacherUser.userId: ${appointment.teacherUser?.userId}, loginUserId: ${loginUserId}, include: ${shouldInclude}`);
                   break;
 
                 default:
@@ -202,13 +468,53 @@ const AppointmentList: React.FC = () => {
 
               return shouldInclude;
             });
-
-            // console.log("Filtered appointments count:", appointmentsData.length);
-          } else {
-            console.log("currentUser flag or userId is missing - showing all appointments");
           }
-        } else {
-          console.log("currentUser is null - showing all appointments");
+        }
+
+        // Apply medium/type filtering based on tab type prop
+        if (type && type !== "all") {
+          const normalizedType = type.toLowerCase().trim();
+          appointmentsData = appointmentsData.filter((item: Appointment) => {
+            const medium = (
+              item.availability?.medium ||
+              (item as any).medium ||
+              (item.zoomLink || item.availability?.zoomLink ? "online" : "")
+            ).toLowerCase().trim();
+            const status = (item.status || "").toLowerCase().trim();
+
+            if (isTeachersOrg) {
+              if (normalizedType === "completed") {
+                return status === "completed" || status === "approved";
+              }
+              if (normalizedType === "canceled" || normalizedType === "cancelled") {
+                return status === "canceled" || status === "cancelled" || status === "rejected";
+              }
+              if (normalizedType === "reschedule" || normalizedType === "rescheduled") {
+                return status === "rescheduled";
+              }
+              return true;
+            } else {
+              if (normalizedType === "online" || normalizedType === "video") {
+                return medium === "online" || medium === "video";
+              }
+              if (normalizedType === "clinic" || normalizedType === "center") {
+                return medium === "center" || medium === "clinic";
+              }
+              if (normalizedType === "home") {
+                return medium === "home";
+              }
+              if (normalizedType === "completed") {
+                return status === "completed" || status === "approved";
+              }
+              if (normalizedType === "canceled" || normalizedType === "cancelled") {
+                return status === "canceled" || status === "cancelled" || status === "rejected";
+              }
+              if (normalizedType === "reschedule" || normalizedType === "rescheduled") {
+                return status === "rescheduled";
+              }
+              return true;
+            }
+          });
         }
 
         const formattedRows: AppointmentRow[] = appointmentsData.map(
@@ -219,11 +525,13 @@ const AppointmentList: React.FC = () => {
             time: item.time,
             status: item.status,
             parent: item.parentUser?.name || "N/A",
+            parentImage: getParentProfileImage(item.parentUser),
             teacher: item.teacherUser?.name || "N/A",
             organization: item.organization?.name || "N/A",
             zonalAdmin: item.zonalAdmin?.name || "N/A",
             admin: item.admin?.name || "N/A",
-            zoomLink: item.zoomLink || "",
+            zoomLink: item.zoomLink || item.availability?.zoomLink || "",
+            medium: item.availability?.medium || (item.zoomLink || item.availability?.zoomLink ? "online" : ""),
           })
         );
 
@@ -240,7 +548,7 @@ const AppointmentList: React.FC = () => {
     };
 
     fetchAppointments();
-  }, [search, sortBy, sort]);
+  }, [type, currentRole, currentUser?.userId]);
 
   const availableTimes = availabilitySlots.filter(
     (slot) => slot.date === rescheduleDate && !slot.isBooked
@@ -316,47 +624,61 @@ const AppointmentList: React.FC = () => {
 
   // console.log("...........currentRole",currentRole);
 
+  const handleFilterClick = (key: string) => {
+    setCurrentPage(1);
+    setSortConfig((prev) => ({
+      key,
+      order: prev.key === key && prev.order === "asc" ? "desc" : "asc",
+    }));
+  };
+
   const columns = useMemo(
     () => [
       {
         key: "parent",
         title: "Name",
-        // showFilter: true,
-        onFilterClick: () => handleFilterClick("parentUser"),
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("parent"),
+        render: (value: string, row: AppointmentRow) => (
+          <div className="doctor-info">
+            <TableAvatar src={row.parentImage || undefined} name={value || row.parent} />
+            <h5>{value || row.parent || "-"}</h5>
+          </div>
+        ),
         fixed: true,
       },
       {
         key: "teacher",
         title: "Dr Name",
-        // showFilter: true,
-        onFilterClick: () => handleFilterClick("teacherUser"),
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("teacher"),
       },
-      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin" && currentRole !== "Admin"
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin" && currentRole !== "Admin"
       ? [
       {
         key: "zonalAdmin",
         title: "Zonal Admin",
-        // showFilter: true,
+        showFilter: true,
         onFilterClick: () => handleFilterClick("zonalAdmin"),
       },
         ]
       : []),
-      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin"
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin"
       ? [
       {
         key: "admin",
         title: "Admin",
-        // showFilter: true,
+        showFilter: true,
         onFilterClick: () => handleFilterClick("admin"),
       },
       ]
       : []),
-      ...(currentRole !== "TeachersOrg" && currentRole !== "OrganizationAdmin"
+      ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin"
       ? [
       {
         key: "organization",
         title: "Organization",
-        // showFilter: true,
+        showFilter: true,
         onFilterClick: () => handleFilterClick("organization"),
         
       },
@@ -365,7 +687,7 @@ const AppointmentList: React.FC = () => {
       {
         key: "date",
         title: "Date",
-        // showFilter: true,
+        showFilter: true,
         onFilterClick: () => handleFilterClick("date"),
         fixed: true,
       },
@@ -373,6 +695,8 @@ const AppointmentList: React.FC = () => {
       {
         key: "status",
         title: "Status",
+        showFilter: true,
+        onFilterClick: () => handleFilterClick("status"),
         render: (value: string) => (
           <DashboardButtons
             className="status_button"
@@ -392,67 +716,6 @@ const AppointmentList: React.FC = () => {
       {
         key: "reschedule",
         title: "Action",
-        ////// important /////////////////
-        // render: (_value: unknown, row: AppointmentRow) => {
-        //   const isUpdating = updatingAppointmentId === row.id;
-
-        //   if (isSuperAdmin && row.status.toLowerCase() === "rescheduled") {
-        //     return (
-        //       <>
-        //         <button
-        //           type="button"
-        //           onClick={() => handleAppointmentStatus(row.id, "approved")}
-        //           disabled={isUpdating}
-        //         >
-        //           Approve
-        //         </button>
-        //         <button
-        //           type="button"
-        //           onClick={() => handleAppointmentStatus(row.id, "rejected")}
-        //           disabled={isUpdating}
-        //         >
-        //           Cancel
-        //         </button>
-        //       </>
-        //     );
-        //   }
-
-        //   if (isAdmin && row.status.toLowerCase() === "rescheduled") {
-        //     return (
-        //       <>
-        //         <button
-        //           type="button"
-        //           onClick={() => handleAppointmentStatus(row.id, "approved")}
-        //           disabled={isUpdating}
-        //         >
-        //           Approve
-        //         </button>
-        //         <button
-        //           type="button"
-        //           onClick={() => handleAppointmentStatus(row.id, "rejected")}
-        //           disabled={isUpdating}
-        //         >
-        //           Cancel
-        //         </button>
-        //       </>
-        //     );
-        //   }
-
-        //   const status = row.status?.toLowerCase();
-
-        //   return status === "approved" ? (
-        //     <button type="button" onClick={() => openRescheduleDialog(row)}>
-        //       Reschedule
-        //     </button>
-        //   ) : status === "rejected" ? (
-        //     <button type="button" onClick={() => openRescheduleDialog(row)}>
-        //       Reschedule
-        //     </button>
-        //   ) : (
-        //     "-"
-        //   );
-        // },
-        //////////////// important ////////////////////
         render: (_value: any, row: any) => (
           <DashboardButtons
             text="View Details"
@@ -463,69 +726,63 @@ const AppointmentList: React.FC = () => {
         ),
         fixed: true,
       },
-      // {
-      //   key: "zoomLink",
-      //   title: "Zoom Link",
-      //   render: (value: string) =>
-      //     value ? (
-      //       <a href={value} target="_blank" rel="noreferrer">
-      //         Join
-      //       </a>
-      //     ) : (
-      //       "N/A"
-      //     ),
-      // },
     ],
-    [isSuperAdmin, updatingAppointmentId, navigate]
+    [currentRole, sortConfig, navigate]
   );
 
-  function handleFilterClick(key: string) {
-    setCurrentPage(1);
-    // if (sortBy === key) {
-    //   setSort((s) => (s === "asc" ? "desc" : "asc"));
-    // } else {
-    //   setSortBy(key);
-    //   setSort("asc");
-    // }
-
-    if (sortBy === key) {
-      setSort((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortBy(key);
-      setSort("asc");
-    }
-  }
-
   // Reset page when search changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
+  const filteredAndSorted = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let data = appointments.slice();
 
-//   const filteredAndSorted = useMemo(() => {
-//     const q = search.trim().toLowerCase();
-//     let data = appointments.slice();
+    if (q) {
+      data = data.filter((r) => {
+        return (
+          String(r.parent || "").toLowerCase().includes(q) ||
+          String(r.teacher || "").toLowerCase().includes(q) ||
+          String(r.organization || "").toLowerCase().includes(q) ||
+          String(r.zonalAdmin || "").toLowerCase().includes(q) ||
+          String(r.admin || "").toLowerCase().includes(q) ||
+          String(r.date || "").toLowerCase().includes(q) ||
+          String(r.time || "").toLowerCase().includes(q) ||
+          String(r.status || "").toLowerCase().includes(q) ||
+          String(r.medium || "").toLowerCase().includes(q)
+        );
+      });
+    }
 
-//     if (q) {
-//       data = data.filter((r) => {
-//         return (
-//           String(r.parent).toLowerCase().includes(q) ||
-//           String(r.teacher).toLowerCase().includes(q) ||
-//           String(r.organization).toLowerCase().includes(q) ||
-//           String(r.date).toLowerCase().includes(q) ||
-//           String(r.time).toLowerCase().includes(q) ||
-//           String(r.status).toLowerCase().includes(q)
-//         );
-//       });
-//     }
+    const { key, order } = sortConfig;
+    data.sort((a, b) => {
+      if (key === "date") {
+        const timeA = parseDateValue(a.date, a.time);
+        const timeB = parseDateValue(b.date, b.time);
+        if (timeA !== timeB) {
+          return order === "asc" ? timeA - timeB : timeB - timeA;
+        }
+      }
+      const va: string = String((a as any)[key] ?? "").toLowerCase().trim();
+      const vb: string = String((b as any)[key] ?? "").toLowerCase().trim();
+      const comparison = va.localeCompare(vb, undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+      return order === "asc" ? comparison : -comparison;
+    });
 
-//     data.sort((a, b) => {
-//       const va: string = String((a as any)[sortBy] ?? "");
-//       const vb: string = String((b as any)[sortBy] ?? "");
-//       return sort === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
-//     });
+    return data;
+  }, [appointments, search, sortConfig]);
 
-//     return data;
-//   }, [appointments, search, sort, sortBy]);
+  const videoAppointments = useMemo(() => {
+    return appointments.filter((r) => r.medium === "online");
+  }, [appointments]);
+
+  const homeAppointments = useMemo(() => {
+    return appointments.filter((r) => r.medium === "home");
+  }, [appointments]);
+
+  const clinicAppointments = useMemo(() => {
+    return appointments.filter((r) => r.medium === "center" || r.medium === "clinic");
+  }, [appointments]);
 
   if (loading) {
     return <Loader fullScreen />;
@@ -533,12 +790,19 @@ const AppointmentList: React.FC = () => {
 
   return (
     <div className="AppointmentsList">
-      <SearchWithSort
-        searchValue={search}
-        onSearchChange={setSearch}
-        sortValue={sort}
-        onSortChange={(v: string) => setSort(v === "desc" ? "desc" : "asc")}
-      />
+      {!isTeachersOrg && (
+        <SearchWithSort
+          searchValue={search}
+          onSearchChange={setSearch}
+          sortValue={sortConfig.order}
+          onSortChange={(v: string) =>
+            setSortConfig((prev) => ({
+              ...prev,
+              order: v === "desc" ? "desc" : "asc",
+            }))
+          }
+        />
+      )}
 
       {statusActionError && <div className="error-message">{statusActionError}</div>}
 
@@ -546,21 +810,40 @@ const AppointmentList: React.FC = () => {
         <div className="error-message">
           {error}
         </div>
+      ) : isTeachersOrg ? (
+        <div className="TeachersOrgTables">
+          <TeachersOrgTableSection
+            title="Video Appointments"
+            data={videoAppointments}
+            currentRole={currentRole}
+            navigate={navigate}
+          />
+          <TeachersOrgTableSection
+            title="Home Appointments"
+            data={homeAppointments}
+            currentRole={currentRole}
+            navigate={navigate}
+          />
+          <TeachersOrgTableSection
+            title="Clinic Appointments"
+            data={clinicAppointments}
+            currentRole={currentRole}
+            navigate={navigate}
+          />
+        </div>
       ) : (
         <Table
           columns={columns}
-          rows={appointments}
+          rows={filteredAndSorted}
           selectable={true}
-          // onBulkDelete={true}
-          sortBy={sortBy}
-          sortOrder={sort}
-          // onSort={handleFilterClick}
+          sortBy={sortConfig.key}
+          sortOrder={sortConfig.order}
           pagination={true}
           currentPage={currentPage}
           totalPages={
             Math.max(
               Math.ceil(
-                appointments.length / rowsPerPage
+                filteredAndSorted.length / rowsPerPage
               ),
               1
             )
