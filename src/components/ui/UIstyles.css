@@ -125,8 +125,8 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .DashboardsTabs.Horizontal{display: block; border-top: none;}
 .DashboardsTabs.Horizontal .tabs-header{width: 100%; padding: 0px; border-right: solid 1px var(--GreyBorders); display: flex; gap: 20px;}
 .DashboardsTabs.Horizontal .tabs-content{width: 100%; padding: 35px 0 0;}
-.DashboardsTabs.Horizontal .tab-btn.Horizontal{width: 100%; margin: 10px 0px; padding: 8px 28px 8px 8px; text-align: left; font-size: 15px; background: transparent; border: none;}
-.DashboardsTabs.Horizontal .tab-btn.active.Horizontal{background: var(--YellowButton); position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);}
+.DashboardsTabs.Horizontal .tab-btn.Horizontal{width: 100%; margin: 10px 0px; padding: 8px 28px 8px 8px; text-align: left; font-size: 15px; background: #0000000f; border: none; font-weight: bold; text-transform: uppercase; color: var(--TextcolorDark);}
+.DashboardsTabs.Horizontal .tab-btn.active.Horizontal{background: var(--YellowButton); position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); color: var(--TextcolorBlack);}
 .DashboardsTabs.Horizontal .tab-btn.active.Horizontal .AppointmentTab svg{background: var(--UpcomingStatus);}
 .DashboardsTabs.Horizontal .tab-btn.Horizontal .AppointmentTab svg{ padding: 10px; background: var(--ColorSky); fill: var(--TextcolorLight); border-radius: 5px;}
 .DashboardsTabs.Horizontal .TabButton{border-bottom: 0;}

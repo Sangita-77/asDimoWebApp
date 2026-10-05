@@ -8,6 +8,9 @@ import { Heading1 } from "../../components/ui/HeadingPara";
 import SearchWithSort from "../../components/ui/SearchWithSort";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import DashboardButtons from "../../components/ui/Buttons";
+import Tabs from "../../components/ui/Tabs";
+import { Target, Video, House, Stethoscope, CheckCircle, XCircle, RefreshCw, } from "lucide-react";
+
 import IButton from "../../assets/Images/iButton.svg";
 
 
@@ -105,7 +108,59 @@ const AppointmentList: React.FC = () => {
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState<string>("date");
   const currentRole = getCurrentUserRole();
+  const currentUser = tokenManager.getUser();
+  const isTeachersOrg = currentRole === "TeachersOrg";
 
+  const tabs = [
+    {
+      id: "all",
+      label: (
+        <span className="AppointmentTab">
+          {isTeachersOrg ? <Target size={45} /> : <Target size={45} />}
+          <span>
+            {isTeachersOrg ? "All SESSION" : "All Appointments"}
+          </span>
+        </span>
+      ),
+      content: "all",
+    },
+    {
+      id: "online",
+      label: (
+        <span className="AppointmentTab">
+          {isTeachersOrg ? <CheckCircle size={45} /> : <Video size={45} />}
+          <span>
+            {isTeachersOrg ? "Complete SESSION" : "Video Appointments"}
+          </span>
+        </span>
+      ),
+      content: "online",
+    },
+    {
+      id: "video",
+      label: (
+        <span className="AppointmentTab">
+          {isTeachersOrg ? <XCircle size={45} /> : <House size={45} />}
+          <span>
+            {isTeachersOrg ? "Canceled SESSION" : "Home Appointments"}
+          </span>
+        </span>
+      ),
+      content: "video",
+    },
+    {
+      id: "clinic",
+      label: (
+        <span className="AppointmentTab">
+          {isTeachersOrg ? <RefreshCw size={45} /> : <Stethoscope size={45} />}
+          <span>
+            {isTeachersOrg ? "Reschedule SESSION" : "Clinic Appointments"}
+          </span>
+        </span>
+      ),
+      content: "gggggggggg",
+    },
+  ];
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -114,7 +169,7 @@ const AppointmentList: React.FC = () => {
 
       try {
         const token = tokenManager.getAccessToken();
-        const currentUser = tokenManager.getUser();
+        // const currentUser = tokenManager.getUser();
         const query = new URLSearchParams();
 
         if (search) query.set("search", search);
@@ -532,6 +587,15 @@ const AppointmentList: React.FC = () => {
   return (
     <div className="AppointmentsList">
       <Heading1 text="Appointments" />
+      {/* {currentRole === "TeachersOrg" && (
+        <div>
+          <Tabs tabs={tabs} variant="Horizontal" />
+        </div>
+      )} */}
+      
+      <div>
+          <Tabs tabs={tabs} variant="Horizontal" />
+      </div>
 
       <SearchWithSort
         searchValue={search}
@@ -635,6 +699,7 @@ const AppointmentList: React.FC = () => {
           </form>
         </div>
       )}
+
     </div>
   );
 };
