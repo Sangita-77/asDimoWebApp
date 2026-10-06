@@ -88,7 +88,7 @@ const ProfileTable: React.FC<ProfileTableProps> = ({
               {permittedHeaders.map((header) => (
                 <td key={header.key}>
                   {header.key === "doctor" ? (
-                    <div className="doctor-info">
+                    <div className="doctor-info Doc">
                       {/* {row.profileImage && (
                         <img
                           src={row.profileImage}

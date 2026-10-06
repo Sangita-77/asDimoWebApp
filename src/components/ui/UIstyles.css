@@ -219,7 +219,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 /* Table End */
 
 /* Search Start */
-.search-sort-container { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; position: relative; margin-top: 20px;} 
+.search-sort-container { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 0px; position: relative; margin-top: 20px;} 
 .search-input { width: 475px; height: 60px; padding: 0 15px 0 44px; border: 1px solid var(--GreyBorders); border-radius: 5px; background: var(--TextcolorLight); font-size: 14px; transition: all 0.2s ease; outline: none; }
 .search-input:focus { border-color: var(--ColorBlue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
 .search-icon { position: absolute; left: 14px; top: 57%; transform: translateY(-50%); color: var(--TextcolorDark); pointer-events: none; } 
@@ -244,10 +244,11 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .profile-table th:not(:first-child),.profile-table td:not(:first-child) { text-align: center; }
 .profile-table tbody tr{ background: var(--TableHeader); margin-bottom: 10px; border-bottom: solid 10px var(--TextcolorLight); border-radius: 20px;}
 .doctor-info { display: flex; align-items: center; gap: 12px; } 
+.doctor-info.Doc div{ margin: 0;} 
 .doctor-image { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: solid 1px var(--BorderColor); flex-shrink: 0; } 
 .doctor-image-initial { width: 40px; height: 40px; border-radius: 50%; background: var(--SecondayColor); color: var(--TextcolorLight); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; text-transform: uppercase; border: solid 1px var(--BorderColor); flex-shrink: 0; }
 .doctor-info h5 { margin: 0; font-size: 14px; font-weight: 600; color: var(--TextcolorDark); }
-.doctor-info p { margin: 2px 0 0; font-size: 14px; color: var(--TextcolorDark); } 
+.doctor-info p { margin: 2px 0 0; font-size: 14px; color: var(--TextcolorDark); text-align: left;} 
 .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 5px; font-size: 13px; font-weight: 600; text-transform: capitalize; width: 100px; }
 /* Upcoming */
 .status-badge.pending { background: var(--UpcomingStatus); color: var(--TextcolorLight); }
@@ -258,8 +259,8 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 /* Reschedule */
 .status-badge.reschedule, .status-badge.rescheduled { background: var(--RescheduleStstus); color: var(--TextcolorLight); }
 /* AnalyticsCardTable End */
-.status-badge.approved { background: rgb(29, 29, 146); color: var(--TextcolorLight); }
-.status-badge.rejected { background: rgb(185, 44, 44); color: var(--TextcolorLight); }
+/* .status-badge.approved { background: rgb(29, 29, 146); color: var(--TextcolorLight); }
+.status-badge.rejected { background: rgb(185, 44, 44); color: var(--TextcolorLight); } */
 
 
 
@@ -328,91 +329,6 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 /* Toolbar */
 /* Form Add End */
 
-/* GraphBar Start */
-.timing-title {
-  background: #08a4df;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 6px;
-  padding: 8px 24px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 28px;
-}
-
-.chart {
-  position: relative;
-  height: 145px;
-  padding-left: 32px;
-}
-
-.grid-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  border-top: 2px solid #d8d8d8;
-}
-
-.grid-line span {
-  position: absolute;
-  left: 5px;
-  top: -8px;
-  transform: translateX(-100%);
-  font-size: 7px;
-  color: var(--TextcolorDark);
-}
-
-.line-100 {
-  top: 0;
-}
-
-.line-75 {
-  top: 25%;
-}
-
-.line-50 {
-  top: 50%;
-}
-
-.line-25 {
-  top: 75%;
-}
-
-.bars {
-  position: absolute;
-  left: 32px;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.bar-column {
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.bar {
-  width: 18px;
-  max-height: 100%;
-  background: #08a4df;
-  border-radius: 4px 4px 2px 2px;
-}
-
-.day {
-  margin-top: 17px;
-  font-size: 7px;
-  color: #fff;
-}
-
-/* GraphBar End */
 
 
 

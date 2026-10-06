@@ -31,6 +31,7 @@ const Appointments: React.FC = () => {
         </span>
       ),
       content: <AppointmentList type="all" isTeachersOrg={isTeachersOrg} />,
+
     },
     {
       id: "online",
