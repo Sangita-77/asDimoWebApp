@@ -361,7 +361,7 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
 
 const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeachersOrg: isTeachersOrgProp }) => {
   const navigate = useNavigate();
-  const currentRole = getCurrentUserRole();
+  const currentRole = getCurrentUserRole() ?? "";
   const isTeachersOrg = isTeachersOrgProp ?? (currentRole === "TeachersOrg" || currentRole === "teachersGlobal");
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -375,7 +375,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
   const [availabilitySlots] = useState<AvailabilitySlot[]>([]);
   const [availabilityLoading] = useState(false);
   const [statusActionError] = useState<string | null>(null);
-  const [updatingAppointmentId] = useState<string | null>(null);
+  // const [updatingAppointmentId] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -620,7 +620,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
     }
   };
 
-  const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
+  // const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
 
   // console.log("...........currentRole",currentRole);
 
