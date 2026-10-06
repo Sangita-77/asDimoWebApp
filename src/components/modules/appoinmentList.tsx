@@ -813,19 +813,19 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       ) : isTeachersOrg ? (
         <div className="TeachersOrgTables">
           <TeachersOrgTableSection
-            title="Video Appointments"
+            title={`Video Appointments (${videoAppointments.length})`}
             data={videoAppointments}
             currentRole={currentRole}
             navigate={navigate}
           />
           <TeachersOrgTableSection
-            title="Home Appointments"
+            title={`Home Appointments (${homeAppointments.length})`}
             data={homeAppointments}
             currentRole={currentRole}
             navigate={navigate}
           />
           <TeachersOrgTableSection
-            title="Clinic Appointments"
+            title={`Clinic Appointments (${clinicAppointments.length})`}
             data={clinicAppointments}
             currentRole={currentRole}
             navigate={navigate}
