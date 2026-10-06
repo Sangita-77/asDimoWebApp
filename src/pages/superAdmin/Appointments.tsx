@@ -29,7 +29,7 @@ const Appointments: React.FC = () => {
           </span>
         </span>
       ),
-      content: <AppointmentList />,
+      content: <AppointmentList /> ,
     },
     {
       id: "online",
