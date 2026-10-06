@@ -208,6 +208,10 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         navigate(routes.ORGANIZATIONADMIN_USER_DETAILS, {
           state: { userId , flag },
         });
+      }else if(currentRole == "therapist"){
+        navigate(routes.THERAPIST_USER_DETAILS, {
+          state: { userId , flag },
+        });
       }else{
         navigate(routes.SUP_USER_DETAILS, {
           state: { userId , flag },
