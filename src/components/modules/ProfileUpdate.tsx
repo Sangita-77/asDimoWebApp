@@ -41,6 +41,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             ? "Zonal Admin"
             : profileData.user.flag === 1
             ? "Organization Admin"
+            : profileData.user.flag === 3
+            ? "Therapist"
+            : profileData.user.flag === 5
+            ? "Global Organization"
             : "User",
         profileImg: profileData.user.profileImg
           ? `${filebasename}${profileData.user.profileImg}`
