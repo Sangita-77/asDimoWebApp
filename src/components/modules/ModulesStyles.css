@@ -108,3 +108,16 @@
 /* ---------------- ASSIGNED ADMIN ---------------- */
 
 
+
+@media (max-width: 768px) {
+    .ViewProfileDetails {flex-direction: column;}
+    .ViewProfileDetails:not(.ORG) .Profile_Editable {width: 100%; margin-top: 20px;}
+    .ViewProfileDetails:not(.ORG) .ORGList {width: 100%; margin-top: 10px; margin-left: 0;}
+    .ViewProfileDetails:not(.ORG) .Profile_Editable .profile-image-container {margin-bottom: 10px;}
+
+    .dashboard .content > .d-flex {flex-wrap: wrap; row-gap: 20px;}
+    .AddInfoWordWrap {width: 100%;}
+    .BacktoListButton {justify-content: start; width: 100%;}
+
+    .AnalyticesCard {grid-template-columns: 1fr; gap: 20px;}
+}

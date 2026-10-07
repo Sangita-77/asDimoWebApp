@@ -561,7 +561,41 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 /* Responsive */
 @media (max-width: 768px) {
- 
+    h1.PageTitle {font-size: 25px; line-height: 35px; margin-bottom: 10px;}
+    h2.Heading2 {font-size: 22px; line-height: 32px;}
+    h3.Heading3 {font-size: 38px; line-height: 48px;}
+    h4.Heading4 {font-size: 17px; line-height: 27px;}
+
+    .profile-image {width: 80px; height: 80px;}
+    .upload-image-btn {width: 80px; margin-top: 5px;}
+    .GlobalButton button.greyborder {padding: 9px 20px 7px 7px;}
+    .table-card-label {width: 30%;}
+    .table-card-value {width: 66%; font-size: 15px; word-wrap: anywhere;}
+
+    .DoctorsTabs {margin-top: 0px !important; margin-bottom: 15px; justify-content: center;}
+    .DashboardsTabs {margin-top: 20px;}
+    .DashboardsTabs.Horizontal .tabs-header {flex-wrap: wrap; row-gap: 0; border-right: 0;}
+    .DashboardsTabs.Horizontal .tab-btn.Horizontal {margin: 7px 0px;}
+    .DashboardsTabs.Horizontal .TabButton {flex: 0 0 266px;}
+    .DashboardsTabs.Horizontal .AppointmentTab {justify-content: flex-start;}
+    .DashboardsTabs.Horizontal .tabs-content {padding: 15px 0 0;}
+    .search-sort-container {margin-bottom: 20px;}
+
+    .DashboardsTabs.LeftSide .tabs-header {padding: 50px 10px 50px 0; width: 28%;}
+    .DashboardsTabs.LeftSide .tabs-content {width: 72%; padding: 30px 20px;}
+    .DashboardsTabs.LeftSide .tab-btn.LeftSide {padding: 13px 15px;}
+    .profile-image-container {margin-bottom: 15px;}
+
+    .add_information {margin-top: 20px;}
+    .add_information .profile-preview {width: 100px; height: 100px;}
+    .add_information .top-section {margin-bottom: 10px;}
+    .add_information .bottom-fields {margin-top: 10px; row-gap: 10px;}
+    .add_information .bottom-fields .quarter-width {flex: 0 0 calc(50% - 12px);}
+    .add_information .submit-section {justify-content: start; margin-top: 15px;}
+    .add_information .right-fields .Heading2 {margin-bottom: 10px;}
+
+    .GlobalButton button.solid {padding: 13px 20px 10px;}
+    .loader-wrapper{position: absolute; z-index: 9999; left: 50%; top: 50%; transform: translate(-50%, -50%);}
 }
 
 
