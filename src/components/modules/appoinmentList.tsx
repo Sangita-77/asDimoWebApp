@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL, filebasename } from "../../api/config";
-import { tokenManager } from "../../services/tokenManager";
+import { tokenManager, getDoneBy } from "../../services/tokenManager";
 import Table from "../ui/Table";
 import Loader from "../ui/Loaders";
 import SearchWithSort from "../ui/SearchWithSort";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import DashboardButtons from "../ui/Buttons";
 import { Heading2 } from "../ui/HeadingPara";
+import ModalBox from "../ui/ModalBox";
 import "../ui/UIstyles.css";
 
 import IButton from "../../assets/Images/iButton.svg";
@@ -26,6 +27,7 @@ interface Appointment {
   date: string;
   time: string;
   status: string;
+  doneBy?: string;
   zoomLink: string | null;
   createdAt: string;
   updatedAt: string;
@@ -116,6 +118,7 @@ interface AppointmentRow {
   date: string;
   time: string;
   status: string;
+  doneBy?: string;
   parent: string;
   parentImage?: string | null;
   teacher: string;
@@ -182,11 +185,64 @@ const parseDateValue = (dateStr: string, timeStr?: string) => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
+const isJoinCallActive = (dateStr: string, timeStr: string, status: string, zoomLink?: string | null): boolean => {
+  if (!status || status.toLowerCase().trim() !== "approved") return false;
+  if (!zoomLink || !zoomLink.trim()) return false;
+  if (!dateStr || !timeStr) return false;
+
+  let appointmentDate: Date | null = null;
+  const dateParts = dateStr.trim().split(/[-/]/);
+
+  const isPM = /pm/i.test(timeStr);
+  const isAM = /am/i.test(timeStr);
+  const cleanTime = timeStr.replace(/am|pm/gi, "").trim();
+  const timeParts = cleanTime.split(":");
+  if (timeParts.length < 1) return false;
+
+  let hours = parseInt(timeParts[0], 10);
+  let minutes = timeParts.length >= 2 ? parseInt(timeParts[1], 10) : 0;
+
+  if (isNaN(hours) || isNaN(minutes)) return false;
+
+  if (isPM && hours < 12) hours += 12;
+  if (isAM && hours === 12) hours = 0;
+
+  if (dateParts.length === 3) {
+    if (dateParts[0].length === 2 && dateParts[2].length === 4) {
+      // DD-MM-YYYY
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const year = parseInt(dateParts[2], 10);
+      appointmentDate = new Date(year, month, day, hours, minutes, 0, 0);
+    } else if (dateParts[0].length === 4) {
+      // YYYY-MM-DD
+      const year = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const day = parseInt(dateParts[2], 10);
+      appointmentDate = new Date(year, month, day, hours, minutes, 0, 0);
+    }
+  }
+
+  if (!appointmentDate || isNaN(appointmentDate.getTime())) {
+    return false;
+  }
+
+  const appointmentTimeMs = appointmentDate.getTime();
+  const nowMs = Date.now();
+
+  const tenMinutesBeforeMs = appointmentTimeMs - 10 * 60 * 1000;
+  const oneHourAfterMs = appointmentTimeMs + 60 * 60 * 1000;
+
+  return nowMs >= tenMinutesBeforeMs && nowMs <= oneHourAfterMs;
+};
+
 interface TeachersOrgTableSectionProps {
   title: string;
   data: AppointmentRow[];
   currentRole: string;
   navigate: (path: string) => void;
+  isVideoTable?: boolean;
+  onMarkAsCompleted?: (row: AppointmentRow) => void;
 }
 
 const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
@@ -194,6 +250,8 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
   data,
   currentRole,
   navigate,
+  isVideoTable = false,
+  onMarkAsCompleted,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(4);
@@ -201,6 +259,14 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
     key: "date",
     order: "desc",
   });
+  const [, setTick] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick(Date.now());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleFilterClick = (key: string) => {
     setCurrentPage(1);
@@ -304,7 +370,7 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
             variant={
               value?.toLowerCase() === "rescheduled"
                 ? "SolidBlue"
-                : value?.toLowerCase() === "cancelled"
+                : value?.toLowerCase() === "cancelled" || value?.toLowerCase() === "canceled"
                 ? "SolidYellow"
                 : value?.toLowerCase() === "rejected"
                 ? "red"
@@ -313,21 +379,62 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
           />
         ),
       },
+      ...(isVideoTable
+        ? [
+            {
+              key: "join",
+              title: "Join",
+              fixed: true,
+              render: (_value: any, row: AppointmentRow) => {
+                const active = isJoinCallActive(row.date, row.time, row.status, row.zoomLink);
+                return (
+                  <DashboardButtons
+                    text="Join Call"
+                    variant="SolidNeon"
+                    disabled={!active}
+                    onClick={() => {
+                      if (active && row.zoomLink) {
+                        window.open(row.zoomLink, "_blank", "noopener,noreferrer");
+                      }
+                    }}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
       {
-        key: "reschedule",
+        key: "action",
         title: "Action",
-        render: (_value: any, row: any) => (
-          <DashboardButtons
-            text="View Details"
-            icon={<img src={IButton} alt="view" className="btn-icon" />}
-            variant="trashparent"
-            onClick={() => navigate(`../appointment-details/${row.id}`)}
-          />
-        ),
+        render: (_value: any, row: AppointmentRow) => {
+          // console.log(".........dfggg", row);
+          const isApproved = row.status?.toLowerCase() === "approved";
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              {isApproved ? (
+                <DashboardButtons
+                  text="Mark As Completed"
+                  variant="SolidNeon"
+                  onClick={() => onMarkAsCompleted?.(row)}
+                />
+              ) : (
+                <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "capitalize", color: "#555" }}>
+                  {row.status ? `${row.status} by ${row.doneBy}` : "-"}
+                </span>
+              )}
+              <DashboardButtons
+                text="View Details"
+                icon={<img src={IButton} alt="view" className="btn-icon" />}
+                variant="trashparent"
+                onClick={() => navigate(`../appointment-details/${row.id}`)}
+              />
+            </div>
+          );
+        },
         fixed: true,
       },
     ],
-    [currentRole, sortConfig, navigate]
+    [currentRole, isVideoTable, sortConfig, navigate, onMarkAsCompleted]
   );
 
   const totalPages = Math.max(Math.ceil(sortedData.length / rowsPerPage), 1);
@@ -375,7 +482,10 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
   const [availabilitySlots] = useState<AvailabilitySlot[]>([]);
   const [availabilityLoading] = useState(false);
   const [statusActionError] = useState<string | null>(null);
-  // const [updatingAppointmentId] = useState<string | null>(null);
+
+  const [appointmentToComplete, setAppointmentToComplete] = useState<AppointmentRow | null>(null);
+  const [completing, setCompleting] = useState(false);
+  const [completeError, setCompleteError] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -385,6 +495,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
     order: "desc",
   });
   const currentUser = tokenManager.getUser();
+
   useEffect(() => {
     const fetchAppointments = async () => {
       setLoading(true);
@@ -392,7 +503,6 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
 
       try {
         const token = tokenManager.getAccessToken();
-        // const currentUser = tokenManager.getUser();
         const query = new URLSearchParams();
 
         // For teachersGlobal or TeachersOrg, filter by their teacherId
@@ -422,7 +532,6 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
         }
 
         let responseData = await response.json();
-        // console.log("..responseData..", responseData);
 
         if (!responseData.success) {
           throw new Error(
@@ -472,7 +581,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
         }
 
         // Apply medium/type filtering based on tab type prop
-        if (type && type !== "all") {
+        if (type) {
           const normalizedType = type.toLowerCase().trim();
           appointmentsData = appointmentsData.filter((item: Appointment) => {
             const medium = (
@@ -483,8 +592,11 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             const status = (item.status || "").toLowerCase().trim();
 
             if (isTeachersOrg) {
+              if (normalizedType === "all") {
+                return status === "approved";
+              }
               if (normalizedType === "completed") {
-                return status === "completed" || status === "approved";
+                return status === "completed";
               }
               if (normalizedType === "canceled" || normalizedType === "cancelled") {
                 return status === "canceled" || status === "cancelled" || status === "rejected";
@@ -494,6 +606,9 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
               }
               return true;
             } else {
+              if (normalizedType === "all") {
+                return true;
+              }
               if (normalizedType === "online" || normalizedType === "video") {
                 return medium === "online" || medium === "video";
               }
@@ -504,7 +619,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
                 return medium === "home";
               }
               if (normalizedType === "completed") {
-                return status === "completed" || status === "approved";
+                return status === "completed";
               }
               if (normalizedType === "canceled" || normalizedType === "cancelled") {
                 return status === "canceled" || status === "cancelled" || status === "rejected";
@@ -532,6 +647,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             admin: item.admin?.name || "N/A",
             zoomLink: item.zoomLink || item.availability?.zoomLink || "",
             medium: item.availability?.medium || (item.zoomLink || item.availability?.zoomLink ? "online" : ""),
+            doneBy: item.doneBy || "User",
           })
         );
 
@@ -548,7 +664,55 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
     };
 
     fetchAppointments();
-  }, [type, currentRole, currentUser?.userId]);
+  }, [type, currentRole, currentUser?.userId, isTeachersOrg]);
+
+  const handleConfirmComplete = async () => {
+    if (!appointmentToComplete) return;
+
+    setCompleting(true);
+    setCompleteError(null);
+
+    try {
+      const token = tokenManager.getAccessToken();
+      const response = await fetch(
+        `${BASE_URL}/appointments/complete/${appointmentToComplete.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+          body: JSON.stringify({
+            doneBy: getDoneBy(currentUser?.flag),
+          }),
+        }
+      );
+
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok || (responseData && responseData.success === false)) {
+        throw new Error(
+          responseData?.message || `Failed to complete appointment: ${response.status}`
+        );
+      }
+
+      setAppointments((prev) =>
+        prev.map((app) =>
+          app.id === appointmentToComplete.id
+            ? { ...app, status: "completed" }
+            : app
+        )
+      );
+
+      setAppointmentToComplete(null);
+    } catch (err) {
+      setCompleteError(
+        err instanceof Error ? err.message : String(err)
+      );
+    } finally {
+      setCompleting(false);
+    }
+  };
 
   const availableTimes = availabilitySlots.filter(
     (slot) => slot.date === rescheduleDate && !slot.isBooked
@@ -585,6 +749,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
           body: JSON.stringify({
             date: rescheduleDate,
             time: rescheduleTime,
+            doneBy: getDoneBy(currentUser?.flag),
           }),
         }
       );
@@ -596,6 +761,33 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
         );
       }
 
+      let updatedStatus = responseData.data?.status || appointmentToReschedule.status;
+
+      if (currentUser && [0, 6, 7].includes(Number(currentUser.flag))) {
+        try {
+          const statusRes = await fetch(`${BASE_URL}/therapists/appointments/status`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+            body: JSON.stringify({
+              appointmentId: appointmentToReschedule.id,
+              status: "approved",
+              doneBy: getDoneBy(currentUser?.flag),
+            }),
+          });
+          const statusData = await statusRes.json().catch(() => null);
+          if (statusData?.data?.status) {
+            updatedStatus = statusData.data.status;
+          } else {
+            updatedStatus = "approved";
+          }
+        } catch (statusErr) {
+          console.error("Error auto-approving appointment after reschedule:", statusErr);
+        }
+      }
+
       setAppointments((currentAppointments) =>
         currentAppointments.map((appointment) =>
           appointment.id === appointmentToReschedule.id
@@ -603,7 +795,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
                 ...appointment,
                 date: responseData.data?.date || rescheduleDate,
                 time: responseData.data?.time || rescheduleTime,
-                status: responseData.data?.status || appointment.status,
+                status: updatedStatus,
               }
             : appointment
         )
@@ -619,10 +811,6 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       setRescheduling(false);
     }
   };
-
-  // const isSuperAdmin = Number(tokenManager.getUser()?.flag) === 0;
-
-  // console.log("...........currentRole",currentRole);
 
   const handleFilterClick = (key: string) => {
     setCurrentPage(1);
@@ -680,7 +868,6 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
         title: "Organization",
         showFilter: true,
         onFilterClick: () => handleFilterClick("organization"),
-        
       },
       ]
       : []),
@@ -704,7 +891,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             variant={
               value?.toLowerCase() === "rescheduled"
                 ? "SolidBlue"
-                : value?.toLowerCase() === "cancelled"
+                : value?.toLowerCase() === "cancelled" || value?.toLowerCase() === "canceled"
                 ? "SolidYellow"
                 : value?.toLowerCase() === "rejected"
                 ? "red"
@@ -773,16 +960,32 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
   }, [appointments, search, sortConfig]);
 
   const videoAppointments = useMemo(() => {
-    return appointments.filter((r) => r.medium === "online");
-  }, [appointments]);
+    return appointments.filter((r) => {
+      const isVideo = r.medium === "online" || r.medium === "video" || Boolean(r.zoomLink);
+      if (!isVideo) return false;
+      if (isTeachersOrg && type === "all") return r.status?.toLowerCase() === "approved";
+      if (isTeachersOrg && type === "completed") return r.status?.toLowerCase() === "completed";
+      return true;
+    });
+  }, [appointments, isTeachersOrg, type]);
 
   const homeAppointments = useMemo(() => {
-    return appointments.filter((r) => r.medium === "home");
-  }, [appointments]);
+    return appointments.filter((r) => {
+      if (r.medium !== "home") return false;
+      if (isTeachersOrg && type === "all") return r.status?.toLowerCase() === "approved";
+      if (isTeachersOrg && type === "completed") return r.status?.toLowerCase() === "completed";
+      return true;
+    });
+  }, [appointments, isTeachersOrg, type]);
 
   const clinicAppointments = useMemo(() => {
-    return appointments.filter((r) => r.medium === "center" || r.medium === "clinic");
-  }, [appointments]);
+    return appointments.filter((r) => {
+      if (r.medium !== "center" && r.medium !== "clinic") return false;
+      if (isTeachersOrg && type === "all") return r.status?.toLowerCase() === "approved";
+      if (isTeachersOrg && type === "completed") return r.status?.toLowerCase() === "completed";
+      return true;
+    });
+  }, [appointments, isTeachersOrg, type]);
 
   if (loading) {
     return <Loader fullScreen />;
@@ -817,18 +1020,33 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             data={videoAppointments}
             currentRole={currentRole}
             navigate={navigate}
+            isVideoTable={true}
+            onMarkAsCompleted={(row) => {
+              setAppointmentToComplete(row);
+              setCompleteError(null);
+            }}
           />
           <TeachersOrgTableSection
             title={`Home Appointments (${homeAppointments.length})`}
             data={homeAppointments}
             currentRole={currentRole}
             navigate={navigate}
+            isVideoTable={false}
+            onMarkAsCompleted={(row) => {
+              setAppointmentToComplete(row);
+              setCompleteError(null);
+            }}
           />
           <TeachersOrgTableSection
             title={`Clinic Appointments (${clinicAppointments.length})`}
             data={clinicAppointments}
             currentRole={currentRole}
             navigate={navigate}
+            isVideoTable={false}
+            onMarkAsCompleted={(row) => {
+              setAppointmentToComplete(row);
+              setCompleteError(null);
+            }}
           />
         </div>
       ) : (
@@ -855,6 +1073,51 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             setCurrentPage(1);
           }}
           showChooseColumns={true}
+        />
+      )}
+
+      {appointmentToComplete && (
+        <ModalBox
+          header={<h3>Complete Appointment</h3>}
+          onCancel={() => {
+            if (!completing) {
+              setAppointmentToComplete(null);
+              setCompleteError(null);
+            }
+          }}
+          body={
+            <div style={{ textAlign: "center", padding: "10px 0" }}>
+              <p style={{ fontSize: "15px", marginBottom: "20px", color: "#333", lineHeight: "1.5" }}>
+                Are you sure you want to mark the appointment with <strong>{appointmentToComplete.parent}</strong> on <strong>{appointmentToComplete.date}</strong> at <strong>{appointmentToComplete.time}</strong> as completed?
+              </p>
+
+              {completeError && (
+                <div className="error-message" style={{ marginBottom: "15px", color: "red" }}>
+                  {completeError}
+                </div>
+              )}
+
+              <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "15px" }}>
+                <DashboardButtons
+                  text="Cancel"
+                  variant="trashparent"
+                  onClick={() => {
+                    if (!completing) {
+                      setAppointmentToComplete(null);
+                      setCompleteError(null);
+                    }
+                  }}
+                  disabled={completing}
+                />
+                <DashboardButtons
+                  text={completing ? "Completing..." : "Confirm"}
+                  variant="SolidNeon"
+                  onClick={handleConfirmComplete}
+                  disabled={completing}
+                />
+              </div>
+            </div>
+          }
         />
       )}
 

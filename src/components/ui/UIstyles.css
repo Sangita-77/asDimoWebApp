@@ -61,6 +61,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .GlobalButton button.lg{font-weight: 600; font-size: 16px;}
 /* icon */
 .GlobalButton button .btn-icon{padding: 0 7px;}
+.GlobalButton button:disabled{opacity: 0.55; cursor: not-allowed !important; pointer-events: none; transform: none !important; box-shadow: none !important;}
 /* Button End */
 
 
