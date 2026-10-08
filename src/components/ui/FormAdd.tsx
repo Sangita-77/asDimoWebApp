@@ -51,13 +51,39 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   onSubmit,
   heading,
 }) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const getInitialData = () => {
+    const initial: Record<string, any> = {};
+    fields.forEach((field) => {
+      if (field.value !== undefined) {
+        initial[field.name] = field.value;
+      }
+    });
+    return initial;
+  };
+
+  const [formData, setFormData] = useState<Record<string, any>>(getInitialData);
   const [preview, setPreview] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  React.useEffect(() => {
+    setFormData((prev) => {
+      const updated = { ...prev };
+      let changed = false;
+      fields.forEach((field) => {
+        if (field.value !== undefined && updated[field.name] === undefined) {
+          updated[field.name] = field.value;
+          changed = true;
+        }
+      });
+      return changed ? updated : prev;
+    });
+  }, [fields]);
 
-  const isFieldVisible = (field: Field, data = formData) =>
-    !field.showWhen || data[field.showWhen.field] === field.showWhen.value;
+  const isFieldVisible = (field: Field, data = formData) => {
+    if (!field.showWhen) return true;
+    const currentVal = data[field.showWhen.field] ?? fields.find((f) => f.name === field.showWhen?.field)?.value;
+    return currentVal === field.showWhen.value;
+  };
 
   const updateFormData = (name: string, value: any) => {
     const nextFormData = {
@@ -110,23 +136,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   onSubmit(formData);
-  // };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  try {
-    setIsSubmitting(true);
-    await onSubmit(formData);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    try {
+      setIsSubmitting(true);
+      const defaults = getInitialData();
+      await onSubmit({ ...defaults, ...formData });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
 <form className="add_information" onSubmit={handleSubmit}>
@@ -160,9 +182,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                   multiple={field.multiple}
                   value={field.multiple
                     ? (Array.isArray(formData[field.name]) ? formData[field.name] : [])
-                    : (formData[field.name] ?? "")}
+                    : (formData[field.name] ?? field.value ?? "")}
                   onChange={handleSelectChange}
                   required={field.required && !field.multiple}
+                  disabled={field.readOnly}
                 >
                 {!field.multiple && (
                   <option value="" disabled>
@@ -219,9 +242,10 @@ const handleSubmit = async (e: React.FormEvent) => {
             multiple={field.multiple}
             value={field.multiple
               ? (Array.isArray(formData[field.name]) ? formData[field.name] : [])
-              : (formData[field.name] ?? "")}
+              : (formData[field.name] ?? field.value ?? "")}
             onChange={handleSelectChange}
             required={field.required && !field.multiple}
+            disabled={field.readOnly}
           >
           {!field.multiple && <option value="">Select {field.label}</option>}
 
