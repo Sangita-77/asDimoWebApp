@@ -1,32 +1,36 @@
-import { Heading2, Heading1Light, ParagraphLight } from "../../components/ui/HeadingPara";
-import "./therapist.css";
-// import AppointmentCalendar from "../../components/ui/AppointmentCalender";
+import { Heading2 } from "../../components/ui/HeadingPara";
+import CurrentDates from "../../components/ui/CurrentDates";
 
-const therapistAnalyticsindex: React.FC= ({
-}) => {
-// const appointments = [
-//   "2026-06-28",
-//   "2026-07-08",
-//   "2026-08-11",
-//   "2026-09-19",
-// ];
+const MainDashboard: React.FC = () => {
+  const bookedDates = [
+    "2026-10-06",
+    "2026-10-08",
+    "2026-10-10",
+  ];
+
   return (
     <>
-    <Heading2 text="DASHBOARD"/>
-        <div className="therapistDashboard">
-            <div className="paymnetStatus">
-               <ParagraphLight text="Total Balance"/>
-               <Heading1Light text="?30,000"/>
-               <div className="d-flex">
-                  
-               </div>
-            </div> 
-        </div>
-        <div  className="">
-           <Heading2 text="Appointment"/>
-           {/* <AppointmentCalendar appointments={appointments} /> */}
-        </div>
+      <Heading2 text="DASHBOARD" />
+
+      <CurrentDates bookedDates={bookedDates} />
     </>
-  )
+  );
 };
-export default therapistAnalyticsindex;
+
+export default MainDashboard;
+
+
+// import React from "react";
+// import Analytices from "../../components/modules/Analytices";
+
+// const MainDashboard: React.FC= ({
+
+// }) => {
+//   return (
+//     <div className="MainDashboard">
+//         <Analytices/>
+//     </div>
+//   );
+// };
+
+// export default MainDashboard;
