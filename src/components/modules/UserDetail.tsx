@@ -26,7 +26,7 @@ import InteractionIcon from "../../assets/Images/InteractionIcon.svg";
 import BehaviorIcon from "../../assets/Images/BehaviorIcon.svg";
 import CognitiveIcon from "../../assets/Images/CognitiveIcon.svg";
 import MotorSkillsIcon from "../../assets/Images/MotorSkillsIcon.svg";
-// import TimingReport from "../ui/graphBar";
+import TimingReport from "../ui/graphBar";
 
 
 
@@ -692,9 +692,9 @@ const UserDetail: React.FC<Props> = ({ userId: propUserId }) => {
             </div>
 
               {/* Timing Report */}
-              {/* <div className="timing-report">
+              <div className="timing-report">
                  <TimingReport data={timingData} />
-              </div> */}
+              </div>
             </div>
           </section>
         </div>
