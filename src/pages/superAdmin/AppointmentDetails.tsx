@@ -4,8 +4,9 @@ import { UserIcon, ArrowLeftIcon, HomeIcon, CalendarDaysIcon, XIcon, ChevronDown
 import { Heading1, Paragraph, Paragraph2 } from "../../components/ui/HeadingPara";
 import DashboardButtons from "../../components/ui/Buttons";
 import { BASE_URL, filebasename } from "../../api/config";
-import { tokenManager } from "../../services/tokenManager";
+import { tokenManager, getDoneBy } from "../../services/tokenManager";
 import Loader from "../../components/ui/Loaders";
+import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import "./AppointmentDetails.css";
 
 interface UserDetails {
@@ -27,6 +28,7 @@ interface AppointmentDetailsData {
   date: string;
   time: string;
   status: string;
+  doneBy?: string;
   paymentId?: string | number;
   razorpayPaymentId?: string;
   zoomLink?: string;
@@ -95,6 +97,9 @@ const AppointmentDetails: React.FC = () => {
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetailsData | null>(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  const currentUser = tokenManager.getUser();
+  const userFlag = currentUser?.flag !== undefined ? Number(currentUser.flag) : null;
 
   useEffect(() => {
     const fetchAppointment = async () => {
@@ -226,7 +231,10 @@ const AppointmentDetails: React.FC = () => {
           "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
-        body: JSON.stringify({ reason: cancellationReason.trim() }),
+        body: JSON.stringify({
+          reason: cancellationReason.trim(),
+          doneBy: getDoneBy(userFlag),
+        }),
       });
       const responseData = await response.json().catch(() => null);
 
@@ -234,7 +242,35 @@ const AppointmentDetails: React.FC = () => {
         throw new Error(responseData?.message || "Unable to cancel appointment");
       }
 
-      setAppointment((current) => current ? { ...current, status: responseData.data?.status || "cancelled" } : current);
+      let updatedStatus = responseData.data?.status || "cancelled";
+
+      // // If superadmin (0), zonal admin (6), or admin (7), auto-call status update to "approved"
+      // if (userFlag !== null && [0, 6, 7].includes(userFlag)) {
+      //   try {
+      //     const statusRes = await fetch(`${BASE_URL}/therapists/appointments/status`, {
+      //       method: "PATCH",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: token ? `Bearer ${token}` : "",
+      //       },
+      //       body: JSON.stringify({
+      //         appointmentId: appointment._id,
+      //         status: "approved",
+      //         doneBy: getDoneBy(userFlag),
+      //       }),
+      //     });
+      //     const statusData = await statusRes.json().catch(() => null);
+      //     if (statusData?.data?.status) {
+      //       updatedStatus = statusData.data.status;
+      //     } else {
+      //       updatedStatus = "approved";
+      //     }
+      //   } catch (statusErr) {
+      //     console.error("Error auto-approving appointment after cancel:", statusErr);
+      //   }
+      // }
+
+      setAppointment((current) => current ? { ...current, status: updatedStatus } : current);
       setActiveModal(null);
       setCancellationReason("");
     } catch (cancelError) {
@@ -265,6 +301,7 @@ const AppointmentDetails: React.FC = () => {
           date: selectedDate,
           time: selectedTime,
           reason: rescheduleReason.trim(),
+          doneBy: getDoneBy(userFlag),
         }),
       });
       const responseData = await response.json().catch(() => null);
@@ -273,11 +310,39 @@ const AppointmentDetails: React.FC = () => {
         throw new Error(responseData?.message || "Unable to reschedule appointment");
       }
 
+      let updatedStatus = responseData?.data?.status || appointment.status || "rescheduled";
+
+      // If superadmin (0), zonal admin (6), or admin (7), auto-call status update to "approved"
+      // if (userFlag !== null && [0, 6, 7].includes(userFlag)) {
+      //   try {
+      //     const statusRes = await fetch(`${BASE_URL}/therapists/appointments/status`, {
+      //       method: "PATCH",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: token ? `Bearer ${token}` : "",
+      //       },
+      //       body: JSON.stringify({
+      //         appointmentId: appointment._id,
+      //         status: "approved",
+      //         doneBy: getDoneBy(userFlag),
+      //       }),
+      //     });
+      //     const statusData = await statusRes.json().catch(() => null);
+      //     if (statusData?.data?.status) {
+      //       updatedStatus = statusData.data.status;
+      //     } else {
+      //       updatedStatus = "approved";
+      //     }
+      //   } catch (statusErr) {
+      //     console.error("Error auto-approving appointment after reschedule:", statusErr);
+      //   }
+      // }
+
       setAppointment((current) => current ? {
         ...current,
         date: responseData.data?.date || selectedDate,
         time: responseData.data?.time || selectedTime,
-        status: responseData.data?.status || current.status,
+        status: updatedStatus,
       } : current);
       setActiveModal(null);
       setRescheduleReason("");
@@ -305,6 +370,7 @@ const AppointmentDetails: React.FC = () => {
         body: JSON.stringify({
           appointmentId: appointment._id,
           status: newStatus,
+          doneBy: getDoneBy(userFlag),
         }),
       });
 
@@ -336,14 +402,30 @@ const AppointmentDetails: React.FC = () => {
     return <div className="error-message appointment-details-error">{error || "Appointment not found"}</div>;
   }
 
-  const currentUser = tokenManager.getUser();
-  const userFlag = currentUser?.flag !== undefined ? Number(currentUser.flag) : null;
   const isAllowedRole = userFlag !== null && [0, 1, 6, 7].includes(userFlag);
+  const currentRole = getCurrentUserRole() ?? "";
+  const isTeachersOrgOrGlobal = currentRole === "TeachersOrg" || currentRole === "teachersGlobal" || (userFlag !== null && [3, 5].includes(userFlag));
   const isTeacherRole = userFlag !== null && [3, 5].includes(userFlag);
 
   const appointmentStatus = (appointment.status || "").toLowerCase();
-  const isCancelledOrRescheduled = appointmentStatus === "cancelled" || appointmentStatus === "rescheduled";
-  const showApproveReject = isAllowedRole && isCancelledOrRescheduled;
+  const isCancelledOrRescheduled = appointmentStatus === "cancelled" || appointmentStatus === "canceled" || appointmentStatus === "rescheduled";
+  const doneBy = (appointment.doneBy || "").toLowerCase();
+  const isAdminDoneBy = ["admin", "superadmin", "zonaladmin"].includes(doneBy);
+
+  const getDisplayStatus = () => {
+    const rawStatus = appointment.status || "";
+    if (!rawStatus) return "N/A";
+    const rawStatusLower = rawStatus.toLowerCase();
+    if (isAdminDoneBy) {
+      if (["rejected", "cancelled", "canceled", "rescheduled"].includes(rawStatusLower)) {
+        return `${rawStatus} by ${appointment.doneBy}`;
+      }
+      return `${rawStatus} by ${appointment.doneBy}`;
+    }
+    return rawStatus;
+  };
+
+  const showApproveReject = isAllowedRole && isCancelledOrRescheduled && !isAdminDoneBy;
 
   const parent = appointment.parentUser || {};
   const child = appointment.childDetails?.[0] || {};  
@@ -367,7 +449,7 @@ const AppointmentDetails: React.FC = () => {
     { label: "Contact", value: teacher.phone },
     { label: "Appointment Date", value: appointment.date },
     { label: "Appointment Time", value: appointment.time },
-    { label: "Status", value: appointment.status },
+    { label: "Status", value: getDisplayStatus() },
     { label: "Zoom Link", value: appointment.zoomLink },
   ];
   const organisationInfo = [
@@ -395,7 +477,41 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
         <div>
           <Heading1 text="Appointment DETAILS" /><Paragraph text="View and manage appointment information." /></div>
           <div className="header-actions">
-             {showApproveReject ? (
+             {isAdminDoneBy ? (
+               <div
+                 className="status-display-badge"
+                 style={{
+                   padding: "8px 16px",
+                   borderRadius: "6px",
+                   fontWeight: 600,
+                   fontSize: "14px",
+                   textTransform: "capitalize",
+                   backgroundColor:
+                     appointmentStatus === "approved" || appointmentStatus === "completed"
+                       ? "#e9fbfb"
+                       : appointmentStatus === "cancelled" || appointmentStatus === "canceled" || appointmentStatus === "rejected"
+                       ? "#fff4f4"
+                       : "#eff6ff",
+                   color:
+                     appointmentStatus === "approved" || appointmentStatus === "completed"
+                       ? "#31b68f"
+                       : appointmentStatus === "cancelled" || appointmentStatus === "canceled" || appointmentStatus === "rejected"
+                       ? "#e63517"
+                       : "#2563eb",
+                   border: `1px solid ${
+                     appointmentStatus === "approved" || appointmentStatus === "completed"
+                       ? "#38b991"
+                       : appointmentStatus === "cancelled" || appointmentStatus === "canceled" || appointmentStatus === "rejected"
+                       ? "#e63517"
+                       : "#93c5fd"
+                   }`,
+                   display: "inline-flex",
+                   alignItems: "center",
+                 }}
+               >
+                 {getDisplayStatus()}
+               </div>
+             ) : showApproveReject ? (
                <>
                  <DashboardButtons 
                     text={statusActionLoading === "approved" ? "Approving..." : "Approve"} 
@@ -424,14 +540,16 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                     onClick={() => { setActionError(null); 
                     setActiveModal("reschedule"); }} 
                   />
-                 <DashboardButtons 
-                    text="Cancel Appointment" 
-                    variant="redborder" 
-                    textsize="sm" 
-                    icon={<XIcon size={18} />} 
-                    onClick={() => { setActionError(null); 
-                    setActiveModal("cancel"); }} 
-                 />
+                 {!isTeachersOrgOrGlobal && (
+                   <DashboardButtons 
+                      text="Cancel Appointment" 
+                      variant="redborder" 
+                      textsize="sm" 
+                      icon={<XIcon size={18} />} 
+                      onClick={() => { setActionError(null); 
+                      setActiveModal("cancel"); }} 
+                    />
+                 )}
                </>
              )}
              <DashboardButtons 
@@ -507,7 +625,7 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                     value={item.value} 
                   />
                 )}
-                {isTeacherRole && isCancelledOrRescheduled && (
+                {isTeacherRole && isCancelledOrRescheduled && !isAdminDoneBy && (
                   <div
                     style={{
                       color: "#e63517",

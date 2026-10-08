@@ -26,7 +26,7 @@ const Appointments: React.FC = () => {
         <span className="AppointmentTab">
           <Target size={45} />
           <span>
-            {isTeachersOrg ? "All SESSION" : "All Appointments"}
+            {isTeachersOrg ? "Approved SESSION" : "All Appointments"}
           </span>
         </span>
       ),

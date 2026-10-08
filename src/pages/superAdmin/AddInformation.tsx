@@ -9,11 +9,29 @@ import { countries } from "../../components/ui/countries";
 import DashboardButtons from "../../components/ui/Buttons";
 import { routes } from "../../routes/AppRoutes";
 import { ArrowLeftIcon } from "lucide-animated";
+import { tokenManager } from "../../services/tokenManager";
 
 
 const AddInformation: React.FC = () => {
-const location = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const currentUser = tokenManager.getUser();
+  const currentLoginFlag =
+    currentUser?.flag !== undefined && currentUser?.flag !== null
+      ? Number(currentUser.flag)
+      : null;
+  const currentUserName =
+    currentUser?.name ||
+    currentUser?.fullName ||
+    currentUser?.username ||
+    "";
+  const currentUserId = currentUser?.userId ? String(currentUser.userId) : "";
+  const currentUserOrgName =
+    currentUser?.org_name ||
+    currentUser?.organization?.name ||
+    currentUser?.organizationName ||
+    currentUserName;
 
   const flag = Number(location.state?.flag);
   const [adminOptions, setAdminOptions] = useState<Field["options"]>([]);
@@ -223,14 +241,19 @@ const pageConfig = getPageConfig(flag);
       //   payload
       // );
 
-      const formData = new FormData();
+      const userScope =
+        currentLoginFlag === 1 || currentLoginFlag === 5 || currentLoginFlag === 3
+          ? "non_global"
+          : data.user_scope;
+
       const submitFlag =
-        data.user_scope === "global" && flag === 3
+        userScope === "global" && flag === 3
           ? 5
-          : data.user_scope === "global" && flag === 2
+          : userScope === "global" && flag === 2
           ? 4
           : flag;
 
+      const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("phone", data.phone);
@@ -261,7 +284,7 @@ const pageConfig = getPageConfig(flag);
           formData.append("yearsOfExperience", String(data.yearsOfExperience));
         }
 
-        if (data.user_scope === "global" && data.cliniqueName) {
+        if (userScope === "global" && data.cliniqueName) {
           formData.append("cliniqueName", data.cliniqueName);
         }
       }
@@ -275,11 +298,17 @@ const pageConfig = getPageConfig(flag);
       }
 
       if (flag === 7) {
-        formData.append("zonalAdminId", data.zonalAdminId);
+        const zonalId = currentLoginFlag === 6 ? currentUserId : data.zonalAdminId;
+        if (zonalId) {
+          formData.append("zonalAdminId", String(zonalId));
+        }
       }
 
       if (flag === 1) {
-        formData.append("adminId", data.adminId);
+        const admId = currentLoginFlag === 7 ? currentUserId : data.adminId;
+        if (admId) {
+          formData.append("adminId", String(admId));
+        }
         formData.append(
           "organization_type",
           String(data.organization_type)
@@ -287,25 +316,33 @@ const pageConfig = getPageConfig(flag);
       }
 
       if (submitFlag === 5) {
-        formData.append("adminId", data.adminId);
+        const admId = currentLoginFlag === 7 ? currentUserId : data.adminId;
+        if (admId) {
+          formData.append("adminId", String(admId));
+        }
       }
       if (flag === 4) {
         formData.append("teacherId", "null");
       }
       if (flag === 3) {
-        if (data.organizationAdminId) {
+        const orgAdminId =
+          currentLoginFlag === 1 || currentLoginFlag === 5
+            ? currentUserId
+            : data.organizationAdminId;
+        if (orgAdminId) {
           formData.append(
             "organizationAdminId",
-            data.organizationAdminId
+            String(orgAdminId)
           );
         }
       }
 
       if (flag === 2) {
-        if (data.teacherId) {
+        const tId = currentLoginFlag === 3 ? currentUserId : data.teacherId;
+        if (tId) {
           formData.append(
             "teacherId",
-            data.teacherId
+            String(tId)
           );
         }
       }
@@ -355,28 +392,48 @@ const pageConfig = getPageConfig(flag);
             ],
             required: true,
           },
-          {
-            name: "adminId",
-            label: "Under Admin",
-            fieldType: "select" as const,
-            width: "half" as const,
-            options: adminOptions,
-            required: true,
-          },
+          currentLoginFlag === 7
+            ? {
+                name: "adminId",
+                label: "Under Admin",
+                type: "text",
+                width: "half" as const,
+                value: currentUserName,
+                readOnly: true,
+                required: true,
+              }
+            : {
+                name: "adminId",
+                label: "Under Admin",
+                fieldType: "select" as const,
+                width: "half" as const,
+                options: adminOptions,
+                required: true,
+              },
             ]
           : []),
 
 
 ...(flag === 7
   ? [
-    {
-      name: "zonalAdminId",
-      label: "Under Zonal Admin",
-      fieldType: "select" as const,
-      width: "full" as const,
-      options: zonalAdminOptions,
-      required: true,
-    },
+    currentLoginFlag === 6
+      ? {
+          name: "zonalAdminId",
+          label: "Under Zonal Admin",
+          type: "text",
+          width: "full" as const,
+          value: currentUserName,
+          readOnly: true,
+          required: true,
+        }
+      : {
+          name: "zonalAdminId",
+          label: "Under Zonal Admin",
+          fieldType: "select" as const,
+          width: "full" as const,
+          options: zonalAdminOptions,
+          required: true,
+        },
     ]
 : [3].includes(flag)
   ? [
@@ -422,24 +479,40 @@ const pageConfig = getPageConfig(flag);
         width: "half" as const,
         required: true,
       },
-      {
-        name: "user_scope",
-        label: "User Type",
-        fieldType: "select" as const,
-        width: "full" as const,
-        placeholder: "",
-        options: [
-          {
-            label: "Global",
-            value: "global",
-          },
-          {
-            label: "Non-Global",
+      currentLoginFlag === 1 || currentLoginFlag === 5 || currentLoginFlag === 3
+        ? {
+            name: "user_scope",
+            label: "User Type",
+            fieldType: "select" as const,
+            width: "full" as const,
+            options: [
+              {
+                label: "Non-Global",
+                value: "non_global",
+              },
+            ],
             value: "non_global",
+            readOnly: true,
+            required: true,
+          }
+        : {
+            name: "user_scope",
+            label: "User Type",
+            fieldType: "select" as const,
+            width: "full" as const,
+            placeholder: "",
+            options: [
+              {
+                label: "Global",
+                value: "global",
+              },
+              {
+                label: "Non-Global",
+                value: "non_global",
+              },
+            ],
+            required: true,
           },
-        ],
-        required: true,
-      },
       {
         name: "cliniqueName",
         label: "Clinic Name",
@@ -450,66 +523,124 @@ const pageConfig = getPageConfig(flag);
         },
         required: true,
       },
-      {
-        name: "organizationAdminId",
-        label: "Organization Name",
-        fieldType: "select" as const,
-        width: "full" as const,
-        placeholder: "Select Organization",
-        options: organizationOptions,
-        showWhen: {
-          field: "user_scope",
-          value: "non_global",
-        },
-        required: true,
-      },
-      {
-        name: "adminId",
-        label: "Admin Name",
-        fieldType: "select" as const,
-        width: "full" as const,
-        placeholder: "Select Admin",
-        options: adminOptions,
-        showWhen: {
-          field: "user_scope",
-          value: "global",
-        },
-        required: true,
-      },
+      currentLoginFlag === 1 || currentLoginFlag === 5
+        ? {
+            name: "organizationAdminId",
+            label: "Organization Name",
+            type: "text",
+            width: "full" as const,
+            value: currentUserOrgName,
+            readOnly: true,
+            showWhen: {
+              field: "user_scope",
+              value: "non_global",
+            },
+            required: true,
+          }
+        : {
+            name: "organizationAdminId",
+            label: "Organization Name",
+            fieldType: "select" as const,
+            width: "full" as const,
+            placeholder: "Select Organization",
+            options: organizationOptions,
+            showWhen: {
+              field: "user_scope",
+              value: "non_global",
+            },
+            required: true,
+          },
+      currentLoginFlag === 7
+        ? {
+            name: "adminId",
+            label: "Admin Name",
+            type: "text",
+            width: "full" as const,
+            value: currentUserName,
+            readOnly: true,
+            showWhen: {
+              field: "user_scope",
+              value: "global",
+            },
+            required: true,
+          }
+        : {
+            name: "adminId",
+            label: "Admin Name",
+            fieldType: "select" as const,
+            width: "full" as const,
+            placeholder: "Select Admin",
+            options: adminOptions,
+            showWhen: {
+              field: "user_scope",
+              value: "global",
+            },
+            required: true,
+          },
     ]
 : [2].includes(flag)
   ? [
-      {
-        name: "user_scope",
-        label: "User Type",
-        fieldType: "select" as const,
-        width: "full" as const,
-        placeholder: "",
-        options: [
-          {
-            label: "Global",
-            value: "global",
-          },
-          {
-            label: "Non-Global",
+      currentLoginFlag === 1 || currentLoginFlag === 5 || currentLoginFlag === 3
+        ? {
+            name: "user_scope",
+            label: "User Type",
+            fieldType: "select" as const,
+            width: "full" as const,
+            options: [
+              {
+                label: "Non-Global",
+                value: "non_global",
+              },
+            ],
             value: "non_global",
+            readOnly: true,
+            required: true,
+          }
+        : {
+            name: "user_scope",
+            label: "User Type",
+            fieldType: "select" as const,
+            width: "full" as const,
+            placeholder: "",
+            options: [
+              {
+                label: "Global",
+                value: "global",
+              },
+              {
+                label: "Non-Global",
+                value: "non_global",
+              },
+            ],
+            required: true,
           },
-        ],
-        required: true,
-      },
-      {
-        name: "teacherId",
-        label: "Therapist Name",
-        fieldType: "select" as const,
-        width: "full" as const,
-        placeholder: "Select Therapist",
-        options: therapistOptions,
-        showWhen: {
-          field: "user_scope",
-          value: "non_global",
-        },
-        required: true,
-      },
+      currentLoginFlag === 3
+        ? {
+            name: "teacherId",
+            label: "Therapist Name",
+            type: "text",
+            width: "full" as const,
+            value: currentUserName,
+            readOnly: true,
+            showWhen: {
+              field: "user_scope",
+              value: "non_global",
+            },
+            required: true,
+          }
+        : {
+            name: "teacherId",
+            label: "Therapist Name",
+            fieldType: "select" as const,
+            width: "full" as const,
+            placeholder: "Select Therapist",
+            options: therapistOptions,
+            showWhen: {
+              field: "user_scope",
+              value: "non_global",
+            },
+            required: true,
+          },
     ]
   :  []),
 

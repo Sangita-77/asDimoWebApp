@@ -3,17 +3,16 @@ import "./UIstyles.css";
 
 interface DateSlot {
   date: Date;
-  booked: boolean;
 }
 
 interface DateSlotsProps {
-  bookedDates?: string[];
   onDateSelect?: (date: Date) => void;
+  selectedDate?: Date;
 }
 
 const CurrentDates: React.FC<DateSlotsProps> = ({
-  bookedDates = [],
   onDateSelect,
+  selectedDate,
 }) => {
   const today = new Date();
 
@@ -21,39 +20,57 @@ const CurrentDates: React.FC<DateSlotsProps> = ({
     const date = new Date(today);
     date.setDate(today.getDate() + index);
 
-    const dateString = date.toISOString().split("T")[0];
-
     return {
       date,
-      booked: bookedDates.includes(dateString),
     };
   });
 
   const currentMonth = today.toLocaleDateString("en-US", {
-  month: "long",
-});
+    month: "long",
+  });
+
+  const isSelected = (date: Date) => {
+    if (!selectedDate) {
+      return date.toDateString() === today.toDateString();
+    }
+
+    return date.toDateString() === selectedDate.toDateString();
+  };
 
   return (
-    <div className="boxShadow">
-    <div className="currentMonth">{currentMonth}</div>    
-    <div className="d-flex date-slots">
-      {dates.map(({ date, booked }) => {
-        const day = date.toLocaleDateString("en-US", {
-          weekday: "short",
-        });
+    <div className="date-container">
+      <div className="currentMonth">
+        {currentMonth}
+      </div>
 
-        return (
-          <button
-            key={date.toISOString()}
-            className={`date-slot ${booked ? "booked" : ""}`}
-            onClick={() => onDateSelect?.(date)}
-          >
-            <span className="date-day">{day}</span>
-            <span className="date-number">{date.getDate()}</span>
-          </button>
-        );
-      })}
-    </div>
+      <div className="date-slots">
+        {dates.map(({ date }) => {
+          const day = date.toLocaleDateString("en-US", {
+            weekday: "short",
+          });
+
+          const selected = isSelected(date);
+
+          return (
+            <button
+              key={date.toISOString()}
+              type="button"
+              className={`date-slot ${
+                selected ? "selected" : ""
+              }`}
+              onClick={() => onDateSelect?.(date)}
+            >
+              <span className="date-day">
+                {day}
+              </span>
+
+              <span className="date-number">
+                {date.getDate()}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
