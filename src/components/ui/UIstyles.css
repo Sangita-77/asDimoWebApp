@@ -581,10 +581,13 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
     .DashboardsTabs.Horizontal .tabs-content {padding: 15px 0 0;}
     .search-sort-container {margin-bottom: 20px;}
 
-    .DashboardsTabs.LeftSide .tabs-header {padding: 50px 10px 50px 0; width: 28%;}
-    .DashboardsTabs.LeftSide .tabs-content {width: 72%; padding: 30px 20px;}
-    .DashboardsTabs.LeftSide .tab-btn.LeftSide {padding: 13px 15px;}
+    .DashboardsTabs.LeftSide {flex-direction: column;}
+    .DashboardsTabs.LeftSide .tabs-header {padding: 10px 10px 10px 0px; width: 100%; border: none; display: flex; justify-content: start; column-gap: 20px;}
+    .DashboardsTabs.LeftSide .tabs-content {width: 100%; padding: 30px 0px;}
+    .DashboardsTabs.LeftSide .tab-btn.LeftSide {padding: 13px 15px; margin: 6px 0px;}
     .profile-image-container {margin-bottom: 15px;}
+    .calendar-days {gap: 5px; margin-bottom: 10px;}
+    .TimeSlotsActions {justify-self: start !important; }
 
     .add_information {margin-top: 20px;}
     .add_information .profile-preview {width: 100px; height: 100px;}
@@ -596,6 +599,8 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
     .GlobalButton button.solid {padding: 13px 20px 10px;}
     .loader-wrapper{position: absolute; z-index: 9999; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+
+    .modalBody .logout-popup > p {text-align: center;}
 }
 
 
