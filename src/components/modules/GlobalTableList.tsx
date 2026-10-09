@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import  { routes } from "../../routes/AppRoutes";
 // import PlusIcon from "../../assets/Images/PlusIcon.svg";
 import {XIcon} from 'lucide-animated';
+import { filebasename } from "../../api/config";
 
 
 interface ColumnConfig {
@@ -26,7 +27,51 @@ interface ZonalAdminListProps {
   filteredUserId?: string; // For filtering data by current user (teachersGlobal)
   filterByZonalAdminId?: boolean;
   showDoctorsTabs?: boolean; // For filtering admins by zonalAdminId (flag 7)
+  showSearch?: boolean;
+  showAddButton?: boolean;
+  showPagination?: boolean;
+  showChooseColumns?: boolean;
+  onViewAll?: () => void;
+  limit?: number;
+  selectable?: boolean;
+  showSort?: boolean;
 }
+
+const TableAvatar: React.FC<{ src?: string; name?: string }> = ({ src, name }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const initial =
+    name && name !== "N/A" && name !== "-"
+      ? name.trim().charAt(0).toUpperCase()
+      : "U";
+
+  if (src && !imgError) {
+    return (
+      <img
+        src={src}
+        alt={name || ""}
+        className="doctor-image"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return <div className="doctor-image-initial">{initial}</div>;
+};
+
+const getProfileImage = (user: any): string | undefined => {
+  if (!user) return undefined;
+  const image =
+    user.profileImg ||
+    user.googleProfile?.picture ||
+    user.facebookProfile?.picture ||
+    null;
+
+  if (!image) return undefined;
+  if (typeof image === "string" && (image.startsWith("http://") || image.startsWith("https://"))) {
+    return image;
+  }
+  return `${filebasename}${image.startsWith("/") ? "" : "/"}${image}`;
+};
 
 const getRelatedCount = (item: any, key: string) =>
   item.relatedData?.[key]?.count ??
@@ -79,6 +124,14 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   filteredUserId,
   filterByZonalAdminId,
   showDoctorsTabs = false,
+  showSearch = true,
+  showAddButton = true,
+  showPagination = true,
+  showChooseColumns = true,
+  onViewAll,
+  limit,
+  selectable = true,
+  showSort = true,
 }) => {
   const navigate = useNavigate();
   const flags = Array.isArray(flag) ? flag : [flag];
@@ -227,6 +280,15 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       title: "Name",
       fixed: true,
       onFilterClick: handleSort,
+      render: (value: string, row: any) => (
+        <div className="doctor-info">
+          <TableAvatar
+            src={row.parentImage || undefined}
+            name={value || row.name}
+          />
+          <h5>{value || row.name || "-"}</h5>
+        </div>
+      ),
     },
     admin: {
       key: "admin",
@@ -246,6 +308,15 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       key: "parent_name",
       title: "User",
       fixed: true,
+      render: (value: string, row: any) => (
+        <div className="doctor-info">
+          <TableAvatar
+            src={row.parentImage || undefined}
+            name={value || row.parent_name}
+          />
+          <h5>{value || row.parent_name || "-"}</h5>
+        </div>
+      ),
     },
     subscription: {
       key: "subscription",
@@ -363,7 +434,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
         );
       }
 
-    console.log("API Response:", users);
+    // console.log("API Response:", users);
 
     const formattedRows = users.map((item: any) => {
       const parentId = Number(item.roleData?.parentId ?? item.userId);
@@ -404,6 +475,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       return {
         id: item._id,
         userId: item.userId,
+        parentImage: getProfileImage(item),
 
         name: item.name ?? "-",
         email: item.email,
@@ -525,14 +597,19 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
     }
   };
 
-  const tableColumns = dynamicColumns.map((column) => ({
-    ...(columnRenderMap[column.key] || {
-      key: column.key,
+  const tableColumns = dynamicColumns.map((column) => {
+    const mapped = columnRenderMap[column.key];
+    return {
+      ...(mapped || {
+        key: column.key,
+        title: column.title,
+      }),
       title: column.title,
-    }),
-    title: column.title,
-    showFilter: column.sortable ?? false,
-  }));
+      fixed: column.fixed ?? mapped?.fixed,
+      showFilter: showSort ? (column.sortable ?? (mapped?.onFilterClick ? true : false)) : false,
+      render: (column as any).render || mapped?.render,
+    };
+  });
 
   tableColumns.push({
     key: "actions",
@@ -609,34 +686,33 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
 
   return (
     <div>
-       <div className="d-flex TableSearchWrap">
-      <SearchWithSort
-        searchValue={search}
-        onSearchChange={setSearch}
-        sortValue={sort}
-        onSortChange={(value) => {
-          if (value === "asc" || value === "desc") {
-            setSort(value);
-          }
-        }}
-      />
-      {/* <DashboardButtons text="Add New Admin"/> */}
-      <div className="AddUpdateButton">
-      <DashboardButtons
-      variant="neon"
-      textsize="sm"
-      icon={<XIcon className="PlusIcon" size={20}/>}
-        text={getAddButtonText(primaryFlag)}
-        // onClick={() =>
-        //   navigate(routes.SUP_ADDINFORMATION, {
-        //     state: { flag: primaryFlag },
-        //   })
-        onClick={handleAddInformation}
-        // }
-      />
-      {/* <DashboardButtons text="Export" variant="blueborder" textsize="sm" icon={<img src={ExportIcon} alt="Add" className="btn-icon" onClick={() => exportSelectedRows(selectedUsers)}/>}/>  */}
-      </div>
-       </div>
+      {(showSearch || showAddButton) && (
+        <div className="d-flex TableSearchWrap">
+          {showSearch && (
+            <SearchWithSort
+              searchValue={search}
+              onSearchChange={setSearch}
+              sortValue={sort}
+              onSortChange={(value) => {
+                if (value === "asc" || value === "desc") {
+                  setSort(value);
+                }
+              }}
+            />
+          )}
+          {showAddButton && (
+            <div className="AddUpdateButton">
+              <DashboardButtons
+                variant="neon"
+                textsize="sm"
+                icon={<XIcon className="PlusIcon" size={20}/>}
+                text={getAddButtonText(primaryFlag)}
+                onClick={handleAddInformation}
+              />
+            </div>
+          )}
+        </div>
+      )}
              
         {showDoctorsTabs && (
           <div className="d-flex DoctorsTabs">
@@ -664,19 +740,20 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
 
       <Table
         columns={tableColumns}
-        rows={rows}
-        selectable={true}
-        onBulkDelete={true}
+        rows={limit ? rows.slice(0, limit) : rows}
+        selectable={selectable}
+        onBulkDelete={selectable}
         onDeleteSelected={handleDeleteSelected}
-        pagination={true}
+        pagination={showPagination}
         currentPage={currentPage}
-        totalPages={Math.ceil(rows.length / rowsPerPage) || 1}
+        totalPages={Math.ceil((limit ? rows.slice(0, limit) : rows).length / rowsPerPage) || 1}
         rowsPerPage={rowsPerPage}
         onPageChange={setCurrentPage}
         onRowsPerPageChange={setRowsPerPage}
         sortBy={sortBy}
         sortOrder={sort}
-        showChooseColumns={true}
+        showChooseColumns={showChooseColumns}
+        onViewAll={onViewAll}
       />
 
       {showModal && (

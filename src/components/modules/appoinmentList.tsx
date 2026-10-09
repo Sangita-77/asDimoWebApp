@@ -17,6 +17,14 @@ import type { AvailabilitySlot } from "../ui/TimeSlots";
 export interface AppointmentListProps {
   type?: "all" | "completed" | "canceled" | "reschedule" | "online" | "home" | "clinic" | "center" | "video" | string;
   isTeachersOrg?: boolean;
+  defaultRowsPerPage?: number;
+  showSearch?: boolean;
+  showPagination?: boolean;
+  showChooseColumns?: boolean;
+  onViewAll?: () => void;
+  limit?: number;
+  selectable?: boolean;
+  showSort?: boolean;
 }
 
 interface Appointment {
@@ -426,7 +434,13 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
                 text="View Details"
                 icon={<img src={IButton} alt="view" className="btn-icon" />}
                 variant="trashparent"
-                onClick={() => navigate(`../appointment-details/${row.id}`)}
+                onClick={() => {
+                  const pathParts = window.location.pathname.split("/").filter(Boolean);
+                  const currentBasePath = pathParts[2] || "therapist";
+                  // console.log("...........pathParts.............",pathParts);
+                  // console.log("...........currentBasePath.............",currentBasePath);
+                  navigate(`/${currentBasePath}/appointment-details/${row.id}`);
+                }}
               />
             </div>
           );
@@ -466,7 +480,18 @@ const TeachersOrgTableSection: React.FC<TeachersOrgTableSectionProps> = ({
   );
 };
 
-const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeachersOrg: isTeachersOrgProp }) => {
+const AppointmentList: React.FC<AppointmentListProps> = ({
+  type = "all",
+  isTeachersOrg: isTeachersOrgProp,
+  defaultRowsPerPage = 10,
+  showSearch = true,
+  showPagination = true,
+  showChooseColumns = true,
+  onViewAll,
+  limit,
+  selectable = true,
+  showSort = true,
+}) => {
   const navigate = useNavigate();
   const currentRole = getCurrentUserRole() ?? "";
   const isTeachersOrg = isTeachersOrgProp ?? (currentRole === "TeachersOrg" || currentRole === "teachersGlobal");
@@ -488,7 +513,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
   const [completeError, setCompleteError] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({
     key: "date",
@@ -825,7 +850,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "parent",
         title: "Name",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("parent"),
         render: (value: string, row: AppointmentRow) => (
           <div className="doctor-info">
@@ -838,7 +863,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "teacher",
         title: "Dr Name",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("teacher"),
       },
       ...(currentRole !== "TeachersOrg" && currentRole !== "teachersGlobal" && currentRole !== "OrganizationAdmin" && currentRole !== "Admin"
@@ -846,7 +871,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "zonalAdmin",
         title: "Zonal Admin",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("zonalAdmin"),
       },
         ]
@@ -856,7 +881,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "admin",
         title: "Admin",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("admin"),
       },
       ]
@@ -866,7 +891,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "organization",
         title: "Organization",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("organization"),
       },
       ]
@@ -874,7 +899,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "date",
         title: "Date",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("date"),
         fixed: true,
       },
@@ -882,7 +907,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       {
         key: "status",
         title: "Status",
-        showFilter: true,
+        showFilter: showSort,
         onFilterClick: () => handleFilterClick("status"),
         render: (value: string) => (
           <DashboardButtons
@@ -908,13 +933,19 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
             text="View Details"
             icon={<img src={IButton} alt="view" className="btn-icon" />}
             variant="trashparent"
-            onClick={() => navigate(`../appointment-details/${row.id}`)}
+            onClick={() => {
+              const pathParts = window.location.pathname.split("/").filter(Boolean);
+              const currentBasePath = pathParts[2] || "therapist";
+              // console.log("...........pathParts.............",pathParts);
+              // console.log("...........currentBasePath.............",currentBasePath);
+              navigate(`/${currentBasePath}/appointment-details/${row.id}`);
+            }}
           />
         ),
         fixed: true,
       },
     ],
-    [currentRole, sortConfig, navigate]
+    [currentRole, sortConfig, navigate, showSort]
   );
 
   // Reset page when search changes
@@ -988,12 +1019,26 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
   }, [appointments, isTeachersOrg, type]);
 
   if (loading) {
-    return <Loader fullScreen />;
+    return (
+      <div
+        className="AppointmentsList table-loading-wrapper"
+        style={{
+          minHeight: "260px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          width: "100%",
+        }}
+      >
+        <Loader fullScreen={false} />
+      </div>
+    );
   }
 
   return (
     <div className="AppointmentsList">
-      {!isTeachersOrg && (
+      {!isTeachersOrg && showSearch && (
         <SearchWithSort
           searchValue={search}
           onSearchChange={setSearch}
@@ -1052,27 +1097,29 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ type = "all", isTeach
       ) : (
         <Table
           columns={columns}
-          rows={filteredAndSorted}
-          selectable={true}
+          rows={limit ? filteredAndSorted.slice(0, limit) : filteredAndSorted}
+          selectable={selectable}
           sortBy={sortConfig.key}
           sortOrder={sortConfig.order}
-          pagination={true}
+          pagination={showPagination}
           currentPage={currentPage}
           totalPages={
             Math.max(
               Math.ceil(
-                filteredAndSorted.length / rowsPerPage
+                (limit ? filteredAndSorted.slice(0, limit) : filteredAndSorted).length / rowsPerPage
               ),
               1
             )
           }
           rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[4, 8, 12, 20]}
           onPageChange={setCurrentPage}
           onRowsPerPageChange={(value) => {
             setRowsPerPage(value);
             setCurrentPage(1);
           }}
-          showChooseColumns={true}
+          showChooseColumns={showChooseColumns}
+          onViewAll={onViewAll}
         />
       )}
 

@@ -1,527 +1,343 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CurrentDates from "../../components/ui/CurrentDates";
 import Tabs from "../../components/ui/Tabs";
 import AppointmentList from "../../components/modules/appoinmentList";
+import GlobalTableList from "../../components/modules/GlobalTableList";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
+import { tokenManager } from "../../services/tokenManager";
+import { BASE_URL } from "../../api/config";
+import { routes } from "../../routes/AppRoutes";
 import { Heading2 } from "../../components/ui/HeadingPara";
 import {
   Video,
   House,
   Stethoscope,
-  CheckCircle,
-  XCircle,
-  RefreshCw,
+  Target,
 } from "lucide-react";
 
-interface TimeSlot {
+interface SlotData {
+  id?: string;
+  date: string;
+  time: string;
+  medium: string;
+  isBooked: boolean;
+}
+
+interface TimeSlotDisplay {
   time: string;
   booked: boolean;
 }
 
-interface Availability {
-  [type: string]: TimeSlot[];
-}
+const formatDateToDDMMYYYY = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
-
+const normalizeDateKey = (dateStr: string): string => {
+  if (!dateStr) return "";
+  const parts = dateStr.trim().split(/[-/]/);
+  if (parts.length === 3) {
+    if (parts[0].length === 2 && parts[2].length === 4) {
+      // DD-MM-YYYY
+      return `${parts[0].padStart(2, "0")}-${parts[1].padStart(2, "0")}-${parts[2]}`;
+    } else if (parts[0].length === 4) {
+      // YYYY-MM-DD -> DD-MM-YYYY
+      return `${parts[2].padStart(2, "0")}-${parts[1].padStart(2, "0")}-${parts[0]}`;
+    }
+  }
+  return dateStr;
+};
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const today = new Date();
   const currentRole = getCurrentUserRole();
-  const [selectedDate, setSelectedDate] =
-    useState<Date>(today);
+  const user = tokenManager.getUser();
+  const teacherId = user?.userId || user?.id;
+  const filteredUserId = currentRole === "teachersGlobal" ? (user?.userId ? String(user.userId) : undefined) : undefined;
 
-  const availabilityByDate: Record<string, Availability> = {
-    /*
-     * TODAY
-     */
-    [getDateKey(today)]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: false,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: true,
-        },
-        {
-          time: "05:30 - 06:30 PM",
-          booked: false,
-        },
-      ],
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const [availabilityList, setAvailabilityList] = useState<SlotData[]>([]);
+  const [, setLoadingSlots] = useState(false);
 
-      "Video Conference": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: false,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: true,
-        },
-        {
-          time: "05:30 - 06:30 PM",
-          booked: false,
-        },
-      ],
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      if (!teacherId) return;
+      setLoadingSlots(true);
 
-      "At Home": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: true,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: false,
-        },
-        {
-          time: "05:30 - 06:30 PM",
-          booked: false,
-        },
-      ],
-    },
+      try {
+        const token = tokenManager.getAccessToken();
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        };
 
-    /*
-     * TOMORROW
-     */
-    [getDateKey(addDays(today, 1))]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "11:00 - 12:00 PM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: true,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: false,
-        },
-      ],
+        const slotMap = new Map<string, SlotData>();
 
-      "Video Conference": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "01:00 - 02:00 PM",
-          booked: false,
-        },
-        {
-          time: "03:00 - 04:00 PM",
-          booked: true,
-        },
-      ],
+        // 1. Fetch from appointments?teacherId=
+        try {
+          const appRes = await fetch(`${BASE_URL}/appointments?teacherId=${teacherId}`, {
+            headers,
+          });
+          const appData = await appRes.json().catch(() => null);
 
-      "At Home": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "11:00 - 12:00 PM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: false,
-        },
-        {
-          time: "04:00 - 05:00 PM",
-          booked: true,
-        },
-      ],
-    },
+          if (appData?.success && Array.isArray(appData.data)) {
+            appData.data.forEach((app: any) => {
+              const avail = app.availability;
+              const date = avail?.date || app.date;
+              const time = avail?.time || app.time;
+              if (!date || !time) return;
 
-    /*
-     * DAY 3
-     */
-    [getDateKey(addDays(today, 2))]: {
-      "At Clinic": [
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "11:00 - 12:00 PM",
-          booked: true,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: false,
-        },
-      ],
+              const normDate = normalizeDateKey(date);
+              const medium = (avail?.medium || app.medium || (app.zoomLink ? "online" : "center")).toLowerCase();
+              const isBooked = avail?.isBooked !== undefined ? Boolean(avail.isBooked) : true;
+              const key = `${normDate}_${time}_${medium}`;
 
-      "Video Conference": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "12:00 - 01:00 PM",
-          booked: true,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: false,
-        },
-      ],
+              slotMap.set(key, {
+                id: avail?._id || app._id,
+                date: normDate,
+                time,
+                medium: avail?.medium || app.medium || (app.zoomLink ? "online" : "center"),
+                isBooked,
+              });
+            });
+          }
+        } catch (appErr) {
+          console.error("Failed to fetch appointments for teacher:", appErr);
+        }
 
-      "At Home": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "01:00 - 02:00 PM",
-          booked: false,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: false,
-        },
-      ],
-    },
+        // 2. Fetch from appointments/available-slots/:teacherId
+        try {
+          const slotsRes = await fetch(
+            `${BASE_URL}/appointments/available-slots/${teacherId}`,
+            { headers }
+          );
+          const slotsData = await slotsRes.json().catch(() => null);
 
-    /*
-     * DAY 4
-     */
-    [getDateKey(addDays(today, 3))]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: true,
-        },
-      ],
+          if (slotsData?.success && Array.isArray(slotsData.data)) {
+            slotsData.data.forEach((s: any) => {
+              if (!s || !s.date || !s.time) return;
 
-      "Video Conference": [
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "01:00 - 02:00 PM",
-          booked: false,
-        },
-        {
-          time: "03:00 - 04:00 PM",
-          booked: false,
-        },
-      ],
+              const normDate = normalizeDateKey(s.date);
+              const medium = (s.medium || "online").toLowerCase();
+              const key = `${normDate}_${s.time}_${medium}`;
 
-      "At Home": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "11:00 - 12:00 PM",
-          booked: true,
-        },
-        {
-          time: "04:00 - 05:00 PM",
-          booked: false,
-        },
-      ],
-    },
+              // If not already present or if we have more specific slot data
+              if (!slotMap.has(key)) {
+                slotMap.set(key, {
+                  id: s._id,
+                  date: normDate,
+                  time: s.time,
+                  medium: s.medium || "online",
+                  isBooked: Boolean(s.isBooked),
+                });
+              } else {
+                // If it already exists, ensure booking status is accurate
+                const existing = slotMap.get(key)!;
+                if (s.isBooked !== undefined) {
+                  existing.isBooked = Boolean(s.isBooked);
+                }
+              }
+            });
+          }
+        } catch (slotsErr) {
+          console.error("Failed to fetch available slots:", slotsErr);
+        }
 
-    /*
-     * DAY 5
-     */
-    [getDateKey(addDays(today, 4))]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "11:00 - 12:00 PM",
-          booked: false,
-        },
-        {
-          time: "03:30 - 04:30 PM",
-          booked: false,
-        },
-      ],
+        setAvailabilityList(Array.from(slotMap.values()));
+      } catch (error) {
+        console.error("Error loading availability slots:", error);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
 
-      "Video Conference": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: true,
-        },
-      ],
+    fetchAvailability();
+  }, [teacherId]);
 
-      "At Home": [
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "01:00 - 02:00 PM",
-          booked: false,
-        },
-        {
-          time: "04:30 - 05:30 PM",
-          booked: false,
-        },
-      ],
-    },
+  const selectedDateStr = formatDateToDDMMYYYY(selectedDate);
 
-    /*
-     * DAY 6
-     */
-    [getDateKey(addDays(today, 5))]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "10:00 - 11:00 AM",
-          booked: true,
-        },
-        {
-          time: "03:00 - 04:00 PM",
-          booked: false,
-        },
-      ],
+  const selectedAvailability = useMemo(() => {
+    const slotsForDate = availabilityList.filter(
+      (s) => s.date === selectedDateStr
+    );
 
-      "Video Conference": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "12:00 - 01:00 PM",
-          booked: false,
-        },
-        {
-          time: "04:00 - 05:00 PM",
-          booked: false,
-        },
-      ],
+    const grouped: Record<string, TimeSlotDisplay[]> = {};
 
-      "At Home": [
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: true,
-        },
-        {
-          time: "05:00 - 06:00 PM",
-          booked: false,
-        },
-      ],
-    },
+    slotsForDate.forEach((s) => {
+      let category = "Video Conference";
+      const m = (s.medium || "").toLowerCase().trim();
 
-    /*
-     * DAY 7
-     */
-    [getDateKey(addDays(today, 6))]: {
-      "At Clinic": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: false,
-        },
-        {
-          time: "01:00 - 02:00 PM",
-          booked: true,
-        },
-        {
-          time: "04:00 - 05:00 PM",
-          booked: false,
-        },
-      ],
+      if (m === "home") {
+        category = "At Home";
+      } else if (m === "center" || m === "clinic") {
+        category = "At Clinic";
+      } else if (m === "online" || m === "video") {
+        category = "Video Conference";
+      } else if (m) {
+        category = m.charAt(0).toUpperCase() + m.slice(1);
+      }
 
-      "Video Conference": [
-        {
-          time: "10:00 - 11:00 AM",
-          booked: false,
-        },
-        {
-          time: "02:00 - 03:00 PM",
-          booked: false,
-        },
-        {
-          time: "05:00 - 06:00 PM",
-          booked: true,
-        },
-      ],
+      if (!grouped[category]) {
+        grouped[category] = [];
+      }
 
-      "At Home": [
-        {
-          time: "09:00 - 10:00 AM",
-          booked: true,
-        },
-        {
-          time: "12:00 - 01:00 PM",
-          booked: false,
-        },
-        {
-          time: "03:00 - 04:00 PM",
-          booked: false,
-        },
-      ],
-    },
+      if (!grouped[category].some((existing) => existing.time === s.time)) {
+        grouped[category].push({
+          time: s.time,
+          booked: s.isBooked,
+        });
+      }
+    });
+
+    // Sort time slots chronologically within each category
+    Object.keys(grouped).forEach((cat) => {
+      grouped[cat].sort((a, b) =>
+        a.time.localeCompare(b.time, undefined, { numeric: true })
+      );
+    });
+
+    return grouped;
+  }, [availabilityList, selectedDateStr]);
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
   };
 
-    const isTeachersOrg = currentRole === "TeachersOrg" || currentRole === "teachersGlobal";
-    const tabs = [
-    // {
-    //   id: "all",
-    //   label: (
-    //     <span className="AppointmentTab">
-    //       <Target size={45} />
-    //       <span>
-    //         {isTeachersOrg ? "All SESSION" : "All Appointments"}
-    //       </span>
-    //     </span>
-    //   ),
-    //   content: <AppointmentList type="all" isTeachersOrg={isTeachersOrg} />,
-
-    // },
+  const appointmentTabs = [
+    {
+      id: "all",
+      label: (
+        <span className="AppointmentTab">
+          <Target size={45} />
+          <span>All Appointments</span>
+        </span>
+      ),
+      content: (
+        <AppointmentList
+          type="all"
+          isTeachersOrg={false}
+          showSearch={false}
+          showPagination={false}
+          showChooseColumns={false}
+          selectable={false}
+          showSort={false}
+          onViewAll={() => navigate(routes.THERAPIST_APPOINTMENT || "/therapist/appointment")}
+          limit={4}
+        />
+      ),
+    },
     {
       id: "online",
       label: (
         <span className="AppointmentTab">
-          {isTeachersOrg ? (
-            <CheckCircle size={45} />
-          ) : (
-            <Video size={45} />
-          )}
-             Video Appointments
+          <Video size={45} />
+          <span>Video Appointments</span>
         </span>
       ),
-      content: <AppointmentList type={isTeachersOrg ? "completed" : "online"} isTeachersOrg={isTeachersOrg} />,
+      content: (
+        <AppointmentList
+          type="online"
+          isTeachersOrg={false}
+          showSearch={false}
+          showPagination={false}
+          showChooseColumns={false}
+          selectable={false}
+          showSort={false}
+          onViewAll={() => navigate(routes.THERAPIST_APPOINTMENT || "/therapist/appointment")}
+          limit={4}
+        />
+      ),
     },
     {
       id: "home",
       label: (
         <span className="AppointmentTab">
-          {isTeachersOrg ? (
-            <XCircle size={45} />
-          ) : (
-            <House size={45} />
-          )}
-
-          <span>
-            {isTeachersOrg ? "Canceled SESSION" : "Home Appointments"}
-          </span>
+          <House size={45} />
+          <span>Home Appointments</span>
         </span>
       ),
-      content: <AppointmentList type={isTeachersOrg ? "canceled" : "home"} isTeachersOrg={isTeachersOrg} />,
+      content: (
+        <AppointmentList
+          type="home"
+          isTeachersOrg={false}
+          showSearch={false}
+          showPagination={false}
+          showChooseColumns={false}
+          selectable={false}
+          showSort={false}
+          onViewAll={() => navigate(routes.THERAPIST_APPOINTMENT || "/therapist/appointment")}
+          limit={4}
+        />
+      ),
     },
     {
       id: "clinic",
       label: (
         <span className="AppointmentTab">
-          {isTeachersOrg ? (
-            <RefreshCw size={45} />
-          ) : (
-            <Stethoscope size={45} />
-          )}
-
-          <span>
-            {isTeachersOrg ? "Reschedule SESSION" : "Clinic Appointments"}
-          </span>
+          <Stethoscope size={45} />
+          <span>Clinic Appointments</span>
         </span>
       ),
-      content: <AppointmentList type={isTeachersOrg ? "reschedule" : "clinic"} isTeachersOrg={isTeachersOrg} />,
+      content: (
+        <AppointmentList
+          type="clinic"
+          isTeachersOrg={false}
+          showSearch={false}
+          showPagination={false}
+          showChooseColumns={false}
+          selectable={false}
+          showSort={false}
+          onViewAll={() => navigate(routes.THERAPIST_APPOINTMENT || "/therapist/appointment")}
+          limit={4}
+        />
+      ),
     },
   ];
 
-  const selectedDateKey = getDateKey(selectedDate);
-
-  const selectedAvailability =
-    availabilityByDate[selectedDateKey] || {};
-
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
-
-    // Clear previously selected time
-  };
-
-  const handleTimeSelect = () => {
-  };
+  const parentColumns = [
+    { key: "parent_name", title: "Users", sortable: false, fixed: true },
+    { key: "children_details", title: "Children Details", sortable: false },
+    ...(currentRole !== "OrganizationAdmin" && currentRole !== "TeachersOrg"
+      ? [{ key: "admin_name", title: "Admin", sortable: false }]
+      : []),
+    ...(currentRole !== "TeachersOrg"
+      ? [
+          { key: "organization_name", title: "Organization", sortable: false },
+          { key: "therapist_name", title: "Therapist", sortable: false },
+        ]
+      : []),
+    { key: "last_appointment", title: "Last Appointment", sortable: false },
+    { key: "location", title: "Location" },
+    { key: "subscription", title: "Subscription", sortable: false },
+    { key: "created", title: "Created", sortable: false },
+    { key: "pe", title: "PE", sortable: false },
+  ];
 
   return (
     <>
-      {/* DATE SELECTOR */}
       <CurrentDates
         selectedDate={selectedDate}
         onDateSelect={handleDateSelect}
       />
 
-      {/* AVAILABLE TIME HEADER */}
+
       <div className="available-time-header">
         <h2>Available Time</h2>
 
         <button
           type="button"
           className="change-time-btn"
+          onClick={() => navigate(routes.THERAPIST_SETTINGS || "/therapist/settings")}
         >
           Change Time
         </button>
       </div>
 
-      {/* SELECTED DATE */}
+
       <div className="selected-date-label">
         {selectedDate.toLocaleDateString("en-US", {
           weekday: "long",
@@ -530,105 +346,60 @@ const Dashboard: React.FC = () => {
         })}
       </div>
 
-      {/* TIME SLOTS */}
-      {Object.entries(selectedAvailability).map(
-        ([type, slots]) => (
-          <div
-            className="time-section"
-            key={type}
-          >
-            <h3>{type}</h3>
 
-            <div className="time-slots">
-              {slots.map((slot) => {
-                const isSelected =
-                    selectedDateKey &&
-                    slot.time;
+      {Object.entries(selectedAvailability).map(([type, slots]) => (
+        <div className="time-section" key={type}>
+          <h3>{type}</h3>
 
-                return (
-                  <button
-                    key={slot.time}
-                    type="button"
-                    disabled={slot.booked}
-                    className={`
-                      time-slot
-                      ${slot.booked ? "booked" : ""}
-                      ${
-                        isSelected
-                          ? "selected"
-                          : ""
-                      }
-                    `}
-                    onClick={() => {
-                      if (!slot.booked) {
-                        handleTimeSelect(
-                        );
-                      }
-                    }}
-                  >
-                    <span className="time-text">
-                      {slot.time}
-                    </span>
-
-                    {slot.booked && (
-                      <span className="slot-status">
-                        Booked
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="time-slots">
+            {slots.map((slot) => {
+              return (
+                <button
+                  key={slot.time}
+                  type="button"
+                  className={`time-slot ${slot.booked ? "" : "selected"}`}
+                >
+                  <span className="time-text">{slot.time}</span>
+                  {slot.booked && <span className="slot-status">Booked</span>}
+                </button>
+              );
+            })}
           </div>
-        )
+        </div>
+      ))}
+
+
+      {Object.keys(selectedAvailability).length === 0 && (
+        <div className="no-slots">
+          No time slots available for this date.
+        </div>
       )}
 
-      {/* NO AVAILABILITY */}
-      {Object.keys(selectedAvailability)
-        .length === 0 && (
-          <div className="no-slots">
-            No time slots available for this date.
-          </div>
-      )}
-      <Heading2 text="Upcoming Appointment"/>
-      <Tabs tabs={tabs} variant="Horizontal" />
-  </>
+
+      <div style={{ marginTop: "35px" }}>
+        <Heading2 text="Upcoming Appointment" />
+        <Tabs tabs={appointmentTabs} variant="Horizontal" />
+      </div>
+
+
+      <div style={{ marginTop: "35px" }}>
+        <Heading2 text="User List" />
+        <GlobalTableList
+          flag={[2, 4]}
+          columns={parentColumns}
+          filteredUserId={filteredUserId}
+          showSearch={false}
+          showAddButton={false}
+          showPagination={false}
+          showChooseColumns={false}
+          selectable={false}
+          showSort={false}
+          onViewAll={() => navigate(routes.THERAPIST_PARENT || "/therapist/parent")}
+          limit={4}
+        />
+      </div>
+    </>
   );
 };
-
-/*
- * Convert Date into:
- * YYYY-MM-DD
- */
-function getDateKey(date: Date): string {
-  const year = date.getFullYear();
-
-  const month = String(
-    date.getMonth() + 1
-  ).padStart(2, "0");
-
-  const day = String(
-    date.getDate()
-  ).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-/*
- * Add days without modifying
- * the original Date object.
- */
-function addDays(
-  date: Date,
-  days: number
-): Date {
-  const result = new Date(date);
-
-  result.setDate(
-    result.getDate() + days
-  );
-
-  return result;
-}
 
 export default Dashboard;

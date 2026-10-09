@@ -1,5 +1,6 @@
 /* loader Start*/
-.loader-wrapper{position: absolute; z-index: 9999; left: 55%; top: 48%;}
+.loader-wrapper{position: absolute; z-index: 9999; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.loader-wrapper.fullscreen{position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);}
 .loader { width: 50px; aspect-ratio: 1; border-radius: 50%; border: 8px solid #0000; border-right-color: #105bbd80; position: relative; animation: l24 1s infinite linear; }
 .loader:before, .loader:after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: inherit; animation: inherit; animation-duration: 2s; }
 .loader:after { animation-duration: 4s; }
