@@ -744,11 +744,31 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 
 /* Responsive */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .main.desktop {width: stretch;}
+    .DashboardsTabs.Horizontal .tabs-header {flex-wrap: wrap; row-gap: 0; border-right: 0;}
+
+    .GlobalTable {overflow-x: scroll;}
+    .GlobalTable .custom-table {overflow-x: scroll; width: 100%; max-width: 100%;}
+
+    .patient-content {overflow-x: scroll;}
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .DashboardsTabs.LeftSide .tabs-header {padding: 50px 20px 50px 0;}
+    .DashboardsTabs.Horizontal .tabs-header {flex-wrap: wrap; row-gap: 0;}
+    .DashboardsTabs.Horizontal .tabs-header .TabButton {flex: 0 0 40%;}
+    .DashboardsTabs.Horizontal .AppointmentTab {justify-content: start;}
+    .GlobalTable .custom-table {overflow-x: scroll; width: 900px;}
+}
+
 @media (max-width: 768px) {
     h1.PageTitle {font-size: 25px; line-height: 35px; margin-bottom: 10px;}
     h2.Heading2 {font-size: 22px; line-height: 32px;}
     h3.Heading3 {font-size: 38px; line-height: 48px;}
     h4.Heading4 {font-size: 17px; line-height: 27px;}
+    h5.Heading5 {font-size: 20px; line-height: 30px;}
+    h5.MiniHeading5 {font-size: 14px;}
 
     .profile-image {width: 80px; height: 80px;}
     .upload-image-btn {width: 80px; margin-top: 5px;}
