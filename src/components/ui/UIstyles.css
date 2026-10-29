@@ -1,5 +1,6 @@
 /* loader Start*/
-.loader-wrapper{position: absolute; z-index: 9999; left: 55%; top: 48%;}
+.loader-wrapper{position: absolute; z-index: 9999; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.loader-wrapper.fullscreen{position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);}
 .loader { width: 50px; aspect-ratio: 1; border-radius: 50%; border: 8px solid #0000; border-right-color: #105bbd80; position: relative; animation: l24 1s infinite linear; }
 .loader:before, .loader:after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: inherit; animation: inherit; animation-duration: 2s; }
 .loader:after { animation-duration: 4s; }
@@ -746,11 +747,31 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 
 /* Responsive */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .main.desktop {width: stretch;}
+    .DashboardsTabs.Horizontal .tabs-header {flex-wrap: wrap; row-gap: 0; border-right: 0;}
+
+    .GlobalTable {overflow-x: scroll;}
+    .GlobalTable .custom-table {overflow-x: scroll; width: 100%; max-width: 100%;}
+
+    .patient-content {overflow-x: scroll;}
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .DashboardsTabs.LeftSide .tabs-header {padding: 50px 20px 50px 0;}
+    .DashboardsTabs.Horizontal .tabs-header {flex-wrap: wrap; row-gap: 0;}
+    .DashboardsTabs.Horizontal .tabs-header .TabButton {flex: 0 0 40%;}
+    .DashboardsTabs.Horizontal .AppointmentTab {justify-content: start;}
+    .GlobalTable .custom-table {overflow-x: scroll; width: 100%; max-width: 100%;}
+}
+
 @media (max-width: 768px) {
     h1.PageTitle {font-size: 25px; line-height: 35px; margin-bottom: 10px;}
     h2.Heading2 {font-size: 22px; line-height: 32px;}
     h3.Heading3 {font-size: 38px; line-height: 48px;}
     h4.Heading4 {font-size: 17px; line-height: 27px;}
+    h5.Heading5 {font-size: 20px; line-height: 30px;}
+    h5.MiniHeading5 {font-size: 14px;}
 
     .profile-image {width: 80px; height: 80px;}
     .upload-image-btn {width: 80px; margin-top: 5px;}
@@ -767,10 +788,13 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
     .DashboardsTabs.Horizontal .tabs-content {padding: 15px 0 0;}
     .search-sort-container {margin-bottom: 20px;}
 
-    .DashboardsTabs.LeftSide .tabs-header {padding: 50px 10px 50px 0; width: 28%;}
-    .DashboardsTabs.LeftSide .tabs-content {width: 72%; padding: 30px 20px;}
-    .DashboardsTabs.LeftSide .tab-btn.LeftSide {padding: 13px 15px;}
+    .DashboardsTabs.LeftSide {flex-direction: column;}
+    .DashboardsTabs.LeftSide .tabs-header {padding: 10px 10px 10px 0px; width: 100%; border: none; display: flex; justify-content: start; column-gap: 20px;}
+    .DashboardsTabs.LeftSide .tabs-content {width: 100%; padding: 30px 0px;}
+    .DashboardsTabs.LeftSide .tab-btn.LeftSide {padding: 13px 15px; margin: 6px 0px;}
     .profile-image-container {margin-bottom: 15px;}
+    .calendar-days {gap: 5px; margin-bottom: 10px;}
+    .TimeSlotsActions {justify-self: start !important; }
 
     .add_information {margin-top: 20px;}
     .add_information .profile-preview {width: 100px; height: 100px;}
@@ -782,6 +806,8 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
     .GlobalButton button.solid {padding: 13px 20px 10px;}
     .loader-wrapper{position: absolute; z-index: 9999; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+
+    .modalBody .logout-popup > p {text-align: center;}
 }
 
 

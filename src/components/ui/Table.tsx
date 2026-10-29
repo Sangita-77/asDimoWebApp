@@ -33,6 +33,7 @@ interface TableProps {
   sortOrder?: "asc" | "desc";
   displayLimit?: number;
   showChooseColumns?: boolean;
+  onViewAll?: () => void;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -54,6 +55,7 @@ const Table: React.FC<TableProps> = ({
   sortOrder = "asc",
   displayLimit,
   showChooseColumns = false,
+  onViewAll,
 }) => {
   const roleFlag = Number(tokenManager.getUser()?.flag);
   const hiddenColumnKeysByRole: Record<number, string[]> = {
@@ -305,6 +307,11 @@ const displayedColumns = permittedColumns.filter(
                       ))}
                   </div>
               )}
+          </div>
+        )}
+        {onViewAll && (
+          <div className="table-toolbar">
+            <DashboardButtons text="View All" variant="SolidNeon" textsize="sm" onClick={onViewAll} />
           </div>
         )}
     </div>
