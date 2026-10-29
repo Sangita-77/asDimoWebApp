@@ -439,7 +439,7 @@ const pageConfig = getPageConfig(flag);
   ? [
       {
         name: "therapist_category",
-        label: "Therapist Category",
+        label: "Specialization",
         fieldType: "select" as const,
         width: "full" as const,
         placeholder: "Select Therapist Category",
@@ -456,7 +456,6 @@ const pageConfig = getPageConfig(flag);
         label: "Languages",
         fieldType: "select" as const,
         width: "half" as const,
-        multiple: true,
         placeholder: "Select Languages",
         options: [
           { label: "English", value: "English" },
@@ -473,10 +472,38 @@ const pageConfig = getPageConfig(flag);
       },
       {
         name: "yearsOfExperience",
-        label: "Years of Experience",
+        label: "Experience (Years)",
         type: "number",
         placeholder: "Enter Years of Experience",
         width: "half" as const,
+        required: true,
+      },
+      {
+        name: "qualification",
+        label: "Qualification",
+        type: "input",
+        placeholder: "Enter Years of Experience",
+        width: "half" as const,
+        required: true,
+      },
+      {
+        name: "gender",
+        label: "Gender",
+        width: "half" as const,
+        fieldType: "select" as const,
+        options: [
+          { label: "Male", value: "male" },
+          { label: "Female", value: "female" },
+          { label: "Others", value: "others" },
+          { label: "Operational Therapist", value: "operational therapist" },
+        ],
+        required: true,
+      },
+      {
+        name: "fees",
+        label: "Fees",
+        type: "number",
+        placeholder: "Enter fees",
         required: true,
       },
       currentLoginFlag === 1 || currentLoginFlag === 5 || currentLoginFlag === 3

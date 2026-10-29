@@ -27,7 +27,7 @@ p.TinyPara{font-size: 14px; color: var(--TextcolorBlack);}
 button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;}
 .GlobalButton button:hover{ transform: translateY(-3px);box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);}
 /* ButtonSize */
-.GlobalButton button.full{width: 100%;}
+.GlobalButton button.full{width: 100%; justify-content: center;}
 .GlobalButton button .icon{padding-right: 5px;}
 /* variants */
 .GlobalButton button.SolidNeon{background: #D7F2AC; border: none; color: var(--TextcolorDark); padding: 13px 20px 10px 20px; border-radius: 5px;}
@@ -66,9 +66,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 
 /*Profile_Editable Form start */
-.form-group{display: flex; flex-direction: column; margin-bottom: 10px;}
 .Profile_Editable .form-group label{color: var(--TextcolorDark); font-size: 18px; text-transform: uppercase;}
-.form-group input{height: 45px; padding: 10px; border-radius: 5px; border: solid 1px var(--BorderColor);}
 .Profile_Editable .form-group input::placeholder{font-size: 16px;}
 .Profile_Editable .input-wrapper { position: relative; } 
 .input-wrapper input { width: 100%; padding: 12px 45px 12px 12px; } 
@@ -76,8 +74,12 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .Profile_Editable .input-wrapper .error-text { color: red; font-size: 13px; margin-top: 5px; }
 .Profile_Editable .input-wrapper .password-rules { margin-top: 10px; } 
 .Profile_Editable .input-wrapper .password-rules p { font-size: 13px; margin: 4px 0; } 
-.form-group .valid { color: green; }
-.form-group .invalid { color: red; }
+/* Form Feild Start */
+.form-group{display: flex; flex-direction: column; margin-bottom: 10px;}
+.form-group input, .form-group select, .form-group textarea{height: 45px; padding: 10px; border-radius: 5px; border: solid 1px var(--BorderColor); font-family: inherit;}
+.form-group .valid { color: green;}
+.form-group .invalid { color: red;}
+.form-group select{width: 100%;}
 /*Profile_Editable Form End */
 
 

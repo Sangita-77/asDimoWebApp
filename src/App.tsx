@@ -27,6 +27,7 @@ import SupUserDetails  from "./pages/superAdmin/UserDetails";
 import AddInformation from "./pages/superAdmin/AddInformation";
 import SuperAdminSettings from "./pages/superAdmin/Settings";
 import PaymentPage from "./pages/superAdmin/PaymentPage";
+import AddAppointment from "./pages/superAdmin/AddAppointment";
 
 
 
@@ -82,6 +83,7 @@ function App() {
           <Route path="add-information" element={<AddInformation />} />
           <Route path="report" element={<Report />} />
           <Route path="settings" element={<SuperAdminSettings />} />
+          <Route path="add-appointment" element={<AddAppointment/>} />
         </Route>
 
         {/* ================= ZONAL ADMIN ================= */} 

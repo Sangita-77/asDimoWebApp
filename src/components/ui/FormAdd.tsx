@@ -43,6 +43,12 @@ interface ProfileFormProps {
   showProfilePicture?: boolean;
   heading?: string;
   onSubmit: (data: Record<string, any>) => void;
+
+  buttonText?: string;
+  loadingText?: string;
+  buttonVariant?: string;
+  buttonWidth?: string;
+  showSubmitButton?: boolean;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({
@@ -50,6 +56,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   showProfilePicture = true,
   onSubmit,
   heading,
+  buttonText = "Add",
+  loadingText = "Adding...",
+  showSubmitButton = true,
 }) => {
   const getInitialData = () => {
     const initial: Record<string, any> = {};
@@ -274,14 +283,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   <DashboardButtons text="Add" type="submit" variant="neon"
   />
 </div> */}
+{showSubmitButton && (
 <div className="submit-section">
   <DashboardButtons
-    text={isSubmitting ? "Adding..." : "Add"}
+    text={isSubmitting ? loadingText : buttonText}
     type="submit"
     variant="neon"
     disabled={isSubmitting}
   />
 </div>
+)}
 </form>
   );
 };
