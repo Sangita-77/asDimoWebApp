@@ -3,6 +3,7 @@ import Tabs from "../../components/ui/Tabs";
 import AppointmentList from "../../components/modules/appoinmentList";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import { Heading1 } from "../../components/ui/HeadingPara";
+import { useNavigate } from "react-router-dom";
 import {
   Target,
   Video,
@@ -12,11 +13,15 @@ import {
   XCircle,
   RefreshCw,
 } from "lucide-react";
+import DashboardButtons from "../../components/ui/Buttons";
+import {XIcon} from 'lucide-animated';
+import { routes } from "../../routes/AppRoutes";
+
 
 const Appointments: React.FC = () => {
   const currentRole = getCurrentUserRole();
   // console.log("...............currentRole", currentRole);
-
+  const navigate = useNavigate();
   const isTeachersOrg = currentRole === "TeachersOrg" || currentRole === "teachersGlobal";
 
   const tabs = [
@@ -88,7 +93,19 @@ const Appointments: React.FC = () => {
 
   return (
     <div className="MainDashboard">
+     <div className="d-flex">
       <Heading1 text="Appointments" />
+      <DashboardButtons
+      variant="neon"
+      textsize="sm"
+      icon={<XIcon className="PlusIcon" size={20}/>}
+      text="Add New Appointment"
+      className="AddAppointment"
+        onClick={() =>
+          navigate(routes.SUP_ADDAPPOINTMENT)
+        }
+      />
+     </div>
       <Tabs tabs={tabs} variant="Horizontal" />
     </div>
   );

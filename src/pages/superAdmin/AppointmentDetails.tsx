@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { UserIcon, ArrowLeftIcon, HomeIcon, CalendarDaysIcon, XIcon, ChevronDownIcon, IdCardIcon, CheckIcon } from 'lucide-animated';
+import { UserIcon, ArrowLeftIcon, HomeIcon, CalendarDaysIcon, XIcon, IdCardIcon, CheckIcon } from 'lucide-animated';
 import { Heading1, Paragraph, Paragraph2 } from "../../components/ui/HeadingPara";
 import DashboardButtons from "../../components/ui/Buttons";
 import { BASE_URL, filebasename } from "../../api/config";
@@ -8,6 +8,9 @@ import { tokenManager, getDoneBy } from "../../services/tokenManager";
 import Loader from "../../components/ui/Loaders";
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 import "./AppointmentDetails.css";
+import "../../components/ui/UIstyles.css";
+import Button from "../../components/ui/Buttons";
+// import ModalBox from "../../components/ui/ModalBox";
 
 interface UserDetails {
   userId?: number;
@@ -475,7 +478,8 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
     <>
       <div className="appointment-header">
         <div>
-          <Heading1 text="Appointment DETAILS" /><Paragraph text="View and manage appointment information." /></div>
+          <Heading1 text="Appointment DETAILS" />
+          <Paragraph text="View and manage appointment information." /></div>
           <div className="header-actions">
              {isAdminDoneBy ? (
                <div
@@ -723,7 +727,6 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                                 <option value="">{slotsLoading ? "Loading dates..." : "Select date"}</option>
                                 {availableDates.map((date) => <option key={date} value={date}>{date}</option>)}
                             </select>
-                            <ChevronDownIcon size={16} />
                          </div>
                       </div>
                       <div className="form-group">
@@ -733,7 +736,6 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                             <option value="">Select time</option>
                             {availableTimes.map((time) => <option key={time} value={time}>{time}</option>)}
                           </select>
-                          <ChevronDownIcon size={16} />
                         </div>
                       </div>
                     </div>
@@ -741,9 +743,17 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                       <label>Reason for Reschedule</label>
                       <textarea value={rescheduleReason} onChange={(event) => setRescheduleReason(event.target.value)} />
                     </div>
-                    <button className="action-button reschedule-button" type="button" onClick={handleRescheduleAppointment} disabled={actionLoading || slotsLoading}>
+                    {/* <button className="action-button reschedule-button" type="button" onClick={handleRescheduleAppointment} disabled={actionLoading || slotsLoading}>
                        <CalendarDaysIcon size={17} />{actionLoading ? "Rescheduling..." : "Reschedule Appointment"}
-                    </button>
+                    </button> */}
+                    <Button
+                      text={actionLoading ? "Rescheduling..." : "Reschedule Appointment"}
+                      icon={<CalendarDaysIcon size={22} />}
+                      width="full"
+                      textsize="md"
+                      onClick={handleRescheduleAppointment}
+                      disabled={actionLoading || slotsLoading}
+                    />
                   </> : <>
                     <div className="form-group">
                       <label>Cancellation Reason</label>
@@ -753,8 +763,17 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
                       <label>Additional Comments (Optional)</label>
                         <textarea />
                     </div>
-                    <button className="action-button cancel-button" type="button" onClick={handleCancelAppointment} disabled={actionLoading}><XIcon size={18} />{actionLoading ? "Cancelling..." : "Cancel Appointment"}
-                    </button>
+                    {/* <button className="action-button cancel-button" type="button" onClick={handleCancelAppointment} disabled={actionLoading}><XIcon size={18} />{actionLoading ? "Cancelling..." : "Cancel Appointment"}
+                    </button> */}
+                    <Button
+                      text={actionLoading ? "Cancelling..." : "Cancel Appointment"}
+                      icon={<CalendarDaysIcon size={22} />}
+                      width="full"
+                      textsize="md"
+                      variant="red"
+                      onClick={handleCancelAppointment}
+                      disabled={actionLoading || slotsLoading}
+                    />
                   </>}
                 </div>
            </section>
