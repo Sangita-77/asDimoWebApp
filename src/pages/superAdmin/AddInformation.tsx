@@ -447,8 +447,6 @@ const pageConfig = getPageConfig(flag);
           { label: "Psychologist", value: "Psychologist" },
           { label: "Speech Therapist", value: "speech therapist" },
           { label: "Special Educator", value: "special educator" },
-          { label: "Operational Therapist", value: "operational therapist" },
-          { label: "Special Package", value: "special package" },
         ],
         required: true,
       },
