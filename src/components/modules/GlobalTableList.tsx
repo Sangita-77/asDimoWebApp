@@ -84,6 +84,19 @@ const sortRows = (
   sortOrder: "asc" | "desc"
 ) => {
   return [...rows].sort((firstRow, secondRow) => {
+    if (sortBy === "created" || sortBy === "createdAt") {
+      const firstTime = new Date(
+        firstRow.originalData?.createdAt ?? firstRow.createdAt ?? 0
+      ).getTime();
+      const secondTime = new Date(
+        secondRow.originalData?.createdAt ?? secondRow.createdAt ?? 0
+      ).getTime();
+
+      return sortOrder === "desc"
+        ? secondTime - firstTime
+        : firstTime - secondTime;
+    }
+
     const firstValue = firstRow[sortBy] ?? "";
     const secondValue = secondRow[sortBy] ?? "";
 
@@ -116,6 +129,16 @@ const sortFieldMap: Record<string, string> = {
   pe: "relatedData.teachers.count",
   location: "roleData.city",
   subscription: "subscription",
+  zonal_admin_name: "relatedData.zonalAdmin.name",
+  admin_name: "relatedData.Admin.name",
+  organization_name: "relatedData.organizations.name",
+  parent_name: "name",
+  children_details: "relatedData.parents.count",
+  parent_count: "relatedData.parents.count",
+  therapists: "relatedData.teachers.count",
+  created: "createdAt",
+  createdAt: "createdAt",
+  email: "email",
 };
 
 const GlobalTableList: React.FC<ZonalAdminListProps> = ({
@@ -138,8 +161,8 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
   const primaryFlag = flags[0];
   const flagDependency = flags.join(",");
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"asc" | "desc">("asc");
-  const [sortBy, setSortBy] = useState("name");
+  const [sort, setSort] = useState<"asc" | "desc">("desc");
+  const [sortBy, setSortBy] = useState("createdAt");
   // null means no tab is selected, so both therapist types are shown.
   const [activeDoctorFlag, setActiveDoctorFlag] = useState<number | null>(null);
 
@@ -607,6 +630,7 @@ const GlobalTableList: React.FC<ZonalAdminListProps> = ({
       title: column.title,
       fixed: column.fixed ?? mapped?.fixed,
       showFilter: showSort ? (column.sortable ?? (mapped?.onFilterClick ? true : false)) : false,
+      onFilterClick: mapped?.onFilterClick ?? (column.sortable ? handleSort : undefined),
       render: (column as any).render || mapped?.render,
     };
   });
