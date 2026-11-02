@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PlaceholderImage from "../../assets/Images/PlaceholderImage.svg";
 import { Heading2 } from "./HeadingPara";
 import DashboardButtons from "./Buttons";
+import { ChevronDown } from "lucide-react";
 
 export type Field = {
   name: string;
@@ -65,7 +66,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const [formData, setFormData] = useState<Record<string, any>>(
     getInitialData
   );
-
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -234,34 +235,54 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
         {field.fieldType === "checkbox" ? (
           <div className="checkbox-field">
             {commonLabel}
+            <div className="custom-checkbox-dropdown">
+              <div
+                className="dropdown-control"
+                onClick={() =>
+                  setOpenDropdown(
+                    openDropdown === field.name ? null : field.name
+                  )
+                }
+              >
+                <span>
+                  {Array.isArray(formData[field.name]) &&
+                  formData[field.name].length > 0
+                    ? formData[field.name].join(", ")
+                    : `Select ${field.label}`}
+                </span>
 
-            <div className="checkbox-options">
-              {field.options?.map((option) => {
-                const currentValues = Array.isArray(
-                  formData[field.name]
-                )
-                  ? formData[field.name]
-                  : [];
+                <span
+                  className={`dropdown-arrow ${
+                    openDropdown === field.name ? "active" : ""
+                  }`}
+                >
+                  <ChevronDown size={15}/>
+                </span>
+              </div>
 
-                return (
-                  <label
-                    key={option.value}
-                    className="checkbox-option d-flex"
-                  >
-                    <div className="optionLabel">{option.label}</div>
-                    <input
-                      type="checkbox"
-                      name={field.name}
-                      value={option.value}
-                      checked={currentValues.includes(
-                        option.value
-                      )}
-                      onChange={handleCheckboxChange}
-                      disabled={field.readOnly}
-                    />
-                  </label>
-                );
-              })}
+              {openDropdown === field.name && (
+                <div className="checkbox-dropdown-options">
+                  {field.options?.map((option) => {
+                    const currentValues = Array.isArray(formData[field.name])
+                      ? formData[field.name]
+                      : [];
+
+                    return (
+                      <label key={option.value} className="checkbox-option">
+                        <span>{option.label}</span>
+                        <input
+                          type="checkbox"
+                          name={field.name}
+                          value={option.value}
+                          checked={currentValues.includes(option.value)}
+                          onChange={handleCheckboxChange}
+                          disabled={field.readOnly}
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         ) : field.fieldType === "select" ? (
