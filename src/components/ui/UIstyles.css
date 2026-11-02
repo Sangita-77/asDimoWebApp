@@ -156,7 +156,8 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .field-info select option { padding: 8px 12px; font-size: 16px; background: var(--PrimaryColor); color: #fff; } 
 /* Optional hover/selected styling */
 .field-info select option:checked { background-color: var(--DarkGreen); }
-
+.form-group .checkbox-options input{height: 15px;}
+.add_information .form-group label.checkbox-option {width: 33.33%;}
 /* Profile End*/
 
 

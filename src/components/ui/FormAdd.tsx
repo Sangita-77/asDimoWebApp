@@ -246,8 +246,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                 return (
                   <label
                     key={option.value}
-                    className="checkbox-option"
+                    className="checkbox-option d-flex"
                   >
+                    <div className="optionLabel">{option.label}</div>
                     <input
                       type="checkbox"
                       name={field.name}
@@ -258,8 +259,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                       onChange={handleCheckboxChange}
                       disabled={field.readOnly}
                     />
-
-                    <span>{option.label}</span>
                   </label>
                 );
               })}
