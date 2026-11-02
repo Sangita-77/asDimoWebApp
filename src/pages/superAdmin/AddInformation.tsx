@@ -453,7 +453,7 @@ const pageConfig = getPageConfig(flag);
       {
         name: "languages",
         label: "Languages",
-        fieldType: "select" as const,
+        fieldType: "checkbox" as const,
         width: "half" as const,
         placeholder: "Select Languages",
         options: [
@@ -504,6 +504,13 @@ const pageConfig = getPageConfig(flag);
         type: "number",
         placeholder: "Enter fees",
         required: true,
+      },
+      {
+        name: "about",
+        label: "About Doctor",
+        type: "number",
+        placeholder: "Enter About Doctor",
+        required: false,
       },
       currentLoginFlag === 1 || currentLoginFlag === 5 || currentLoginFlag === 3
         ? {
@@ -653,7 +660,8 @@ const pageConfig = getPageConfig(flag);
               value: "non_global",
             },
             required: true,
-          }
+          } 
+          
         : {
             name: "teacherId",
             label: "Therapist Name",

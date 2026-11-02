@@ -107,7 +107,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .modalCloseBtn { width: 36px; height: 36px;  border: none; border-radius: 50%;  background: var(--DarkGreen); color: var(--TextcolorLight);  font-size: 22px; line-height: 1;  cursor: pointer;  transition: all 0.25s ease; }
 .modalCloseBtn:hover {transform: rotate(90deg);  background: var(--SecondayColor); color: var(--TextcolorLight);}
 /* Body */
-.modalBody { padding: 24px; color: #555; font-size: 15px; line-height: 1.6; }
+.modalBody { padding: 24px; color: #555; font-size: 15px; line-height: 1.6; text-align: center;}
 /* Optional Footer */
 .modalFooter { display: flex; justify-content: flex-end; gap: 12px;  padding: 20px 24px;  border-top: 1px solid #ececec; }
 .logout-popup-actions{gap: 20px; padding-top: 10px;  justify-content: center;}
@@ -156,6 +156,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .field-info select option { padding: 8px 12px; font-size: 16px; background: var(--PrimaryColor); color: #fff; } 
 /* Optional hover/selected styling */
 .field-info select option:checked { background-color: var(--DarkGreen); }
+
 /* Profile End*/
 
 

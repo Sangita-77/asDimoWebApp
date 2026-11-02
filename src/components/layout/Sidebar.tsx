@@ -17,7 +17,7 @@ import SettingsIcon from "../../assets/Images/SettingsIcon.svg";
 import LogOutIcon from "../../assets/Images/LogOutIcon.svg";
 import ReportIcon from "../../assets/Images/ReportIcon.svg";
 import DashboardButtons from "../ui/Buttons";
-import ModalBox from "../ui/ModalBox";
+import ModalBox from "../ui/ModalBox"; 
 import { getCurrentUserRole } from "../../middleware/AuthMiddleware";
 
 
