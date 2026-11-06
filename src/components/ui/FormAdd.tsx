@@ -78,15 +78,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       fields.forEach((field) => {
         if (
           field.value !== undefined &&
-          updated[field.name] === undefined
+          updated[field.name] !== field.value
         ) {
           updated[field.name] = field.value;
           changed = true;
         }
 
         if (
-          field.fieldType === "checkbox" &&
-          updated[field.name] === undefined
+          field.fieldType === "checkbox" && !Array.isArray(updated[field.name]) &&
+          updated[field.name] !== field.value
         ) {
           updated[field.name] = [];
           changed = true;
