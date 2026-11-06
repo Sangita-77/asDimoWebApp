@@ -32,6 +32,8 @@ interface AppointmentDetailsData {
   time: string;
   status: string;
   doneBy?: string;
+  paymentStatus?: string;
+  amount?: number;
   paymentId?: string | number;
   razorpayPaymentId?: string;
   zoomLink?: string;
@@ -131,7 +133,7 @@ const AppointmentDetails: React.FC = () => {
         setAppointment(appointmentData);
 
         const paymentId = appointmentData.paymentId ?? appointmentData.razorpayPaymentId;
-        if (paymentId !== undefined && paymentId !== null && paymentId !== "") {
+        if (paymentId !== undefined && paymentId !== null && String(paymentId).trim() !== "") {
           setPaymentLoading(true);
           const paymentResponse = await fetch(
             `${BASE_URL}/payments/${encodeURIComponent(String(paymentId))}`,
@@ -146,10 +148,12 @@ const AppointmentDetails: React.FC = () => {
           const paymentResponseData = await paymentResponse.json().catch(() => null);
 
           if (!paymentResponse.ok || !paymentResponseData?.success) {
-            throw new Error(paymentResponseData?.message || "Unable to load payment details");
+            setPaymentDetails(null);
+          } else {
+            setPaymentDetails((paymentResponseData.data as PaymentDetailsData) || null);
           }
 
-          setPaymentDetails(paymentResponseData.data as PaymentDetailsData);
+          // paymentDetails handled above
         }
 
         if (appointmentData.teacherUser?.userId) {
@@ -704,7 +708,18 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value }) =>
               <span>Payment Date</span><strong>{valueOrFallback(paymentDate)}</strong>
             </div>
           </>}
-          {!paymentLoading && !paymentError && !paymentDetails && <div className="payment-row"><span>Payment</span><strong>No payment details available</strong></div>}
+          {!paymentLoading && !paymentError && !paymentDetails && (
+            <>
+              <div className="payment-row">
+                <span>Payment Status</span>
+                <span className="paid-badge">{valueOrFallback(appointment.paymentStatus)}</span>
+              </div>
+              <div className="payment-row">
+                <span>Done By</span>
+                <strong>{valueOrFallback(appointment.doneBy)}</strong>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

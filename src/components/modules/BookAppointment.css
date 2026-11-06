@@ -80,6 +80,26 @@
   cursor: pointer;
 }
 
+.appointment-profile-form .form-group select:disabled,
+.appointment-profile-form .form-group input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #f5f6f8;
+}
+
+.disabled-section {
+  pointer-events: none;
+  opacity: 0.55;
+  user-select: none;
+}
+
+.not-available-time {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .appointment-profile-form .form-group select:focus {
   border-color: #3893ff;
 }

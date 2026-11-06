@@ -86,7 +86,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 /* Login form Satrt */
 .FormContainer .login-box .form-group label{color: var(--TextcolorDark); font-size: 18px; text-transform: uppercase;}
-.FormContainer .login-box .form-group input:placeholder{font-size: 16px;}
+.FormContainer .login-box .form-group input::placeholder{font-size: 16px;}
 .FormContainer .login-box .input-wrapper { position: relative; }
 .FormContainer .login-box .input-wrapper .eye-btn { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; font-size: 18px; }
 .FormContainer .login-box .input-wrapper .input-error { border-color: red !important; } 
