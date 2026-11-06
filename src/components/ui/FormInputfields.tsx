@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-animated";
 
@@ -9,9 +8,10 @@ export interface FieldConfig {
   name?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
+  onChange?:
+    | ((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void)
+    | ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    | ((e: React.ChangeEvent<HTMLSelectElement>) => void);
   className?: string;
   required?: boolean;
   error?: string;
@@ -47,7 +47,7 @@ const FormInputField: React.FC<FieldConfig> = ({
           id={name}
           name={name}
           value={value ?? ""}
-          onChange={onChange}
+          onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
           required={required}
           className={error ? "input-error" : ""}
         >
@@ -75,7 +75,7 @@ const FormInputField: React.FC<FieldConfig> = ({
             name={name}
             placeholder={placeholder}
             value={value ?? ""}
-            onChange={onChange}
+            onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
             required={required}
             className={error ? "input-error" : ""}
           />
