@@ -75,7 +75,7 @@ const AddInformation: React.FC = () => {
           }
         }
 
-        if (flag === 3) {
+        if (flag === 3 || flag === 5) {
           const [organizationResponse, adminResponse] = await Promise.all([
             authService.getUsersByFlag(token, 1),
             authService.getUsersByFlag(token, 7),
@@ -122,6 +122,7 @@ const AddInformation: React.FC = () => {
       case 1:
         return "Organization Admin Information";
       case 3:
+      case 5:
         return "Therapist Information";
       case 2:
         return "Parent Information";
@@ -152,6 +153,7 @@ const getPageConfig = (flag: number) => {
     };  
 
      case 3:
+     case 5:
       return {
         route: routes.SUP_THERAPIST,
         text: "Back To Therapist",
@@ -181,6 +183,7 @@ const pageConfig = getPageConfig(flag);
       case 1:
         return "Organization Admin";
       case 3:
+      case 5:
         return "Therapist";
       case 2:
         return "Parent";
@@ -247,7 +250,7 @@ const pageConfig = getPageConfig(flag);
           : data.user_scope;
 
       const submitFlag =
-        userScope === "global" && flag === 3
+        userScope === "global" && (flag === 3 || flag === 5)
           ? 5
           : userScope === "global" && flag === 2
           ? 4
@@ -264,8 +267,22 @@ const pageConfig = getPageConfig(flag);
       formData.append("country", data.country);
       formData.append("flag", String(submitFlag));
 
-      if (flag === 3) {
+      if (flag === 3 || flag === 5 || submitFlag === 3 || submitFlag === 5) {
         formData.append("therapist_category", data.therapist_category);
+        formData.append("specialization", data.therapist_category);
+        formData.append("gender", data.gender ?? "");
+        formData.append(
+          "fees",
+          data.fees !== undefined && data.fees !== null ? String(data.fees) : ""
+        );
+        formData.append(
+          "about_doctor",
+          data.about_doctor ?? data.about ?? ""
+        );
+        formData.append(
+          "qualifications",
+          data.qualifications ?? data.qualification ?? ""
+        );
 
         const selectedLanguages = Array.isArray(data.languages)
           ? data.languages
@@ -324,7 +341,7 @@ const pageConfig = getPageConfig(flag);
       if (flag === 4) {
         formData.append("teacherId", "null");
       }
-      if (flag === 3) {
+      if (flag === 3 || flag === 5 || submitFlag === 3 || submitFlag === 5) {
         const orgAdminId =
           currentLoginFlag === 1 || currentLoginFlag === 5
             ? currentUserId
@@ -435,7 +452,7 @@ const pageConfig = getPageConfig(flag);
           required: true,
         },
     ]
-: [3].includes(flag)
+: [3, 5].includes(flag)
   ? [
       {
         name: "therapist_category",
@@ -447,6 +464,9 @@ const pageConfig = getPageConfig(flag);
           { label: "Psychologist", value: "Psychologist" },
           { label: "Speech Therapist", value: "speech therapist" },
           { label: "Special Educator", value: "special educator" },
+
+          { label: "Operational Therapist", value: "operational therapist" },
+          { label: "Special Package", value: "special package" },
         ],
         required: true,
       },
@@ -478,7 +498,7 @@ const pageConfig = getPageConfig(flag);
         required: true,
       },
       {
-        name: "qualification",
+        name: "qualifications",
         label: "Qualification",
         type: "input",
         placeholder: "Enter Years of Experience",
@@ -491,10 +511,10 @@ const pageConfig = getPageConfig(flag);
         width: "half" as const,
         fieldType: "select" as const,
         options: [
-          { label: "Male", value: "male" },
-          { label: "Female", value: "female" },
-          { label: "Others", value: "others" },
-          { label: "Operational Therapist", value: "operational therapist" },
+          { label: "Male", value: "Male" },
+          { label: "Female", value: "Female" },
+          { label: "Others", value: "Other" },
+
         ],
         required: true,
       },
@@ -506,9 +526,9 @@ const pageConfig = getPageConfig(flag);
         required: true,
       },
       {
-        name: "about",
+        name: "about_doctor",
         label: "About Doctor",
-        type: "number",
+        type: "text",
         placeholder: "Enter About Doctor",
         required: false,
       },

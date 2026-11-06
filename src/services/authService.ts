@@ -322,6 +322,16 @@ export const authService = {
       return response.data;
     },
 
+  getUsersByForParent: async (token: string) => {
+    const response = await axios.get(`${BASE_URL}/auth/getUsersByForParent`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
   getAppoinments: async (token: string) => {
     const response = await axios.get(`${BASE_URL}/appointments`, {
       headers: {
