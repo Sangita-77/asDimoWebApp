@@ -564,13 +564,7 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 
 
 /* Appointment Calender Start */
-.appointment-calendar{
-    width:100%;
-    max-width:100%;
-    border-radius:20px;
-    padding:24px;
-    margin-top: 30px;
-}
+.appointment-calendar{ width:100%; max-width:100%; border-radius:20px; padding: 0px; margin-top: 0px; }
 
 /* Header */
 
