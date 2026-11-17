@@ -397,6 +397,27 @@ export const authService = {
     return response.data;
   },
 
+  updateGlobalStatus: async (
+    token: string,
+    payload: {
+      userId: number | string;
+      globalStatus: boolean;
+    }
+  ) => {
+    const response = await axios.post(
+      `${BASE_URL}/auth/updateGlobalStatus`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  },
+
 };
 
 

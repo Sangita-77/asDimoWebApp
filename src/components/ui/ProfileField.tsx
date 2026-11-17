@@ -31,7 +31,17 @@ export const ProfileImageField: React.FC<{
   profileImage?: string;
   userName?: string;
   onImageChange?: (file: File) => void;
-}> = ({ profileImage, userName, onImageChange }) => {
+  showToggle?: boolean;
+  isPublic?: boolean;
+  onToggle?: (isPublic: boolean) => void;
+}> = ({
+  profileImage,
+  userName,
+  onImageChange,
+  showToggle = false,
+  isPublic = true,
+  onToggle,
+}) => {
   const [uploadedImage, setUploadedImage] = useState("");
 
   const handleImageUpload = (
@@ -51,6 +61,7 @@ export const ProfileImageField: React.FC<{
 
   return (
     <div className="profile-image-container">
+      <div className="profile-avatar-row">
       {imageSrc ? (
         <img
           src={imageSrc}
@@ -62,6 +73,20 @@ export const ProfileImageField: React.FC<{
           {userName?.charAt(0)?.toUpperCase() || "U"}
         </div>
       )}
+
+        {showToggle && (
+          <button
+            type="button"
+            className={`toggle-btn ${isPublic ? "active" : ""}`}
+            onClick={() => onToggle?.(!isPublic)}
+          >
+            <span className="toggle-text">
+              {isPublic ? "Public" : "Private"}
+            </span>
+            <span className="toggle-circle"></span>
+          </button>
+        )}
+      </div>
 
       <label className="upload-image-btn">
         <img src={UploadCameraIcon} alt="Upload" />
