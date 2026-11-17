@@ -75,16 +75,18 @@ export const ProfileImageField: React.FC<{
       )}
 
         {showToggle && (
-          <button
-            type="button"
-            className={`toggle-btn ${isPublic ? "active" : ""}`}
-            onClick={() => onToggle?.(!isPublic)}
-          >
-            <span className="toggle-text">
-              {isPublic ? "Public" : "Private"}
-            </span>
-            <span className="toggle-circle"></span>
-          </button>
+          <div className="toggleProfileWrap">
+            <button
+              type="button"
+              className={`toggle-btn ${isPublic ? "active" : ""}`}
+              onClick={() => onToggle?.(!isPublic)}
+            >
+              <span className="toggle-text">
+                {isPublic ? "Public" : "Private"}
+              </span>
+              <span className="toggle-circle"></span>
+            </button>
+          </div>
         )}
       </div>
 

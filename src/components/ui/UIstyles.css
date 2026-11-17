@@ -146,12 +146,13 @@ button{cursor: pointer; transition: all 0.25s ease; text-transform: capitalize ;
 .upload-image-btn { margin-top: 12px; background: transparent; color: var(--TextcolorDark); border-radius: 8px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; width: 108px; justify-content: center; }
 .profile-placeholder { width: 108px; height: 108px; border-radius: 50%; background: var(--SecondayColor); color: var(--TextcolorLight); font-size: 48px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
 .profile-avatar-row { display: flex; align-items: center; gap: 20px; }
-.profile-avatar-row .toggle-btn { position: relative; display: inline-flex; align-items: center; justify-content: space-between; min-width: 104px; height: 38px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--GreyBorders); background: #e5e7eb; color: var(--TextcolorDark); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; }
+/* .profile-avatar-row .toggle-btn { position: relative; display: inline-flex; align-items: center; justify-content: space-between; min-width: 104px; height: 38px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--GreyBorders); background: #e5e7eb; color: var(--TextcolorDark); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; }
 .profile-avatar-row .toggle-btn.active { background: var(--SecondayColor); border-color: var(--SecondayColor); color: var(--TextcolorLight); }
 .profile-avatar-row .toggle-btn .toggle-text { flex: 1; text-align: center; padding-right: 22px; transition: padding 0.25s ease; user-select: none; }
 .profile-avatar-row .toggle-btn:not(.active) .toggle-text { padding-right: 0; padding-left: 22px; }
 .profile-avatar-row .toggle-btn .toggle-circle { position: absolute; top: 4px; left: 4px; width: 28px; height: 28px; border-radius: 50%; background: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); transition: transform 0.25s ease; }
-.profile-avatar-row .toggle-btn.active .toggle-circle { transform: translateX(66px); }
+.profile-avatar-row .toggle-btn.active .toggle-circle { transform: translateX(66px); } */
+.toggleProfileWrap{width: 49vw; justify-content: right; display: flex;}
 .profile-image { width: 108px; height: 108px; border-radius: 50%; object-fit: cover; border: solid 5px var(--PrimaryColor); }
 .field-info label{width: 100%; display: block; font-weight: 600; font-size: 18px; color: var(--TextcolorDark);}
 .field-info{width: 100%;}
