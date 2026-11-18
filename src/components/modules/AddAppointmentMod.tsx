@@ -132,16 +132,33 @@ const BookAppointment: React.FC = () => {
         const parentJson = await parentRes.json();
         const parents = Array.isArray(parentJson?.data) ? parentJson.data : [];
 
+        // if (isMounted) {
+        //   setParentOptions(
+        //     parents.map((parent: any) => ({
+        //       label: parent.email
+        //         ? `${parent.name} (${parent.email})`
+        //         : parent.name,
+        //       value: String(parent.userId ?? parent._id),
+        //     }))
+        //   );
+        // }
+        
         if (isMounted) {
           setParentOptions(
-            parents.map((parent: any) => ({
-              label: parent.email
-                ? `${parent.name} (${parent.email})`
-                : parent.name,
-              value: String(parent.userId ?? parent._id),
-            }))
+            parents
+              .sort((a: any, b: any) =>
+                String(a.name || "").toLowerCase()
+                  .localeCompare(String(b.name || "").toLowerCase())
+              )
+              .map((parent: any) => ({
+                label: parent.email
+                  ? `${parent.name} (${parent.email})`
+                  : parent.name,
+                value: String(parent.userId ?? parent._id),
+              }))
           );
         }
+
       } catch (error) {
         console.error("Error fetching parents:", error);
         if (isMounted) {
