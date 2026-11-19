@@ -15,7 +15,9 @@ import AppointmentTable from "./Analytices/AppointmentTable.tsx";
 // import DoctorListCard from "./Analytices/DoctorListCard.tsx";
 import { filebasename } from "../../api/config";
 import { routes } from "../../routes/AppRoutes";
+import PaymentCardIndex from "../modules/PaymentCardIndex.tsx";
 // import Loader from "../ui/Loaders";
+
 
 
 interface ZonalAdminRow {
@@ -368,7 +370,6 @@ const DashboardAnalyticsIndex: React.FC = () => {
     {/* <div className="SubscriptionAnalyticsGraph">
       <SubscriptionAnalytics/>
     </div> */}
-
     <div className="analyticsZonalAdmin boxShadow">
        <div className="d-flex">
           <Heading4 text="APPOINTMENTS" span={`(${appointmentRows.length})`} />
@@ -376,6 +377,7 @@ const DashboardAnalyticsIndex: React.FC = () => {
        </div>
           <AppointmentTable appointments={appointmentRows} loading={loading} displayLimit={6} />
     </div>
+    <PaymentCardIndex/>
     <div className="analyticsZonalAdmin">
       <div className="d-flex">
           <Heading4 text={headingInfo.text} span={`(${headingInfo.count})`}/>
@@ -383,6 +385,7 @@ const DashboardAnalyticsIndex: React.FC = () => {
       </div>
        <ZonalAdminTable rows={zonalAdminRows} loading={loading} />
     </div>
+    
     {/* <div className="Appointmentstatistics d-flex">
         <div className="AppointmentstatisticsGraph">
           {loading ? <Loader /> : <Appointmentgraph />}
